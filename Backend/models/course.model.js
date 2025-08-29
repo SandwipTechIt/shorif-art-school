@@ -7,15 +7,35 @@ const courseSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    time: {
-      type: String,
-      required: true,
-    },
     fee: {
       type: String,
       required: true,
       trim: true,
     },
+    time: [
+      {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    ],
+    images: [
+      {
+        id: String,
+        fileName: String,
+        originalName: String,
+        filePath: String,
+        url: String,
+        size: Number,
+        mimeType: String,
+        folder: String,
+        uploadedAt: Date
+      }
+    ],
+    description: {
+      type: String,
+      trim: true,
+    }
   },
   { timestamps: true }
 );

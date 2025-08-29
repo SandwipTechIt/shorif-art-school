@@ -1,46 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router";
-// import { getTotalCounts } from "../../Api";
 
-// Add this to your HTML head:
-// <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-const Widget = () => {
-  const defaultTotalCounts = {
-    totalStudents: 1000,
-    totalCourses: 1000,
-    totalOrders: 1000,
-    totalAdmins: 1000,
-  };
-
-  const [totalCounts, setTotalCounts] = useState(defaultTotalCounts);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getTotalCounts();
-  //       if (response) {
-  //         setTotalCounts(response);
-  //       }
-  //     } catch (apiError) {
-  //       console.error("Error fetching total counts:", apiError);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+const Widget = ({ students, courses, discount, paidAmount }) => {
 
   const widgets = [
     {
-      type: "totalStudents",
+      type: "students",
       title: "Students",
-      to: "students",
+      to: "student/active",
       link: "See all students",
       icon: "fa-user-graduate",
       bgColor: "bg-blue-600",
       iconColor: "text-blue-600",
     },
     {
-      type: "totalCourses",
+      type: "courses",
       title: "Courses",
       to: "course/all",
       link: "View all courses",
@@ -49,22 +23,22 @@ const Widget = () => {
       iconColor: "text-green-600",
     },
     {
-      type: "totalOrders",
-      title: "Orders",
-      to: "orders",
-      link: "View all orders",
+      type: "paidAmount",
+      title: "Paid Amount",
+      to: "payment/all",
+      link: "View all payment",
+      icon: "fas fa-dollar-sign",
+      bgColor: "bg-red-600",
+      iconColor: "text-red-600",
+    },
+    {
+      type: "discount",
+      title: "Discount",
+      to: "payment/all",
+      link: "View all payment",
       icon: "fa-credit-card",
       bgColor: "bg-yellow-500",
       iconColor: "text-yellow-500",
-    },
-    {
-      type: "totalAdmins",
-      title: "Admins",
-      to: "admins",
-      link: "View all admins",
-      icon: "fa-user-shield",
-      bgColor: "bg-red-600",
-      iconColor: "text-red-600",
     },
   ];
 
@@ -78,7 +52,7 @@ const Widget = () => {
           <div className="flex flex-col justify-between">
             <span className="font-bold text-lg">{widget.title}</span>
             <span className="text-3xl font-extrabold">
-              {totalCounts[widget.type]}
+              {widget.type === "students" ? students : widget.type === "courses" ? courses : widget.type === "discount" ? discount : widget.type === "paidAmount" ? paidAmount : ""}
             </span>
             <Link
               to={`/${widget.to}`}

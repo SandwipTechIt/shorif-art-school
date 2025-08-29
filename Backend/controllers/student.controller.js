@@ -1,3 +1,4 @@
+// Generate 100 random students
 // Arrays of possible values
 const maleFirstNames = [
   "Abdul",
@@ -135,7 +136,10 @@ function generateRandomMobileNumber() {
   }
   return number;
 }
-
+function getRandomStatus() {
+  const statuses = ["active", "inactive", "completed"];
+  return statuses[Math.floor(Math.random() * statuses.length)];
+}
 // Function to generate a random student
 function generateRandomStudent() {
   const gender = Math.random() > 0.5 ? "male" : "female";
@@ -160,8 +164,8 @@ function generateRandomStudent() {
   const courseId = [
     "688acebab02b418894a0609f",
     "688acea0b02b418894a0609d",
-    "688ace8bb02b418894a0609b"
-  ]
+    "688ace8bb02b418894a0609b",
+  ];
   return {
     name: firstName + " " + lastName,
     fatherName: fatherName,
@@ -173,8 +177,11 @@ function generateRandomStudent() {
     address: areas[getRandomInt(0, areas.length - 1)],
     mobileNumber: mobileNumber,
     whatsAppNumber: mobileNumber,
-    courseId: courseId[Math.floor(Math.random() * 3)],
-    status: "active",
+    courses: '["68b0a7c189052c517b7cda68","68b0a79689052c517b7cda62"]',
+    courseTimes: '{"68b0a7c189052c517b7cda68":"8:00 AM","68b0a79689052c517b7cda62":"1:00 PM"}',
+    admissionFee: '2000',
+    status: getRandomStatus(),
+    img: "http://192.168.0.200:3000/images/image-1756437412479-240071824.png"
   };
 }
 
@@ -186,80 +193,152 @@ function generateRandomStudents(count) {
   }
   return students;
 }
-
-// // Generate 100 random students
-
 // // Output the result
 // console.log(JSON.stringify(randomStudents, null, 2));
 // ---------------------------------------------------------------------------------------------------------------------------
 
 import Student from "../models/student.model.js";
+import Course from "../models/course.model.js";
+import Enrollment from "../models/enrollment.model.js";
+import Counter from "../models/studentID.model.js";
+import Payment from "../models/payment.model.js";
 
+import { deleteImage, getImageUrl, getFilenameFromUrl } from "../utils/imageUtils.js";
+import { getStudentEnrolledCourseName } from "../helper/getStudentEnrolledCourseName.js";
 
-const createManyStudents = async () => {
-  try {
-    const students = generateRandomStudents(200);
-    await Student.insertMany(students);
-    console.log("100,000 random students created successfully.");
-  } catch (error) {
-    console.error("Error creating students:", error);
+// Utility function to create enrollments for a student
+const createEnrollmentsForStudent = async (studentId, courses, courseTimes) => {
+  if (!courses?.length) return [];
+
+  const enrollments = [];
+
+  for (let i = 0; i < courses.length; i++) {
+    const courseId = courses[i];
+    const course = await Course.findById(courseId).select('name fee');
+
+    if (!course) continue;
+
+    // Get course time - support both object and array formats
+    const courseTime = courseTimes?.[courseId] || courseTimes?.[i] || 'TBD';
+
+    const enrollment = new Enrollment({
+      studentId,
+      courseName: course.name,
+      courseTime,
+      fee: course.fee,
+    });
+
+    const savedEnrollment = await enrollment.save();
+    enrollments.push(savedEnrollment);
   }
+
+  return enrollments;
 };
+
 
 export const createStudent = async (req, res) => {
   try {
-    const student = new Student(req.body);
-    await student.save();
-    res.status(201).json(student);
+    let studentData = { ...req.body };
+
+    // Handle courses and courseTimes if they are JSON strings
+    if (typeof studentData.courses === 'string') {
+      studentData.courses = JSON.parse(studentData.courses);
+    }
+    if (typeof studentData.courseTimes === 'string') {
+      studentData.courseTimes = JSON.parse(studentData.courseTimes);
+    }
+
+    const { courses, courseTimes, ...rest } = studentData;
+
+    if (req.files.image.length > 0) {
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      rest.img = getImageUrl(req.files.image[0].filename, baseUrl)
+    }
+    await Counter.findByIdAndUpdate(
+      "studentId",
+      { $setOnInsert: { seq: 1000 } },
+      { upsert: true }
+    );
+    const student = new Student(rest);
+    const response = await student.save();
+
+
+    const studentEnrollment = await createEnrollmentsForStudent(response._id, courses, courseTimes);
+    
+    const totalFee=studentEnrollment.reduce((total, enrollment) => total + Number(enrollment.fee), 0);
+        
+    const paymentData={
+      studentId:response._id,
+      month:new Date().getMonth(),
+      year:new Date().getFullYear(),
+      amount:totalFee
+    }
+    const payment=new Payment(paymentData);
+    await payment.save();
+
+
+    res.status(201).json({
+      success: true,
+      message: "Student created successfully",
+      student: response
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-
-
+const createManyStudents = async () => {
+  try {
+    const students = generateRandomStudents(200);
+    for (let i = 0; i < students.length; i++) {
+      if (typeof students[i].courses === 'string') {
+        students[i].courses = JSON.parse(students[i].courses);
+      }
+      if (typeof students[i].courseTimes === 'string') {
+        students[i].courseTimes = JSON.parse(students[i].courseTimes);
+      }
+      const { courses, courseTimes, ...rest } = students[i];
+      await Counter.findByIdAndUpdate(
+        "studentId",
+        { $setOnInsert: { seq: 1000 } },
+        { upsert: true }
+      );
+      const student = new Student(rest);
+      const response = await student.save();
+      await createEnrollmentsForStudent(response._id, courses, courseTimes);
+    }
+  } catch (error) {
+    console.error("Error creating students:", error);
+  }
+}
 
 export const getStudents = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
   const status = req.query.status || "active";
-  const skip = (page - 1) * limit;
-
 
   try {
-    // await createManyStudents(); // Call the function to create many students
+
     const students = await Student.find({ status })
-      .select('name fatherName motherName mobileNumber createdAt courseId')
-      .populate({
-        path: 'courseId',
-        select: 'name' // Only fetch the 'name' field from Course
-      })
+      .select("id img name fatherName motherName mobileNumber whatsAppNumber createdAt courseId")
       .sort({ _id: -1 })
-      .limit(limit)
-      .skip(skip);
+      .limit(200)
 
-    // Transform the response to include courseName instead of courseID
-    const transformedStudents = students.map(student => {
-      const studentObj = student.toObject();
-      if (studentObj.courseId) {
-        studentObj.courseName = studentObj.courseId.name;
-        delete studentObj.courseId; // Remove the original courseID
-      }
-      return studentObj;
-    });
 
-    const totalDocuments = await Student.countDocuments({ status });
-    const totalPages = Math.ceil(totalDocuments / limit);
+    // await createManyStudents();
 
-    res.status(200).json({
-      students: transformedStudents,
-      totalPages
-    });
+
+    const studentsWithCourseData = await Promise.all(
+      students.map(async (student) => {
+        const studentObj = student.toObject();
+        studentObj.courseName = await getStudentEnrolledCourseName(student._id);
+        return studentObj;
+      })
+    );
+
+    res.status(200).json(studentsWithCourseData);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 export const searchStudents = async (req, res) => {
   const status = req.query.status || "active";
@@ -275,14 +354,15 @@ export const searchStudents = async (req, res) => {
         { address: { $regex: req.params.query, $options: "i" } },
         { schoolName: { $regex: req.params.query, $options: "i" } },
       ],
-    }).select('name fatherName motherName mobileNumber createdAt courseId')
-    .populate({
-      path: 'courseId',
-      select: 'name' // Only fetch the 'name' field from Course
-    }).sort({ _id: -1 });
+    })
+      .select("name fatherName motherName mobileNumber createdAt courseId")
+      .populate({
+        path: "courseId",
+        select: "name", // Only fetch the 'name' field from Course
+      })
+      .sort({ _id: -1 });
 
-
-    const transformedStudents = students.map(student => {
+    const transformedStudents = students.map((student) => {
       const studentObj = student.toObject();
       if (studentObj.courseId) {
         studentObj.courseName = studentObj.courseId.name;
@@ -296,47 +376,126 @@ export const searchStudents = async (req, res) => {
   }
 };
 
-
-
 export const getStudentById = async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id).populate({
-      path: 'courseId',
-      select: 'name' // Only fetch the 'name' field from Course
-    });
-    const studentObj = student.toObject();
-    if (studentObj.courseId) {
-      studentObj.courseName = studentObj.courseId.name;
-      // delete studentObj.courseId; // Remove the original courseID
-    }
+    const student = await Student.findById(req.params.id);
+
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
+
+    // Get enrollments for this student
+    const enrollments = await Enrollment.find({ studentId: req.params.id });
+
+    // Convert to object and add enrollments
+    const studentObj = student.toObject();
+    studentObj.enrollments = enrollments;
+
+    // Map enrollments to create courses and courseTimes data for frontend compatibility
+    const coursesData = [];
+    const courseTimesData = {};
+
+    // For each enrollment, we need to find the corresponding course to get the courseId
+    for (const enrollment of enrollments) {
+      try {
+        const course = await Course.findOne({ name: enrollment.courseName });
+        if (course) {
+          coursesData.push(course._id.toString());
+          courseTimesData[course._id.toString()] = enrollment.courseTime;
+        }
+      } catch (courseError) {
+        console.warn(`Could not find course for enrollment: ${enrollment.courseName}`);
+      }
+    }
+
+    studentObj.courses = coursesData;
+    studentObj.courseTimes = courseTimesData;
+
     res.status(200).json(studentObj);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-
-
-
 export const updateStudent = async (req, res) => {
   try {
-    const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    let studentData = { ...req.body };
+
+    // Handle courses and courseTimes if they are JSON strings
+    if (typeof studentData.courses === 'string') {
+      studentData.courses = JSON.parse(studentData.courses);
+    }
+    if (typeof studentData.courseTimes === 'string') {
+      studentData.courseTimes = JSON.parse(studentData.courseTimes);
+    }
+
+    // Find the student to get the old image path if it exists
+    const student = await Student.findById(req.params.id);
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
-    res.status(200).json(student);
+
+
+    // Remove non-student fields from update data
+    const { courses, courseTimes, removeImage, ...updateData } = studentData;
+
+    // Handle new image upload
+    if (removeImage && student.img) {
+      try {
+        await deleteImage(getFilenameFromUrl(student.img));
+        updateData.img = null;
+      } catch (deleteError) {
+        console.error("Error deleting image, but proceeding with update:", deleteError);
+        updateData.img = null;
+      }
+    } else if (req.files && req.files.image && req.files.image.length > 0) {
+      // If there's a new image, delete the old one
+      if (student.img) {
+        try {
+          await deleteImage(getFilenameFromUrl(student.img));
+        } catch (deleteError) {
+          console.error("Error deleting old image, but proceeding with update:", deleteError);
+        }
+      }
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      updateData.img = getImageUrl(req.files.image[0].filename, baseUrl);
+    }
+
+
+
+    // Update student record
+    const updatedStudent = await Student.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStudent) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found"
+      });
+    }
+
+    // Update enrollments if courses are provided
+    if (courses && Array.isArray(courses)) {
+      await Enrollment.deleteMany({ studentId: req.params.id });
+      await createEnrollmentsForStudent(req.params.id, courses, courseTimes);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Student updated successfully",
+      student: updatedStudent
+    });
+
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
   }
 };
-
-
 
 export const deleteStudent = async (req, res) => {
   try {
@@ -349,3 +508,6 @@ export const deleteStudent = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Export utility function for use in other parts of the application
+export { createEnrollmentsForStudent };

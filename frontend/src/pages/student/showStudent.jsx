@@ -4,7 +4,7 @@ import { getApi, deleteApi } from "../../api";
 import { ErrorMessage } from "../../components/ui/errorMessage";
 import { LoadingSpinner } from "../../components/ui/loader";
 import { useState, useEffect } from "react";
-
+import { formateDate } from "../../utiils/formateDate";
 const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
   useEffect(() => {
     // Store original body overflow value
@@ -53,7 +53,7 @@ const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
           <h2 className="text-lg font-bold text-gray-800">Confirm Deletion</h2>
         </div>
         <p className="text-gray-600 mb-6">
-          Are you sure you want to delete this product? This action cannot be
+          Are you sure you want to delete this student? This action cannot be
           undone.
         </p>
         <div className="flex justify-end gap-3">
@@ -115,10 +115,6 @@ const ShowStudent = () => {
     );
   }
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
 
   return (
     <>
@@ -130,7 +126,7 @@ const ShowStudent = () => {
               <div className="flex flex-col sm:flex-row items-center">
                 <div className="mb-4 sm:mb-0 sm:mr-6">
                   <div className="w-24 h-24 rounded-full bg-white/50 flex items-center justify-center shadow-lg">
-                    <i className="fas fa-user-graduate text-4xl text-blue-600"></i>
+                    <img src={student.img} className="w-full h-full object-cover rounded-full" alt="" />
                   </div>
                 </div>
                 <div className="text-center sm:text-left">
@@ -139,18 +135,16 @@ const ShowStudent = () => {
                   </h1>
                   <div className="flex items-center justify-center sm:justify-start">
                     <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                        student.status === "active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${student.status === "active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                        }`}
                     >
                       <i
-                        className={`fas fa-circle mr-2 text-xs ${
-                          student.status === "active"
-                            ? "text-green-500"
-                            : "text-red-500"
-                        }`}
+                        className={`fas fa-circle mr-2 text-xs ${student.status === "active"
+                          ? "text-green-500"
+                          : "text-red-500"
+                          }`}
                       ></i>
                       {student.status.charAt(0).toUpperCase() +
                         student.status.slice(1)}
@@ -237,7 +231,7 @@ const ShowStudent = () => {
                           Date of Birth
                         </p>
                         <p className="font-medium text-gray-800 dark:text-white">
-                          {formatDate(student.dob)}
+                          {formateDate(student.dob)}
                         </p>
                       </div>
                     </div>
@@ -252,6 +246,20 @@ const ShowStudent = () => {
                         </p>
                         <p className="font-medium text-gray-800 capitalize dark:text-white">
                           {student.gender}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
+                        <i className="fas fa-venus-mars text-blue-600"></i>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-white">
+                          Admission Fee
+                        </p>
+                        <p className="font-medium text-gray-800 capitalize dark:text-white">
+                          {student.admissionFee || 0} TK
                         </p>
                       </div>
                     </div>
@@ -284,20 +292,6 @@ const ShowStudent = () => {
 
                       <div className="flex items-start">
                         <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
-                          <i className="fas fa-book text-blue-600"></i>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-500 dark:text-white">
-                            Course
-                          </p>
-                          <p className="font-medium text-gray-800 dark:text-white">
-                            {student.courseName}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
                           <i className="fas fa-briefcase text-blue-600"></i>
                         </div>
                         <div>
@@ -306,6 +300,35 @@ const ShowStudent = () => {
                           </p>
                           <p className="font-medium text-gray-800 dark:text-white">
                             {student.profession}
+                          </p>
+                        </div>
+                      </div>
+
+
+                      <div className="flex items-start">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
+                          <i className="fas fa-book text-blue-600"></i>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 dark:text-white">
+                            Course
+                          </p>
+                          <p className="font-medium text-gray-800 dark:text-white">
+                            {student.enrollments?.map(e => e.courseName).join(', ')}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
+                          <i className="fas fa-book text-blue-600"></i>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 dark:text-white">
+                            Admit Date
+                          </p>
+                          <p className="font-medium text-gray-800 dark:text-white">
+                            {formateDate(student.createdAt)}
                           </p>
                         </div>
                       </div>
@@ -370,7 +393,7 @@ const ShowStudent = () => {
               <div className="mt-10 pt-6 border-t border-gray-200 text-center text-gray-500 text-md">
                 <p>
                   Last updated:{" "}
-                  {formatDate(student.updatedAt || student.createdAt)}
+                  {formateDate(student.updatedAt || student.createdAt)}
                 </p>
               </div>
             </div>

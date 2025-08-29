@@ -1,13 +1,19 @@
 /* File: src/pages/AddStudent.js */
-import React, { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
+import DatePicker from "react-datepicker";
+import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
+
 import { getApi, postApi } from "../../api";
-import { LoadingSpinner } from "../../components/ui/loader";
+import Loader from "../../components/ui/loader";
 import { ErrorMessage } from "../../components/ui/errorMessage";
+import { MultiSelect } from "../../components/ui/multiselect";
+import "react-datepicker/dist/react-datepicker.css";
 
-/* File: src/components/form/Input.js */
-import { forwardRef } from "react";
 
-const Input = forwardRef(({ label, icon, error, ...rest }, ref) => (
+
+
+const Input = ({ label, icon, error, placeholder, ...rest }) => (
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
       {label}
@@ -17,22 +23,18 @@ const Input = forwardRef(({ label, icon, error, ...rest }, ref) => (
         <i className={icon}></i>
       </span>
       <input
-        ref={ref}
-        className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 dark:text-white ${
-          error
-            ? "border-red-500 focus:ring-red-400"
-            : "border-gray-300 focus:ring-blue-500"
-        }`}
+        placeholder={placeholder}
+        className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 dark:text-white ${error
+          ? "border-red-500 focus:ring-red-400"
+          : "border-[#00c2ff80] focus:ring-[#00c2ff80]"
+          }`}
         {...rest}
       />
     </div>
-    {/* {error && <ErrorMessage message={error} />} */}
   </div>
-));
+);
 
-/* File: src/components/form/Select.js */
-
-const Select = forwardRef(({ label, icon, options, error, ...rest }, ref) => (
+const Select = ({ label, icon, options, error, ...rest }) => (
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
       {label}
@@ -42,73 +44,173 @@ const Select = forwardRef(({ label, icon, options, error, ...rest }, ref) => (
         <i className={icon}></i>
       </span>
       <select
-        ref={ref}
-        className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-          error
-            ? "border-red-500 focus:ring-red-400"
-            : "border-gray-300 focus:ring-blue-500"
-        }`}
+        className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 dark:text-white ${error
+          ? "border-red-500 focus:ring-red-400"
+          : "border-[#00c2ff80] focus:ring-[#00c2ff80]"
+          } ${rest.disabled ? "bg-gray-100 dark:bg-gray-700 cursor-not-allowed" : ""}`}
         {...rest}
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value}>
+          <option key={o.value} value={o.value} className="dark:text-white dark:bg-gray-800">
             {o.label}
           </option>
         ))}
       </select>
     </div>
-    {/* {error && <ErrorMessage message={error} />} */}
   </div>
-));
+);
+
+/* File: src/components/form/ImageInput.js */
+
+const ImageInput = ({ label, onChange, preview, onRemove, error }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
+      {label}
+    </label>
+    <div className="space-y-4">
+      {/* File Input */}
+      <div className="relative">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={onChange}
+          className="hidden"
+          id="image-upload"
+        />
+        <label
+          htmlFor="image-upload"
+          className={`w-full flex items-center justify-center px-4 py-8 border-2 border-dashed rounded-md cursor-pointer transition-colors ${error
+            ? "border-red-500 hover:border-red-400"
+            : "border-[#00c2ff80] hover:border-[#00c2ff]"
+            }`}
+        >
+          <div className="text-center">
+            <i className="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Click to upload student photo
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              PNG, JPG, GIF up to 10MB
+            </p>
+          </div>
+        </label>
+      </div>
+
+      {/* Image Preview */}
+      {preview && (
+        <div className="relative inline-block">
+          <img
+            src={preview}
+            alt="Student preview"
+            className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200"
+          />
+          <button
+            type="button"
+            onClick={onRemove}
+            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+          >
+            <i className="fas fa-times text-xs"></i>
+          </button>
+        </div>
+      )}
+    </div>
+    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+  </div>
+);
 
 export default function AddStudent() {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
-  const [errors, setErrors] = useState({});
-  const [serverMsg, setServerMsg] = useState("");
 
+
+  const { data: courses, error, isLoading, isFetching } = useQuery({
+    queryKey: ["courses"],
+    queryFn: () => getApi("getCourses"),
+    retry: 1,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  })
+
+
+  const [errors, setErrors] = useState({});
   const [form, setForm] = useState({
     name: "",
     fatherName: "",
     motherName: "",
-    dob: "",
+    dob: null,
     profession: "",
     gender: "",
     schoolName: "",
     address: "",
     mobileNumber: "",
     whatsAppNumber: "",
-    courseId: "",
+    courses: [], // Array of course IDs
+    courseTimes: {}, // Object: {courseId: selectedTimeSlot}
+    admissionFee: "",
+    image: null,
   });
 
-  const inputRefs = useRef([]);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  const fetchCourses = async () => {
-    try {
-      const data = await getApi("getCourses");
-      setCourses(data);
-      setErrors({ global: "" });
-    } catch {
-      setErrors({ global: "Unable to load courses. Please try again." });
-    } finally {
-      setIsFetching(false);
-    }
-  };
-  // Fetch courses
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  // Get selected courses to show available time slots
+  const selectedCourses = courses?.filter(course => form.courses.includes(course._id)) || [];
 
-  // Focus first input on mount
-  useEffect(() => {
-    inputRefs.current[0]?.focus();
-  }, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleCourseSelection = (selectedCourseIds) => {
+    // Clean up time selections for deselected courses
+    const newCourseTimes = { ...form.courseTimes };
+    Object.keys(newCourseTimes).forEach(courseId => {
+      if (!selectedCourseIds.includes(courseId)) {
+        delete newCourseTimes[courseId];
+      }
+    });
+
+    setForm((prev) => ({
+      ...prev,
+      courses: selectedCourseIds,
+      courseTimes: newCourseTimes
+    }));
+    setErrors((prev) => ({ ...prev, courses: "", courseTimes: "" }));
+  };
+
+  const handleTimeSelection = (courseId, timeSlot) => {
+    setForm((prev) => ({
+      ...prev,
+      courseTimes: {
+        ...prev.courseTimes,
+        [courseId]: timeSlot
+      }
+    }));
+    setErrors((prev) => ({ ...prev, courseTimes: "" }));
+  };
+
+  const handleDateChange = (date) => {
+    setForm((prev) => ({ ...prev, dob: date }));
+    setErrors((prev) => ({ ...prev, dob: "" }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setForm((prev) => ({ ...prev, image: file }));
+
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setForm((prev) => ({ ...prev, image: null }));
+    setImagePreview(null);
   };
 
   const validate = () => {
@@ -121,9 +223,16 @@ export default function AddStudent() {
       newErrors.mobileNumber = "Mobile number is required";
     else if (!/^[0-9]{10,15}$/.test(form.mobileNumber))
       newErrors.mobileNumber = "Enter a valid number";
-    if (!form.courseId) newErrors.courseId = "Please select a course";
-    if (!form.dob || !/^\d{2}\/\d{2}\/\d{4}$/.test(form.dob))
-      newErrors.dob = "Enter date as DD/MM/YYYY";
+    if (!form.courses || form.courses.length === 0)
+      newErrors.courses = "Please select at least one course";
+
+    // Check if time slots are selected for all courses
+    const missingTimeSlots = form.courses.filter(courseId => !form.courseTimes[courseId]);
+    if (missingTimeSlots.length > 0)
+      newErrors.courseTimes = "Please select time slots for all selected courses";
+
+    if (!form.dob)
+      newErrors.dob = "Date of birth is required";
     return newErrors;
   };
 
@@ -135,37 +244,58 @@ export default function AddStudent() {
       return;
     }
 
-    setLoading(true);
-    setServerMsg("");
+    // Format date for backend
+    const formattedDate = form.dob ? form.dob.toISOString().split('T')[0] : '';
 
-    // convert DD/MM/YYYY to ISO
-    const [day, month, year] = form.dob.split("/");
-    const payload = { ...form, dob: `${year}-${month}-${day}` };
+    // Create FormData for file upload
+    const formData = new FormData();
+    Object.keys(form).forEach(key => {
+      if (key === 'dob') {
+        formData.append(key, formattedDate);
+      } else if (key === 'courses') {
+        formData.append(key, JSON.stringify(form.courses));
+      } else if (key === 'courseTimes') {
+        formData.append(key, JSON.stringify(form.courseTimes));
+      } else if (key === 'image' && form.image) {
+        formData.append('image', form.image);
+      } else if (key !== 'image') {
+        formData.append(key, form[key]);
+      }
+    });
 
     try {
-      await postApi("createStudent", payload);
-      setServerMsg("Student added successfully!");
-      setForm({
-        name: "",
-        fatherName: "",
-        motherName: "",
-        dob: "",
-        profession: "",
-        gender: "",
-        schoolName: "",
-        address: "",
-        mobileNumber: "",
-        whatsAppNumber: "",
-        courseId: "",
+      await postApi("createStudent", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      inputRefs.current[0]?.focus();
-    } catch (err) {
-      setServerMsg(
-        err.response?.data?.message ||
-          "An error occurred while adding the student."
-      );
+      toast.success("Student added successfully!", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      // Reset form after successful submission
+      // setForm({
+      //   name: "",
+      //   fatherName: "",
+      //   motherName: "",
+      //   dob: null,
+      //   profession: "",
+      //   gender: "",
+      //   schoolName: "",
+      //   address: "",
+      //   mobileNumber: "",
+      //   whatsAppNumber: "",
+      //   courses: [],
+      //   courseTimes: {},
+      //   admissionFee: "",
+      //   image: null,
+      // });
+      setImagePreview(null);
     } finally {
-      setLoading(false);
     }
   };
 
@@ -178,113 +308,103 @@ export default function AddStudent() {
     }
   };
 
-  if (isFetching) {
+  if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-10 px-4">
-        <LoadingSpinner />
-      </div>
+      <Loader />
     );
   }
 
-  if (errors.global) {
+  if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-10 px-4">
-        {/* <ErrorMessage message={errors.global} /> */}
         <ErrorMessage
-          error={{ message: errors.global }}
-          onRetry={() => fetchCourses()}
+          error={{ message: error.message }}
+          onRetry={() => queryClient.invalidateQueries({ queryKey: ['courses'] })}
         />
       </div>
     );
   }
   return (
-    <div className="min-h-screen flex flex-col items-center py-10 px-4">
+    <div className="flex flex-col items-center md:py-10 md:px-4">
       <div className="bgGlass shadow-xl rounded-lg w-full p-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center dark:text-white">
           <i className="fas fa-user-graduate mr-2 text-blue-600" /> Add New
           Student
         </h1>
 
-        {serverMsg && (
-          <div
-            className={`mb-4 p-3 rounded text-sm font-medium ${
-              serverMsg.includes("success")
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {serverMsg}
-          </div>
-        )}
+
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
             <Input
-              ref={(el) => (inputRefs.current[0] = el)}
-              index={0}
               label="Full Name"
               name="name"
               value={form.name}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(0)}
               error={errors.name}
               icon="fas fa-user"
+              placeholder="Enter full name"
             />
             <Input
-              ref={(el) => (inputRefs.current[1] = el)}
-              index={1}
               label="Father's Name"
               name="fatherName"
               value={form.fatherName}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(1)}
               error={errors.fatherName}
               icon="fas fa-male"
+              placeholder="Enter father's name"
             />
             <Input
-              ref={(el) => (inputRefs.current[2] = el)}
-              index={2}
               label="Mother's Name"
               name="motherName"
               value={form.motherName}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(2)}
               error={errors.motherName}
               icon="fas fa-female"
+              placeholder="Enter mother's name"
             />
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
+                Date of Birth
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-200 z-10">
+                  <i className="fas fa-calendar-alt"></i>
+                </span>
+                <DatePicker
+                  selected={form.dob}
+                  onChange={handleDateChange}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="DD/MM/YYYY"
+                  showYearDropdown
+                  showMonthDropdown
+                  dropdownMode="select"
+                  maxDate={new Date()}
+                  className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 dark:text-white h-[42px] ${errors.dob
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-[#00c2ff80] focus:ring-[#00c2ff80]"
+                    }`}
+                  wrapperClassName="w-full"
+                />
+              </div>
+              {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob}</p>}
+            </div>
             <Input
-              ref={(el) => (inputRefs.current[3] = el)}
-              index={3}
-              label="Date of Birth"
-              name="dob"
-              placeholder="DD/MM/YYYY"
-              value={form.dob}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown(3)}
-              error={errors.dob}
-              icon="fas fa-calendar-alt"
-            />
-            <Input
-              ref={(el) => (inputRefs.current[4] = el)}
-              index={4}
               label="Profession / Occupation"
               name="profession"
               value={form.profession}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(4)}
               icon="fas fa-briefcase"
+              placeholder="Enter profession"
             />
             <Select
-              ref={(el) => (inputRefs.current[5] = el)}
-              index={5}
               label="Gender"
               name="gender"
               value={form.gender}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(5)}
               options={[
                 { label: "Select Gender", value: "" },
                 { label: "Male", value: "male" },
@@ -292,80 +412,125 @@ export default function AddStudent() {
               ]}
               error={errors.gender}
               icon="fas fa-venus-mars"
+              placeholder="Select gender"
             />
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 mb-4">
             <Input
-              ref={(el) => (inputRefs.current[6] = el)}
-              index={6}
               label="School / College Name"
               name="schoolName"
               value={form.schoolName}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(6)}
               icon="fas fa-school"
+              placeholder="Enter school name"
             />
-            <Select
-              ref={(el) => (inputRefs.current[7] = el)}
-              index={7}
-              label="Course"
-              name="courseId"
-              value={form.courseId}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown(7)}
-              options={[
-                { label: "Select Course", value: "" },
-                ...courses.map((c) => ({ label: c.name, value: c._id })),
-              ]}
-              error={errors.courseId}
-              icon="fas fa-graduation-cap"
-            />
-          </div>
-
-          <div className="mb-4">
             <Input
-              ref={(el) => (inputRefs.current[8] = el)}
-              index={8}
               label="Address"
               name="address"
               value={form.address}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(8)}
               icon="fas fa-map-marker-alt"
+              placeholder="Enter address"
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div className="grid md:grid-cols-2 gap-6 mb-4">
             <Input
-              ref={(el) => (inputRefs.current[9] = el)}
-              index={9}
               label="Mobile Number"
               name="mobileNumber"
               value={form.mobileNumber}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(9)}
               error={errors.mobileNumber}
               icon="fas fa-phone-alt"
+              placeholder="Enter mobile number"
             />
             <Input
-              ref={(el) => (inputRefs.current[10] = el)}
-              index={10}
               label="WhatsApp Number"
               name="whatsAppNumber"
               value={form.whatsAppNumber}
               onChange={handleChange}
-              onKeyDown={handleKeyDown(10)}
               icon="fab fa-whatsapp"
+              placeholder="Enter whatsapp number"
+            />
+          </div>
+
+          <div className="grid md:grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 mb-6">
+            {/* Courses Selection */}
+            <div >
+              <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
+                <i className="fas fa-graduation-cap mr-2"></i>
+                Select Courses
+              </label>
+              <MultiSelect
+                options={courses.map((c) => ({ label: c.name, value: c._id }))}
+                selectedOptions={form.courses}
+                onSelectionChange={handleCourseSelection}
+              />
+              {errors.courses && <p className="text-red-500 text-sm mt-1">{errors.courses}</p>}
+            </div>
+            <Input
+              label="Admission Fee"
+              name="admissionFee"
+              value={form.admissionFee}
+              onChange={handleChange}
+              icon="fas fa-money-bill-alt"
+              placeholder="Enter admission fee"
+            />
+          </div>
+
+
+          <div className="grid md:grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              {/* Time Slots Selection for Each Course */}
+              {selectedCourses.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-white">
+                    <i className="fas fa-clock mr-2"></i>
+                    Select Time Slots for Each Course
+                  </label>
+                  <div className="space-y-4">
+                    {selectedCourses.map((course) => (
+                      <div key={course._id} className="border border-gray-200 rounded-lg p-4 dark:border-gray-600">
+                        <h4 className="font-medium text-gray-800 mb-2 dark:text-white">
+                          {course.name}
+                        </h4>
+                        <Select
+                          label=""
+                          name={`time-${course._id}`}
+                          value={form.courseTimes[course._id] || ""}
+                          onChange={(e) => handleTimeSelection(course._id, e.target.value)}
+                          options={[
+                            { label: "Select Time Slot", value: "" },
+                            ...course.time.map((timeSlot) => ({
+                              label: timeSlot,
+                              value: timeSlot
+                            })),
+                          ]}
+                          icon="fas fa-clock"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  {errors.courseTimes && <p className="text-red-500 text-sm mt-1">{errors.courseTimes}</p>}
+                </div>
+              )}
+            </div>
+            <ImageInput
+              label="Student Photo"
+              onChange={handleImageChange}
+              preview={imagePreview}
+              onRemove={removeImage}
+              error={errors.image}
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full max-w-md mx-auto flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg py-3 transition duration-200 disabled:opacity-50"
           >
-            {loading ? (
+            {isLoading ? (
               <i className="fas fa-spinner animate-spin"></i>
             ) : (
               "Add Student"

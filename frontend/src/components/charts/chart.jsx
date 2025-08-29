@@ -1,10 +1,20 @@
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 
-const ApexChart = () => {
-  const [state, setState] = useState({
-    series: [{ name: "Money Received", data: [] }],
-    options: {
+const ApexChart = ({ data = [] }) => {
+  // derive numeric series from incoming data
+  const series = useMemo(
+    () => [
+      {
+        name: "Money Received",
+        data: data.map((d) => Number(d.totalPaidAmount ?? 0)),
+      },
+    ],
+    [data]
+  );
+
+  const options = useMemo(
+    () => ({
       chart: {
         height: 350,
         type: "area",
@@ -14,94 +24,34 @@ const ApexChart = () => {
       title: {
         text: "Money Received - Last 12 Months",
         align: "center",
-        style: {
-          fontSize: "18px",
-          fontWeight: "bold",
-          color: "#555",
-        },
+        style: { fontSize: "18px", fontWeight: "bold", color: "#555" },
       },
       dataLabels: { enabled: false },
       stroke: { curve: "smooth" },
       xaxis: {
         type: "category",
-        categories: [],
+        categories: data.map((d) => d.month || ""), // month labels from your data
       },
       tooltip: {
-        x: {
-          formatter: (value) => value,
+        y: {
+          formatter: (val) => `৳ ${Number(val).toLocaleString()}`,
         },
       },
       yaxis: {
         labels: {
-          formatter: (value) => `৳ ${value.toLocaleString()}`,
+          formatter: (value) => `৳ ${Number(value).toLocaleString()}`,
         },
       },
-      grid: {
-        show: true,
-        borderColor: "#e0e0e0",
-        strokeDashArray: 2,
-      },
-      interactions: {
-        hover: {
-          enabled: false,
-        },
-      },
-      animations: {
-        enabled: true,
-      },
-      // fill: {
-      //   type: "gradient",
-      //   gradient: {
-      //     shadeIntensity: 1,
-      //     opacityFrom: 0.7,
-      //     opacityTo: 0.3,
-      //     stops: [0, 200],
-      //   },
-      // },
-    },
-  });
-
-  useEffect(() => {
-    // Generate last 12 months labels
-    const today = new Date();
-    const months = [];
-
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-      const formattedMonth = date.toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      });
-      months.push(formattedMonth);
-    }
-
-    // Dummy data for the last 12 months
-    const dummyData = [
-      3200, 1600, 3200, 1600, 3200, 1600, 3200, 1600, 3200, 1600, 3200, 1600,
-    ];
-
-    setState((prev) => ({
-      ...prev,
-      series: [{ ...prev.series[0], data: dummyData }],
-      options: {
-        ...prev.options,
-        xaxis: {
-          ...prev.options.xaxis,
-          categories: months,
-        },
-      },
-    }));
-  }, []);
+      grid: { show: true, borderColor: "#e0e0e0", strokeDashArray: 2 },
+      animations: { enabled: true },
+    }),
+    [data]
+  );
 
   return (
     <div className="chart-container">
       <div id="chart">
-        <ReactApexChart
-          options={state.options}
-          series={state.series}
-          type="area"
-          height={350}
-        />
+        <ReactApexChart options={options} series={series} type="area" height={350} />
       </div>
     </div>
   );

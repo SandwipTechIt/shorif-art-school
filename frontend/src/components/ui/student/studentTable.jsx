@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router";
-
+import { Link, useNavigate } from "react-router";
+import { formateDate } from "../../../utiils/formateDate";
 const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
   useEffect(() => {
     // Store original body overflow value
@@ -49,7 +49,7 @@ const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
           <h2 className="text-lg font-bold text-gray-800">Confirm Deletion</h2>
         </div>
         <p className="text-gray-600 mb-6">
-          Are you sure you want to delete this product? This action cannot be
+          Are you sure you want to delete this student? This action cannot be
           undone.
         </p>
         <div className="flex justify-end gap-3">
@@ -71,18 +71,35 @@ const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
   );
 };
 
-export const StudentTable = ({ students, onDeleteStudent }) => {
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const handleView = (studentId) => {
-    console.log("Editing student:", studentId);
-    // Add navigation or modal logic for editing here
+export const StudentTable = ({ students, onDeleteStudent, searchTerm }) => {
+
+  const getHighlightedText = (text, highlight) => {
+    if (!highlight.trim()) {
+      return <span>{text}</span>;
+    }
+    const regex = new RegExp(`(${highlight})`, 'gi');
+    const parts = text.split(regex);
+    return (
+      <span>
+        {parts.map((part, i) =>
+          regex.test(part) ? (
+            <span key={i} className="bg-yellow-200">
+              {part}
+            </span>
+          ) : (
+            part
+          )
+        )}
+      </span>
+    );
   };
+
+  const navigate = useNavigate()
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const handleDeleteRequest = (studentId) => {
     setDeleteConfirm(studentId);
   };
   const handleConfirmDelete = async () => {
-    console.log("Deleting student:", deleteConfirm);
-
     try {
       await onDeleteStudent(deleteConfirm);
       setDeleteConfirm(null);
@@ -93,19 +110,7 @@ export const StudentTable = ({ students, onDeleteStudent }) => {
   const handleCancelDelete = () => {
     setDeleteConfirm(null);
   };
-  const formatAdmitDate = (dateString) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return "Invalid Date";
-    }
-  };
+
   if (!students || students.length < 1) {
     return (
       <div className="min-h-[240px] flex flex-col items-center justify-center text-slate-500">
@@ -124,6 +129,8 @@ export const StudentTable = ({ students, onDeleteStudent }) => {
         <thead className="hidden md:table-header-group">
           <tr>
             {/* <th className="bg-[#721c24] p-4 text-left text-white">Image</th> */}
+            <th className="bg-[#721c24] p-4 text-left text-white">Img</th>
+            <th className="bg-[#721c24] p-4 text-left text-white">Id</th>
             <th className="bg-[#721c24] p-4 text-left text-white">Name</th>
             <th className="bg-[#721c24] p-4 text-left text-white">Father</th>
             <th className="bg-[#721c24] p-4 text-left text-white">Mother</th>
@@ -142,58 +149,65 @@ export const StudentTable = ({ students, onDeleteStudent }) => {
           {students.map((student) => (
             <tr
               key={student._id}
-              className="mb-4 block rounded-lg border border-b-2 hover:bg-gray-50 dark:hover:bg-gray-500 even:bg-gray-50 dark:even:bg-gray-dark md:mb-0 md:table-row md:border-0 md:border-b dark:text-white"
+              onClick={() => navigate(`/student/view/${student._id}`)}
+              className="mb-4 block cursor-pointer rounded-lg border border-b-2 hover:bg-gray-50 dark:hover:bg-gray-500 even:bg-gray-50 dark:even:bg-gray-dark md:mb-0 md:table-row md:border-0 md:border-b dark:text-white"
             >
               {/* Image Cell */}
-              {/* <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
+              <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden">
                   Image
                 </span>
                 <img
-                  src={student.images[0].url}
+                  src={student.img || "/default.png"}
                   className="h-[50px] w-[50px] object-contain"
                   alt={student.name}
                 />
-              </td> */}
+              </td>
+              <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
+                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
+                  Id
+                </span>
+                {getHighlightedText(String(student.id), searchTerm)}
+              </td>
               {/* Data Cells with Mobile Labels */}
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
                   Name
                 </span>
-                {student.name}
+                {getHighlightedText(student.name, searchTerm)}
               </td>
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
                   Father
                 </span>
-                {student.fatherName}
+                {getHighlightedText(student.fatherName, searchTerm)}
               </td>
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
                   Mother
                 </span>
-                {student.motherName}
+                {getHighlightedText(student.motherName, searchTerm)}
               </td>
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
                   Course
                 </span>
-                {student.courseName}
+                {getHighlightedText(student.courseName, searchTerm)}
               </td>
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
                   Mobile
                 </span>
-                {student.mobileNumber}
+                {getHighlightedText(student.mobileNumber, searchTerm)}
               </td>
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
                   Admit Date
                 </span>
-                {formatAdmitDate(student.createdAt)}
+                {formateDate(student.createdAt)}
               </td>
               {/* Options/Buttons Cell */}
-              <td className="flex items-center justify-between p-2 text-right md:table-cell md:p-4 md:text-left">
+              <td className="flex items-center justify-between p-2 text-right md:table-cell md:p-4 md:text-left"  onClick={(e) => e.stopPropagation()}>
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
                   Options
                 </span>

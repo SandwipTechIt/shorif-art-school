@@ -6,21 +6,18 @@ import { StudentHeader } from "../../components/ui/student/studentHeader";
 import { StudentTable } from "../../components/ui/student/studentTable";
 import { Pagination } from "../../components/ui/pagination";
 import { getApi, deleteApi } from "../../api";
+import { toast } from 'react-toastify';
 
 const AllStudents = () => {
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchData, setSearchData] = useState(null);
   const queryClient = useQueryClient();
 
   // Fetch students data using React Query
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["inActiveStudents", pagination.currentPage],
+    queryKey: ["inActiveStudents"],
     queryFn: () =>
-      getApi(`getStudents?page=${pagination.currentPage}`, {
+      getApi(`getStudents`, {
         status: "inactive",
       }),
     keepPreviousData: true,
@@ -28,56 +25,40 @@ const AllStudents = () => {
     refetchOnWindowFocus: true,
   });
 
-  // Update total pages when data changes
-  useEffect(() => {
-    if (data?.totalPages) {
-      setPagination((prev) => ({ ...prev, totalPages: data.totalPages }));
-    }
-  }, [data]);
-
   // Delete student mutation
   const deleteStudentMutation = useMutation({
     mutationFn: (id) => deleteApi(`deleteStudent/${id}`),
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries(["students"]);
-    // },
-    onSuccess: () =>
-      queryClient.invalidateQueries(["students", pagination.currentPage]),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['students'] }),
+        toast.success("Student deleted successfully!", {
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message || "Failed to delete student. Please try again.", {
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    },
   });
 
-  // Handle pagination
-  const handlePageChange = (page) => {
-    setPagination((prev) => ({ ...prev, currentPage: page }));
-  };
+
 
   // Handle search input change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to the first page on a new search
   };
 
-  // Handle search submission
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) {
-      setSearchData(null);
-      return;
-    }
 
-    try {
-      const response = await getApi(`searchStudents/${searchTerm}`, {
-        status: "inactive",
-      });
-      setSearchData(response);
-    } catch (error) {
-      console.error("Error searching students:", error);
-    }
-  };
 
-  // Clear search when pagination changes
-  useEffect(() => {
-    setSearchData(null);
-    setSearchTerm("");
-  }, [pagination.currentPage]);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -91,28 +72,54 @@ const AllStudents = () => {
       />
     );
   }
+  // Filter students based on the search term
+  const filteredStudents = data.filter((student) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      String(student.id).toLowerCase().includes(term) ||
+      student.name.toLowerCase().includes(term) ||
+      (student.fatherName &&
+        student.fatherName.toLowerCase().includes(term)) ||
+      (student.motherName &&
+        student.motherName.toLowerCase().includes(term)) ||
+      (student.courseName &&
+        student.courseName.toLowerCase().includes(term)) ||
+      (student.mobileNumber && student.mobileNumber.toLowerCase().includes(term))
+    );
+  });
 
+  // Calculate pagination values
+  const itemsPerPage = 20;
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredStudents.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
   return (
     <div id="allStudent">
       <div className="allStudentContainer flex flex-col">
         <StudentHeader
           searchTerm={searchTerm}
           onSearchChange={handleSearchChange}
-          onSearchSubmit={handleSearch}
+          status="inactive"
         />
 
         <div className="studentTable">
           <StudentTable
-            students={searchData && searchTerm ? searchData : data.students}
+            students={currentItems}
             onDeleteStudent={(id) => deleteStudentMutation.mutate(id)}
+            searchTerm={searchTerm}
           />
         </div>
 
         <div className="studentPagination">
-          {pagination.totalPages > 1 && (
+          {totalPages > 1 && (
             <Pagination
-              pagination={pagination}
-              onPageChange={handlePageChange}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+              totalPages={totalPages}
             />
           )}
         </div>
@@ -122,3 +129,6 @@ const AllStudents = () => {
 };
 
 export default AllStudents;
+
+
+

@@ -5,9 +5,10 @@ import "./index.css";
 import App from "./App.jsx";
 import { AppWrapper } from "./components/common/PageMeta.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
-
-// 1️⃣ Create the client once
-
+import BG from "./context/backgroundContext";
+import AuthProvider from "./context/authContext";
+import KeybindingsProvider from "./context/keyContext.jsx"
+import { BrowserRouter } from "react-router";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -19,12 +20,20 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AppWrapper>
-          <App />
-        </AppWrapper>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+            <KeybindingsProvider>
+              <BG>
+                <AppWrapper>
+                  <App />
+                </AppWrapper>
+              </BG>
+            </KeybindingsProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </StrictMode>
 );
