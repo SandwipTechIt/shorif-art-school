@@ -5,7 +5,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     <div className="flex items-center justify-center gap-2 my-6">
       {/* Previous Button */}
       <button
-        className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 text-gray-600 transition-all duration-200 shadow-sm hover:bg-gray-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+        className="flex items-center justify-center w-10 h-10 rounded-lg bg-white text-gray-600 transition-all duration-200 shadow-sm hover:bg-gray-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
@@ -35,7 +35,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                 onClick={() => onPageChange(pageNumber)}
                 className={`flex items-center justify-center min-w-[2.5rem] h-10 px-3 rounded-lg transition-all duration-200 shadow-sm ${currentPage === pageNumber
                     ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold shadow-md"
-                    : "bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 hover:shadow-md"
+                    : "bg-white text-gray-700 font-medium hover:bg-gray-200 hover:shadow-md"
                   }`}
                 aria-label={`Page ${pageNumber}`}
                 aria-current={
@@ -51,7 +51,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
       {/* Next Button */}
       <button
-        className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 text-gray-600 transition-all duration-200 shadow-sm hover:bg-gray-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+        className="flex items-center justify-center w-10 h-10 rounded-lg bg-white text-gray-600 transition-all duration-200 shadow-sm hover:bg-gray-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"

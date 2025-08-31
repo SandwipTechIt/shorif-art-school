@@ -18,6 +18,7 @@ import EditCourse from "./pages/course/editCourse";
 
 import AddStudent from "./pages/student/addStudent";
 import AllStudents from "./pages/student/allStudent";
+import ActiveStudent from "./pages/student/activeStudent";
 import InActiveStudent from "./pages/student/inActiveStudent";
 import PassedStudent from "./pages/student/passedStudent";
 import ShowStudent from "./pages/student/showStudent";
@@ -26,6 +27,7 @@ import EditStudent from "./pages/student/editStudent";
 import Payment from "./pages/payment/payment";
 import AddPayment from "./pages/payment/addPayment";
 import AllPayment from "./pages/payment/allPayment";
+import DuePayment from "./pages/payment/duePayment";
 
 
 
@@ -53,10 +55,10 @@ export default function App() {
               <Route path="/course/add" element={<AddCourse />} />
               <Route path="/course/edit/:id" element={<EditCourse />} />
               {/* Student routes */}
-              <Route path="/student/active" element={<AllStudents />} />
+              <Route path="/student/all" element={<AllStudents />} />
+              <Route path="/student/active" element={<ActiveStudent />} />
               <Route path="/student/inactive" element={<InActiveStudent />} />
               <Route path="/student/completed" element={<PassedStudent />} />
-              <Route path="/student/all" element={<AllStudents />} />
               <Route path="/student/add" element={<AddStudent />} />
               <Route path="/student/view/:id" element={<ShowStudent />} />
               <Route path="/student/edit/:id" element={<EditStudent />} />
@@ -64,6 +66,7 @@ export default function App() {
               <Route path="/payment" element={<Payment />} />
               <Route path="/payment/add/:id" element={<AddPayment />} />
               <Route path="/payment/all" element={<AllPayment />} />
+              <Route path="/payment/due" element={<DuePayment />} />
               {/* Message routes */}
               <Route path="/message/main" element={<MainMessage />} />  
               <Route path="/message/whatsapp" element={<WhatsappMessage />} />

@@ -1,10 +1,11 @@
+import mongoose from "mongoose";
 import Student from "../models/student.model.js";
 import Payment from "../models/payment.model.js";
 import Invoice from "../models/invoice.model.js";
-import PaymentService from "../services/paymentService.js";
 import { createError } from "../utils/error.js";
 import { getStudentEnrolledCourseName } from "../helper/getStudentEnrolledCourseName.js";
-import mongoose from "mongoose";
+import { getMonthsBetween, getTotalPaid } from "../helper/dues.js";
+
 
 export const getStudentPayment = async (req, res, next) => {
   try {
@@ -33,6 +34,7 @@ export const getStudentPayment = async (req, res, next) => {
     return next(createError(500, error.message || "Internal server error"));
   }
 };
+
 
 export const createPayment = async (req, res, next) => {
 
@@ -94,7 +96,7 @@ export const getAllPayments = async (req, res, next) => {
   try {
     const payments = await Invoice.find().skip(skip).limit(limit).sort({ createdAt: -1 }).populate({
       path: "studentId",
-      select: "name fatherName mobileNumber createdAt"
+      select: "name fatherName mobileNumber createdAt img"
     })
 
     const totalPages = Math.ceil((await Invoice.countDocuments()) / limit);
@@ -114,6 +116,7 @@ export const getAllPayments = async (req, res, next) => {
       totalPages,
     });
   } catch (error) {
+    console.log(error);
     return next(createError(500, error.message || "Internal server error"));
   }
 };
@@ -138,17 +141,15 @@ export const searchPayments = async (req, res, next) => {
 
     if (searchQuery) {
       if (mongoose.Types.ObjectId.isValid(searchQuery)) {
-        console.log("valid");
         query._id = searchQuery;
       } else {
-        console.log("invalid");
         query.studentID = searchQuery;
       }
     }
 
     const payments = await Invoice.find(query).sort({ createdAt: -1 }).populate({
       path: "studentId",
-      select: "name fatherName mobileNumber createdAt"
+      select: "name fatherName mobileNumber createdAt img"
     });
 
     const paymentsWithCourseNames = await Promise.all(payments.map(async (payment) => {
@@ -168,6 +169,8 @@ export const searchPayments = async (req, res, next) => {
     return next(createError(500, error.message || "Internal server error"));
   }
 };
+
+
 
 export const deletePayment = async (req, res, next) => {
   try {
@@ -189,42 +192,117 @@ export const deletePayment = async (req, res, next) => {
 
 
 export const getAllDues = async (req, res, next) => {
-  const { fromDate, toDate, searchQuery } = req.body;
+  const page = parseInt(req.query.page) || 1;
+  const limit = 5;
+  const skip = (page - 1) * limit;
   try {
-    
-    const currentMonth=new Date().getMonth();
-    const currentYear=new Date().getFullYear();
-    const studentsIds=await Student.find({}).select("_id");
-
-    const payments=await Payment.find({month:currentMonth,year:currentYear,studentId:{$in:studentsIds}});
+    const students = await Student.find({})
+      .skip(skip).limit(limit).sort({ createdAt: -1 }).select("name id  img mobileNumber whatsAppNumber createdAt")
 
 
+    const studentsWithDues = await Promise.all(
+      students.map(async (student) => {
+        const amountPaid = await getTotalPaid(student._id.toString());
+        const currentDate = new Date();
+        const monthsEnrolled = (currentDate.getFullYear() - student.createdAt.getFullYear()) * 12 +
+          (currentDate.getMonth() - student.createdAt.getMonth()) + 1;
+        const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id.toString());
 
+        const totalExpected = totalFee * monthsEnrolled;
+        const outstandingDues = totalExpected - amountPaid;
+
+
+        const studentObj = student.toObject(); // or student.toJSON()
+        studentObj.courseNames = courseNames;
+        studentObj.dues = outstandingDues;
+
+
+
+        return studentObj;
+      })
+    );
+
+    const studentsWithOutstandingDues = studentsWithDues.filter(student => student.dues > 0);
+
+    const totalPages = Math.ceil((await Student.countDocuments()) / limit);
 
     return res.status(200).json({
       success: true,
-      data: payments,
+      data: studentsWithOutstandingDues,
+      totalPages
     });
   } catch (error) {
     return next(createError(500, error.message || "Internal server error"));
   }
 };
 
-// export const getStudentPaymentHistory = async (req, res, next) => {
-//   try {
-//     const { studentId, enrollmentId } = req.params;
 
-//     const result = await PaymentService.getStudentPaymentHistory(studentId, enrollmentId);
 
-//     if (!result.success) {
-//       return next(createError(400, result.message));
-//     }
+export const searchDues = async (req, res, next) => {
 
-//     return res.status(200).json({
-//       success: true,
-//       data: result.data
-//     });
-//   } catch (error) {
-//     return next(createError(500, error.message || "Internal server error"));
-//   }
-// };
+  const { fromDate, toDate, searchQuery } = req.body;
+
+  try {
+    const from = fromDate ? new Date(fromDate) : new Date(2025, 8);
+    const to = toDate ? new Date(toDate) : new Date();
+
+    const startMonth = from.getMonth();
+    const startYear = from.getFullYear();
+
+    const endMonth = to.getMonth();
+    const endYear = to.getFullYear();
+
+    const range = getMonthsBetween(startMonth, startYear, endMonth, endYear);
+
+    const query = {
+      status: "active"
+    }
+    if (searchQuery) {
+      query.id = searchQuery
+    }
+    // 1. All student ids that should pay
+    const allStudentIds = await Student.find(query).distinct('_id');
+
+    // 2. Students that have **any** payment in the range
+    const paidAny = await Payment.aggregate([
+      {
+        $match: {
+          studentId: { $in: allStudentIds },
+          $or: range
+        }
+      },
+      {
+        $group: {
+          _id: '$studentId'
+        }
+      }
+    ]);
+
+
+    const unpaidStudents = await Student.find({
+      _id: { $nin: paidAny },
+      ...query
+    });
+
+    const unpaidStudentsWithCourseNames = await Promise.all(
+      unpaidStudents.map(async (student) => {
+        const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id.toString());
+        return {
+          ...student.toObject(),
+          courseNames,
+          totalFee,
+          dues: totalFee * range.length,
+        };
+      })
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: unpaidStudentsWithCourseNames,
+    });
+  } catch (error) {
+    return next(createError(500, error.message || "Internal server error"));
+  }
+
+
+};

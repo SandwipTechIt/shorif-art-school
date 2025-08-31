@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import { getApi, deleteApi } from "../../api";
 
-import PaymentHeader from "../../components/payment/paymentHeader";
-import PaymentsTable from "../../components/payment/paymentsTable";
+import DueHeader from "../../components/payment/dueHeader";
+import DueTable from "../../components/payment/dueTable";
 import { Pagination } from "../../components/ui/pagination";
 import Loader from "../../components/ui/loader";
 import ErrorMessage from "../../components/ui/errorMessage";
@@ -15,8 +15,8 @@ export default () => {
     const [searchResults, setSearchResults] = useState(null);
 
     const { data: payments, isLoading, isError, error, refetch } = useQuery({
-        queryKey: ["payments", currentPage],
-        queryFn: () => getApi("/getAllPayments?page=" + currentPage),
+        queryKey: ["duePayments", currentPage],
+        queryFn: () => getApi("getAllDues?page=" + currentPage),
         refetchOnMount: "always",
         refetchOnWindowFocus: true
     });
@@ -44,11 +44,11 @@ export default () => {
     if (isError) return <ErrorMessage message={error.message || "Unable to fetch student data"} />;
     return (
         <div>
-            <PaymentHeader onSearch={setSearchResults} />
+            <DueHeader onSearch={setSearchResults} />
             {searchResults ? (
-                <PaymentsTable students={searchResults} onDeleteStudent={handleDeleteRequest} />
+                <DueTable students={searchResults} onDeleteStudent={handleDeleteRequest} />
             ) : (
-                <PaymentsTable students={payments.data} onDeleteStudent={handleDeleteRequest} />
+                <DueTable students={payments.data} onDeleteStudent={handleDeleteRequest} />
             )}
             <div className="studentPagination">
                 {totalPages > 1 && !searchResults && (

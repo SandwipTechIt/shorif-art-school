@@ -77,7 +77,7 @@ export default ({ students, searchTerm }) => {
                                     Image
                                 </span>
                                 <img
-                                    src={student.img || "/default.png"}
+                                    src={student?.img || "/default.png"}
                                     className="h-[50px] w-[50px] object-contain"
                                     alt={student.name || "Student"}
                                 />

@@ -21,7 +21,8 @@ const navItems: NavItem[] = [
     icon: "fas fa-user",
     subItems: [
       { name: "Add Student", path: "/student/add" },
-      { name: "All Student", path: "/student/active" },
+      { name: "All Student", path: "/student/all" },
+      { name: "Active Student", path: "/student/active" },
       { name: "InActive Student", path: "/student/inactive" },
       { name: "Passed Student", path: "/student/completed" },
     ],

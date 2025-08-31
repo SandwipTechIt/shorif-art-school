@@ -10,7 +10,8 @@ import {
   getAllPayments,
   deletePayment,
   searchPayments,
-  getAllDues
+  getAllDues,
+  searchDues
 } from "../controllers/payment.controller.js";
 
 // Legacy routes (for backward compatibility)
@@ -21,5 +22,6 @@ Router.post("/searchPayments", middleware, searchPayments);
 Router.delete("/deletePayment/:studentId", middleware, deletePayment);
 
 Router.get("/getAllDues", middleware, getAllDues);
+Router.post("/searchDues", middleware, searchDues);
 
 export default Router;

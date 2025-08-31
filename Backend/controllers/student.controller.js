@@ -262,7 +262,7 @@ export const createStudent = async (req, res) => {
 
 const createManyStudents = async () => {
   try {
-    const students = generateRandomStudents(200);
+    const students = generateRandomStudents(10);
     for (let i = 0; i < students.length; i++) {
       if (typeof students[i].courses === 'string') {
         students[i].courses = JSON.parse(students[i].courses);
@@ -286,11 +286,15 @@ const createManyStudents = async () => {
 }
 
 export const getStudents = async (req, res) => {
-  const status = req.query.status || "active";
+  const query = {};
+  if (req.query.status) {
+    query.status = req.query.status;
+  }
+
 
   try {
 
-    const students = await Student.find({ status })
+    const students = await Student.find(query)
       .select("id img name fatherName motherName mobileNumber whatsAppNumber createdAt courseId")
       .sort({ _id: -1 })
       .limit(200)

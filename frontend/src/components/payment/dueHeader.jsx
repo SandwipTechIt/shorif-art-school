@@ -15,22 +15,16 @@ function SearchComponent({ onSearch }) {
             return;
         }
         try {
-            const response = await postApi("/searchPayments", { fromDate, toDate, searchQuery });
+            const response = await postApi("/searchDues", { fromDate, toDate, searchQuery });
             onSearch(response?.data);
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Unable to search payments");
+            toast.error(error?.response?.data?.message || "Unable to search dues");
         }
     };
 
-    const handelReset = () => {
-        setFromDate("");
-        setToDate("");
-        setSearchQuery("");
-        onSearch(null);
-    }
     return (
         <div className="p-6 bgGlass rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">Search Payment</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Search Due</h2>
             <form
                 className="flex flex-col md:flex-row lg:items-end gap-4"
                 onSubmit={handleSearch}
@@ -39,9 +33,10 @@ function SearchComponent({ onSearch }) {
                     <label className="block text-sm font-medium text-gray-700 mb-1">From</label>
                     <DatePicker
                         selected={fromDate}
-                        onChange={(date) => setFromDate(date)}
+                        onChange={(date) => {setFromDate(date); onSearch(null)}}
                         showMonthYearPicker
                         dateFormat="MMMM yyyy"
+                        minDate={new Date(2025, 8)}
                         maxDate={new Date()}
                         placeholderText="Select from month and year"
                         className="w-full px-3 py-2 border border-primary rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -62,6 +57,7 @@ function SearchComponent({ onSearch }) {
                             } else {
                               setToDate(null);
                             }
+                            onSearch(null)
                           }}
                         showMonthYearPicker
                         dateFormat="MMMM yyyy"
@@ -77,7 +73,7 @@ function SearchComponent({ onSearch }) {
                     <input
                         type="text"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => {setSearchQuery(e.target.value); onSearch(null)}}
                         placeholder="Enter search query"
                         className="w-full px-3 py-2 border border-primary rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
@@ -87,13 +83,6 @@ function SearchComponent({ onSearch }) {
                     className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                     Search
-                </button>
-                <button
-                    type="button"
-                    onClick={handelReset}
-                    className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                >
-                    Reset
                 </button>
             </form>
         </div>
