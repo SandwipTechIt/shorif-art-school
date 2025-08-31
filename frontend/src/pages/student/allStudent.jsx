@@ -16,7 +16,8 @@ const AllStudents = () => {
   // Fetch students data using React Query
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["students"],
-    queryFn: () => getApi(`getStudents`),
+    queryFn: () =>
+      getApi(`getStudents`),
     keepPreviousData: true,
     refetchOnMount: "always",
     refetchOnWindowFocus: true,
@@ -100,7 +101,7 @@ const AllStudents = () => {
         <StudentHeader
           searchTerm={searchTerm}
           onSearchChange={handleSearchChange}
-          status="All"
+          status="inactive"
         />
 
         <div className="studentTable">
@@ -126,3 +127,6 @@ const AllStudents = () => {
 };
 
 export default AllStudents;
+
+
+

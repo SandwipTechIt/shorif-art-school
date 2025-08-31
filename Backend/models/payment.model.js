@@ -11,12 +11,6 @@ const paymentSchema = new mongoose.Schema(
     month: {
       type: Number,
       required: true,
-      // min: 0,
-      // max: 11,
-      // validate: {
-      //   validator: Number.isInteger,
-      //   message: "Month must be an integer between 0 and 11",
-      // },
     },
     year: {
       type: Number,

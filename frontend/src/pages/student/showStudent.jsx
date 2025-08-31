@@ -276,6 +276,21 @@ const ShowStudent = () => {
                     </h2>
 
                     <div className="space-y-4 grid grid-cols-1 md:grid-cols-2  gap-2">
+
+                      <div className="flex items-start">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
+                          <i className="fas fa-id-card text-blue-600"></i>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 dark:text-white">
+                            ID
+                          </p>
+                          <p className="font-medium text-gray-800 dark:text-white">
+                            {student.id}
+                          </p>
+                        </div>
+                      </div>
+
                       <div className="flex items-start">
                         <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
                           <i className="fas fa-school text-blue-600"></i>
@@ -315,6 +330,20 @@ const ShowStudent = () => {
                           </p>
                           <p className="font-medium text-gray-800 dark:text-white">
                             {student.enrollments?.map(e => e.courseName).join(', ')}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
+                          <i className="fas fa-money-bill-1 text-blue-600"></i>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 dark:text-white">
+                            Fee
+                          </p>
+                          <p className="font-medium text-gray-800 dark:text-white">
+                            {student.enrollments?.reduce((total, enrollment) => total + Number(enrollment.fee), 0)}
                           </p>
                         </div>
                       </div>

@@ -74,11 +74,15 @@ const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
 export const StudentTable = ({ students, onDeleteStudent, searchTerm }) => {
 
   const getHighlightedText = (text, highlight) => {
-    if (!highlight.trim()) {
-      return <span>{text}</span>;
+    const safeText = text ? String(text) : "";
+
+    if (!highlight.trim() || !safeText) {
+      return <span>{safeText}</span>;
     }
+
     const regex = new RegExp(`(${highlight})`, 'gi');
-    const parts = text.split(regex);
+    const parts = safeText.split(regex);
+
     return (
       <span>
         {parts.map((part, i) =>
@@ -160,7 +164,7 @@ export const StudentTable = ({ students, onDeleteStudent, searchTerm }) => {
                 <img
                   src={student.img || "/default.png"}
                   className="h-[50px] w-[50px] object-contain"
-                  alt={student.name}
+                  alt={student.name || "Student"}
                 />
               </td>
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
@@ -193,6 +197,7 @@ export const StudentTable = ({ students, onDeleteStudent, searchTerm }) => {
                   Course
                 </span>
                 {getHighlightedText(student.courseName, searchTerm)}
+                {/* {student.courseName} */}
               </td>
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
@@ -204,7 +209,7 @@ export const StudentTable = ({ students, onDeleteStudent, searchTerm }) => {
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
                   Admit Date
                 </span>
-                {formateDate(student.createdAt)}
+                {student.createdAt ? formateDate(student.createdAt) : "N/A"}
               </td>
               {/* Options/Buttons Cell */}
               <td className="flex items-center justify-between p-2 text-right md:table-cell md:p-4 md:text-left"  onClick={(e) => e.stopPropagation()}>

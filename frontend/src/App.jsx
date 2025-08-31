@@ -23,7 +23,7 @@ import PassedStudent from "./pages/student/passedStudent";
 import ShowStudent from "./pages/student/showStudent";
 import EditStudent from "./pages/student/editStudent";
 
-
+import Payment from "./pages/payment/payment";
 import AddPayment from "./pages/payment/addPayment";
 import AllPayment from "./pages/payment/allPayment";
 
@@ -61,7 +61,8 @@ export default function App() {
               <Route path="/student/view/:id" element={<ShowStudent />} />
               <Route path="/student/edit/:id" element={<EditStudent />} />
               {/* Payment routes */}
-              <Route path="/payment/add" element={<AddPayment />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/payment/add/:id" element={<AddPayment />} />
               <Route path="/payment/all" element={<AllPayment />} />
               {/* Message routes */}
               <Route path="/message/main" element={<MainMessage />} />  

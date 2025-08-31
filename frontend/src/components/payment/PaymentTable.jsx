@@ -1,147 +1,136 @@
-// PaymentTable.js
-import React, { useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router";
 import { formateDate } from "../../utiils/formateDate";
-import { useReactToPrint } from "react-to-print";
 
 
-const Invoice = ({ student, invoiceId, payment, discount, due, date }) => {
+export default ({ students, searchTerm }) => {
+
+    const getHighlightedText = (text, highlight) => {
+        const safeText = text ? String(text) : "";
+
+        if (!highlight.trim() || !safeText) {
+            return <span>{safeText}</span>;
+        }
+
+        const regex = new RegExp(`(${highlight})`, 'gi');
+        const parts = safeText.split(regex);
+
+        return (
+            <span>
+                {parts.map((part, i) =>
+                    regex.test(part) ? (
+                        <span key={i} className="bg-yellow-200">
+                            {part}
+                        </span>
+                    ) : (
+                        part
+                    )
+                )}
+            </span>
+        );
+    };
+
+    const navigate = useNavigate()
+
+
+    if (!students || students.length < 1) {
+        return (
+            <div className="min-h-[240px] flex flex-col items-center justify-center text-slate-500">
+                <i className="fa-solid fa-users-slash text-5xl mb-4 text-slate-300" />
+                <h2 className="text-xl font-semibold mb-2">No students found</h2>
+            </div>
+        );
+    }
     return (
-        <div className="p-6">
-            <div className="flex justify-between">
-                <p className="text-lg font-semibold">Student Payment Invoice</p>
-                <p className="text-lg font-semibold">Date: <span className="font-normal">{formateDate(date)}</span></p>
-            </div>
-            <hr className="my-4" style={{ color: "black" }} />
-            <div className="grid grid-cols-2 gap-4">
-                <p className="font-semibold">Student Name: <span className="font-normal">{student?.name}</span></p>
-                <p className="font-semibold">Invoice ID: <span className="font-normal">{invoiceId}</span></p>
-                <p className="font-semibold">Father Name: <span className="font-normal">{student?.fatherName}</span></p>
-                <p className="font-semibold">Payment: <span className="font-normal">{payment}</span></p>
-                <p className="font-semibold">Course: <span className="font-normal">{student?.courseId.name}</span></p>
-                <p className="font-semibold">Discount: <span className="font-normal">{discount}</span></p>
-                <p className="font-semibold">Course Fee: <span className="font-normal">{student?.courseId.fee}</span></p>
-                <p className="font-semibold">Current Due: <span className="font-normal">{due}</span></p>
-            </div>
-            <hr className="my-4" style={{ color: "black" }} />
-            <div className="flex items-center justify-evenly">
-                <div>
-                    <p className="text-center mt-2">__________________</p>
-                    <p className="text-center">Guardian Signature</p>
-                </div>
-                <div>
-                    <p className="text-center mt-2">__________________</p>
-                    <p className="text-center">Student Signature</p>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-const paymentSummary = ({ courseFee, studentPayments, student }) => {
-
-    const admissionDate = new Date(student.createdAt);
-    const currentDate = new Date();
-
-    // Calculate months from admission to current
-    const monthsFromAdmission = (currentDate.getFullYear() - admissionDate.getFullYear()) * 12 +
-        (currentDate.getMonth() - admissionDate.getMonth());
-
-    const paidMonths = studentPayments.length;
-    const totalPaid = studentPayments.reduce((sum, p) => sum + (p.amountPaid || 0), 0);
-    const totalDiscount = studentPayments.reduce((sum, p) => sum + (p.discount || 0), 0);
-    const dueMonths = Math.max(0, monthsFromAdmission - paidMonths);
-    const totalDue = dueMonths * courseFee;
-
-    return totalDue;
-};
-
-const MONTH_NAMES = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
-const PaymentTable = ({ payments, onPrint }) => {
-    const contentRef = useRef(null);
-    const reactToPrintFn = useReactToPrint({ contentRef });
-    return (
-        <table className="w-full table-auto">
-            <thead>
-                <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Month</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Year</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Student Name</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Mobile Number</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Amount</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Discount</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Date</th>
-                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Options</th>
-                </tr>
-            </thead>
-            <tbody>
-                {payments.map((payment) => (
-                    payment.studentId != null
-                        ? (
-                            <tr key={payment._id} className="border-b border-gray-100 hover:bg-gray-50">
-                                <td className="py-3 px-4">{MONTH_NAMES[payment.month]}</td>
-                                <td className="py-3 px-4">{payment.year}</td>
-                                <td className="py-3 px-4">{payment.studentId.name}</td>
-                                <td className="py-3 px-4">{payment.studentId.mobileNumber}</td>
-                                <td className="py-3 px-4">৳{payment.amountPaid}</td>
-                                <td className="py-3 px-4">৳{payment.discount || 0}</td>
-                                <td className="py-3 px-4 text-gray-600">
-                                    {formateDate(payment.createdAt)}
-                                </td>
-
-                                <td className="py-3 px-4">
-                                    <div className="hidden">
-                                        <div ref={contentRef}>
-                                            <Invoice
-                                                student={payment.studentId}
-                                                invoiceId={payment._id}
-                                                payment={payment.amountPaid}
-                                                discount={payment.discount}
-                                                date={payment.createdAt}
-                                                due={paymentSummary({ courseFee: payment.studentId.courseId.fee, studentPayments: payments, student: payment.studentId })}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="flex space-x-2">
-                                        <button
-                                            onClick={reactToPrintFn}
-                                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm"
-                                        >
-                                            Print
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        )
-                        : (<tr key={payment._id} className="border-b border-gray-100 hover:bg-gray-50">
-                            <td className="py-3 px-4">{MONTH_NAMES[payment.month]}</td>
-                            <td className="py-3 px-4">{payment.year}</td>
-                            <td className="py-3 px-4">Not Found</td>
-                            <td className="py-3 px-4">Not Found</td>
-                            <td className="py-3 px-4">{payment.amountPaid}</td>
-                            <td className="py-3 px-4">{payment.discount}</td>
-                            <td className="py-3 px-4 text-gray-600">
-                                {formateDate(payment.createdAt)}
+        <div
+            id="product-table"
+            className="m-0 overflow-x-auto rounded-none shadow-none md:m-2 md:rounded-lg md:shadow-md"
+        >
+            <table className="w-full border-collapse bg-white dark:bg-gray-800">
+                {/* Desktop Table Header */}
+                <thead className="hidden md:table-header-group">
+                    <tr>
+                        {/* <th className="bg-[#721c24] p-4 text-left text-white">Image</th> */}
+                        <th className="bg-[#721c24] p-4 text-left text-white">Img</th>
+                        <th className="bg-[#721c24] p-4 text-left text-white">Id</th>
+                        <th className="bg-[#721c24] p-4 text-left text-white">Name</th>
+                        <th className="bg-[#721c24] p-4 text-left text-white">Father</th>
+                        <th className="bg-[#721c24] p-4 text-left text-white">Mother</th>
+                        <th className="bg-[#721c24] p-4 text-left text-white">Course</th>
+                        <th className="bg-[#721c24] p-4 text-left text-white">Mobile</th>
+                        <th className="w-[150px] bg-[#721c24] p-4 text-left text-white">
+                            Admit Date
+                        </th>
+                    </tr>
+                </thead>
+                {/* Table Body */}
+                <tbody className="block md:table-row-group">
+                    {students.map((student) => (
+                        <tr
+                            key={student._id}
+                            onClick={() => navigate(`/payment/add/${student._id}`)}
+                            className="mb-4 block cursor-pointer rounded-lg border border-b-2 hover:bg-gray-50 dark:hover:bg-gray-500 even:bg-gray-50 dark:even:bg-gray-dark md:mb-0 md:table-row md:border-0 md:border-b dark:text-white"
+                        >
+                            {/* Image Cell */}
+                            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
+                                <span className="mr-4 font-semibold text-gray-700 md:hidden">
+                                    Image
+                                </span>
+                                <img
+                                    src={student.img || "/default.png"}
+                                    className="h-[50px] w-[50px] object-contain"
+                                    alt={student.name || "Student"}
+                                />
                             </td>
-
-                            <td className="py-3 px-4">
-                                <div className="flex space-x-2">
-                                    <button
-                                        disabled
-                                        className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm"
-                                    >
-                                        Print
-                                    </button>
-                                </div>
+                            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
+                                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
+                                    Id
+                                </span>
+                                {getHighlightedText(String(student.id), searchTerm)}
+                            </td>
+                            {/* Data Cells with Mobile Labels */}
+                            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
+                                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
+                                    Name
+                                </span>
+                                {getHighlightedText(student.name, searchTerm)}
+                            </td>
+                            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
+                                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
+                                    Father
+                                </span>
+                                {getHighlightedText(student.fatherName, searchTerm)}
+                            </td>
+                            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
+                                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
+                                    Mother
+                                </span>
+                                {getHighlightedText(student.motherName, searchTerm)}
+                            </td>
+                            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
+                                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
+                                    Course
+                                </span>
+                                {getHighlightedText(student.courseName, searchTerm)}
+                                {/* {student.courseName} */}
+                            </td>
+                            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
+                                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
+                                    Mobile
+                                </span>
+                                {getHighlightedText(student.mobileNumber, searchTerm)}
+                            </td>
+                            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
+                                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
+                                    Admit Date
+                                </span>
+                                {student.createdAt ? formateDate(student.createdAt) : "N/A"}
                             </td>
                         </tr>
-                        )
-                ))}
-            </tbody>
-        </table>
+                    ))}
+                </tbody>
+            </table>
+
+        </div>
     );
 };
-
-export default PaymentTable;

@@ -1,118 +1,64 @@
-// StudentPayment.js
-import React, { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getApi } from "../../api.jsx";
-import PaymentTable from "../../components/payment/PaymentTable";
-import PaymentCard from "../../components/payment/PaymentCard";
-import Pagination from "../../components/payment/Pagination";
-import SearchForm from "../../components/payment/SearchForm";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import { getApi, deleteApi } from "../../api";
 
-const StudentPayment = () => {
+import PaymentHeader from "../../components/payment/paymentHeader";
+import PaymentsTable from "../../components/payment/paymentsTable";
+import { Pagination } from "../../components/ui/pagination";
+import Loader from "../../components/ui/loader";
+import ErrorMessage from "../../components/ui/errorMessage";
+export default () => {
+
     const [currentPage, setCurrentPage] = useState(1);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [isSearching, setIsSearching] = useState(false);
-    const queryClient = useQueryClient();
+    const [totalPages, setTotalPages] = useState("");
+    const [searchResults, setSearchResults] = useState(null);
 
-    const { data: allPaymentsData, isLoading: allPaymentsLoading, isError: allPaymentsError, error: allPaymentsErrorMsg } = useQuery({
-        queryKey: ["allPayments", currentPage],
-        queryFn: () => getApi(`getAllPayments?page=${currentPage}`),
-        enabled: !isSearching,
-        keepPreviousData: true,
+    const { data: payments, isLoading, isError, error, refetch } = useQuery({
+        queryKey: ["payments", currentPage],
+        queryFn: () => getApi("/getAllPayments?page=" + currentPage),
         refetchOnMount: "always",
-        refetchOnWindowFocus: true,
+        refetchOnWindowFocus: true
     });
 
-    // Query for search by invoice ID
-    const { data: searchData, isLoading: searchLoading, isError: searchError, error: searchErrorMsg } = useQuery({
-        queryKey: ["searchPayment", searchTerm],
-        queryFn: () => getApi(`getAllPaymentByInvoice/${searchTerm}`),
-        enabled: isSearching && searchTerm.length > 0,
-        refetchOnMount: "always",
-        refetchOnWindowFocus: true,
-    });
-
-    const handleSearch = (term) => {
-        setSearchTerm(term);
-        setIsSearching(!!term);
-        setCurrentPage(1);
-    };
-
-    const handlePrint = (invoiceId) => {
-        window.open(`/print-invoice/${invoiceId}`, '_blank');
-    };
+    useEffect(() => {
+        if (payments) {
+            setTotalPages(payments.totalPages);
+        }
+    }, [payments]);
 
 
 
-    const handleClearSearch = () => {
-        setSearchTerm("");
-        setIsSearching(false);
-        setCurrentPage(1);
-    };
-
-    // Determine which data to use and loading/error states
-    const isLoading = isSearching ? searchLoading : allPaymentsLoading;
-    const isError = isSearching ? searchError : allPaymentsError;
-    const error = isSearching ? searchErrorMsg : allPaymentsErrorMsg;
-    const data = isSearching ? searchData : allPaymentsData;
-
-    if (isLoading) return <div className="text-center py-8">Loading payments...</div>;
-    if (isError) return <div className="text-center py-8 text-red-500">Error: {error.message}</div>;
-    
-    // Handle different data structures for search vs all payments
-    const payments = isSearching ? (data?.data ? [data.data] : []) : (data?.data || []);
-    
-    if (!payments.length || !Array.isArray(payments)) return <div className="text-center py-8">No payments found</div>;
-
+    const handleDeleteRequest = async (studentId) => {
+        try {
+            const response = await deleteApi(`deletePayment/${studentId}`);
+            if (response.success) {
+                toast.success(response.message);
+                refetch();
+            }
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Unable to delete student");
+        }
+    }
+    if (isLoading) return <Loader />;
+    if (isError) return <ErrorMessage message={error.message || "Unable to fetch student data"} />;
     return (
-        <div className="bg-white/50 rounded-lg shadow-sm border border-gray-200 p-6 mt-6">
-            <div className="paymentHeader flex flex-col md:flex-row justify-between md:items-center  mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                    {isSearching ? `Search Results for "${searchTerm}"` : "All Payments"}
-                </h2>
-                <div className="flex gap-2">
-                    <SearchForm onSearch={handleSearch} />
-                    {isSearching && (
-                        <button
-                            onClick={handleClearSearch}
-                            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
-                        >
-                            Clear
-                        </button>
-                    )}
-                </div>
-            </div>
-
-            {/* Desktop/Tablet View */}
-            <div className="hidden md:block overflow-x-auto">
-                <PaymentTable
-                    payments={payments || []}
-                    onPrint={handlePrint}
-                />
-            </div>
-
-            {/* Mobile View */}
-            <div className="md:hidden space-y-4">
-                {payments.map((payment) => (
-                    payment.studentId != null ? (
-                        <PaymentCard
-                            key={payment._id}
-                            payment={payment}
-                            onPrint={handlePrint}
-                        />
-                    ) : null
-                ))}
-            </div>
-
-            {/* Only show pagination for all payments, not for search results */}
-            {!isSearching && (
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={data?.totalPages || 1}
-                    onPageChange={setCurrentPage}
-                />
+        <div>
+            <PaymentHeader onSearch={setSearchResults} />
+            {searchResults ? (
+                <PaymentsTable students={searchResults} onDeleteStudent={handleDeleteRequest} />
+            ) : (
+                <PaymentsTable students={payments.data} onDeleteStudent={handleDeleteRequest} />
             )}
+            <div className="studentPagination">
+                {totalPages > 1 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                        totalPages={totalPages}
+                    />
+                )}
+            </div>
         </div>
-    );
-};
-
-export default StudentPayment;
+    )
+}

@@ -33,8 +33,8 @@ export default function KeybindingProvider({ children }) {
       // key code -> path (require ctrl/meta)
       KeyA: '/student/add',      // ctrl+a or ctrl+alt+a
       KeyS: '/student/active',   // ctrl+s or ctrl+alt+s
-      KeyC: '/course/add',       // ctrl+c or ctrl+alt+c
-      KeyP: '/payment/add',      // ctrl+p or ctrl+alt+p
+      // KeyC: '/course/add',       // ctrl+c or ctrl+alt+c
+      KeyP: '/payment',      // ctrl+p or ctrl+alt+p
       KeyT: '/transaction/add',  // ctrl+t or ctrl+alt+t  (may be reserved)
     };
 

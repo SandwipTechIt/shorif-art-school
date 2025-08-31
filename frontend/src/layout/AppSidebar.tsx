@@ -36,10 +36,11 @@ const navItems: NavItem[] = [
   },
   {
     name: "Payment",
-    icon: "fas fa-dollar-sign",
+    icon: "fas fa-money-bill-1",
     subItems: [
-      { name: "Add Payment", path: "/payment/add" },
+      { name: "Add Payment", path: "/payment" },
       { name: "All Payment", path: "/payment/all" },
+      { name: "Due Payment", path: "/payment/due" },
     ],
   },
   {

@@ -204,36 +204,10 @@ import Counter from "../models/studentID.model.js";
 import Payment from "../models/payment.model.js";
 
 import { deleteImage, getImageUrl, getFilenameFromUrl } from "../utils/imageUtils.js";
-import { getStudentEnrolledCourseName } from "../helper/getStudentEnrolledCourseName.js";
+import { getStudentEnrolledCourseName, createEnrollmentsForStudent } from "../helper/getStudentEnrolledCourseName.js";
 
-// Utility function to create enrollments for a student
-const createEnrollmentsForStudent = async (studentId, courses, courseTimes) => {
-  if (!courses?.length) return [];
 
-  const enrollments = [];
 
-  for (let i = 0; i < courses.length; i++) {
-    const courseId = courses[i];
-    const course = await Course.findById(courseId).select('name fee');
-
-    if (!course) continue;
-
-    // Get course time - support both object and array formats
-    const courseTime = courseTimes?.[courseId] || courseTimes?.[i] || 'TBD';
-
-    const enrollment = new Enrollment({
-      studentId,
-      courseName: course.name,
-      courseTime,
-      fee: course.fee,
-    });
-
-    const savedEnrollment = await enrollment.save();
-    enrollments.push(savedEnrollment);
-  }
-
-  return enrollments;
-};
 
 
 export const createStudent = async (req, res) => {
@@ -250,7 +224,7 @@ export const createStudent = async (req, res) => {
 
     const { courses, courseTimes, ...rest } = studentData;
 
-    if (req.files.image.length > 0) {
+    if (req.files?.image?.length > 0) {
       const baseUrl = `${req.protocol}://${req.get("host")}`;
       rest.img = getImageUrl(req.files.image[0].filename, baseUrl)
     }
@@ -264,16 +238,15 @@ export const createStudent = async (req, res) => {
 
 
     const studentEnrollment = await createEnrollmentsForStudent(response._id, courses, courseTimes);
-    
-    const totalFee=studentEnrollment.reduce((total, enrollment) => total + Number(enrollment.fee), 0);
-        
-    const paymentData={
-      studentId:response._id,
-      month:new Date().getMonth(),
-      year:new Date().getFullYear(),
-      amount:totalFee
+    const totalFee = studentEnrollment.reduce((total, enrollment) => total + Number(enrollment.fee), 0);
+
+    const paymentData = {
+      studentId: response._id,
+      month: new Date().getMonth(),
+      year: new Date().getFullYear(),
+      amount: totalFee
     }
-    const payment=new Payment(paymentData);
+    const payment = new Payment(paymentData);
     await payment.save();
 
 
@@ -329,7 +302,9 @@ export const getStudents = async (req, res) => {
     const studentsWithCourseData = await Promise.all(
       students.map(async (student) => {
         const studentObj = student.toObject();
-        studentObj.courseName = await getStudentEnrolledCourseName(student._id);
+        const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id);
+        studentObj.courseName = courseNames;
+        studentObj.totalFee = totalFee;
         return studentObj;
       })
     );
@@ -345,33 +320,29 @@ export const searchStudents = async (req, res) => {
   try {
     const students = await Student.find({
       status,
-      $or: [
-        { name: { $regex: req.params.query, $options: "i" } },
-        { fatherName: { $regex: req.params.query, $options: "i" } },
-        { motherName: { $regex: req.params.query, $options: "i" } },
-        { mobileNumber: { $regex: req.params.query, $options: "i" } },
-        { whatsAppNumber: { $regex: req.params.query, $options: "i" } },
-        { address: { $regex: req.params.query, $options: "i" } },
-        { schoolName: { $regex: req.params.query, $options: "i" } },
-      ],
     })
-      .select("name fatherName motherName mobileNumber createdAt courseId")
-      .populate({
-        path: "courseId",
-        select: "name", // Only fetch the 'name' field from Course
-      })
+      .select("name fatherName motherName mobileNumber createdAt")
+      // .populate({
+      //   path: "courseId",
+      //   select: "name", // Only fetch the 'name' field from Course
+      // })
       .sort({ _id: -1 });
 
-    const transformedStudents = students.map((student) => {
-      const studentObj = student.toObject();
-      if (studentObj.courseId) {
-        studentObj.courseName = studentObj.courseId.name;
-        delete studentObj.courseId; // Remove the original courseID
-      }
-      return studentObj;
-    });
-    res.status(200).json(transformedStudents);
+    // const transformedStudents = students.map((student) => {
+    //   const studentObj = student.toObject();
+    //   if (studentObj) {
+    //     studentObj.courseName = studentObj.courseId.name;
+    //     delete studentObj.courseId; // Remove the original courseID
+    //   }
+    //   return studentObj;
+    // });
+
+    console.log(students);
+
+    res.status(200).json(students);
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({ message: error.message });
   }
 };
@@ -490,6 +461,7 @@ export const updateStudent = async (req, res) => {
     });
 
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       success: false,
       message: error.message
