@@ -1,6 +1,7 @@
 import Student from "../models/student.model.js";
 import Message from "../models/message.model.js";
 import Payment from "../models/payment.model.js";
+import {getStudentEnrolledCourseName} from "../helper/getStudentEnrolledCourseName.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -163,21 +164,18 @@ export const sendDueMessage = async (req, res) => {
         const messageTemplate = await Message.findOne();
 
         const students = await Student.find({ status: "active" })
-            .select("mobileNumber name createdAt courseId")
-            .populate({
-                path: "courseId",
-                select: "fee",
-            });
+            .select("mobileNumber name createdAt ");
+
+
 
         let totalSentMessageAmount = 0;
         for (const student of students) {
-            const studentPayments = await Payment.find({ studentId: student._id }).select("month year amountPaid discount");
-            const { dueMonths, totalDue, dueMonthsNames } = calculatePaymentSummary(student, studentPayments);
+            const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id);
             const message = messageTemplate.message
                 .replace("{{studentName}}", student.name)
-                .replace("{{dueAmount}}", totalDue)
+                .replace("{{dueAmount}}", totalFee)
                 .replace("{{currentMonthNameYear}}", new Date().toLocaleString("bn-BD", { month: "long", year: "numeric" }))
-                .replace("{{monthName}}", dueMonthsNames.join(", "));
+                .replace("{{monthName}}", courseNames);
 
             if (totalDue > 0) {
                 try {

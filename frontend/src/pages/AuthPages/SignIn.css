@@ -176,7 +176,6 @@
   margin-bottom: 2rem;
 }
 .login__button:disabled{
-  background: rgb(235, 229, 229);
   cursor: not-allowed;
 }
 .login__register {

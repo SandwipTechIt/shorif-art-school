@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Student from "../models/student.model.js";
 import Payment from "../models/payment.model.js";
 import Invoice from "../models/invoice.model.js";
+import Transaction from "../models/transaction.model.js";
 import { createError } from "../utils/error.js";
 import { getStudentEnrolledCourseName } from "../helper/getStudentEnrolledCourseName.js";
 import { getMonthsBetween, getTotalPaid } from "../helper/dues.js";
@@ -75,6 +76,17 @@ export const createPayment = async (req, res, next) => {
       paymentIds
     });
     await invoice.save();
+
+
+    const transactionData = {
+      title: "Student Payment",
+      amount: amount,
+      type: "income",
+      createdAt: new Date()
+    }
+    const transaction = new Transaction(transactionData);
+    await transaction.save();
+
     return res.status(201).json({
       success: true,
       message: "Payment created successfully",
@@ -180,6 +192,16 @@ export const deletePayment = async (req, res, next) => {
       return next(createError(404, "Payment not found"));
     }
     const payments = await Payment.deleteMany({ _id: { $in: payment.paymentIds } });
+
+    const transactionData = {
+      title: "Student Payment Cancelled",
+      amount: payment.amount,
+      type: "expense",
+      createdAt: new Date()
+    }
+    const transaction = new Transaction(transactionData);
+    await transaction.save();
+
     return res.status(200).json({
       success: true,
       message: "Payment deleted successfully",
@@ -193,11 +215,11 @@ export const deletePayment = async (req, res, next) => {
 
 export const getAllDues = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = 5;
+  const limit = 20;
   const skip = (page - 1) * limit;
   try {
     const students = await Student.find({})
-      .skip(skip).limit(limit).sort({ createdAt: -1 }).select("name id  img mobileNumber whatsAppNumber createdAt")
+      .skip(skip).limit(limit).sort({ createdAt: 1 }).select("name id  img mobileNumber whatsAppNumber createdAt")
 
 
     const studentsWithDues = await Promise.all(

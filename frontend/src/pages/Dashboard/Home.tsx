@@ -29,7 +29,7 @@ export default function Home() {
       </h1> */}
       {/* <div class=""></div> */}
       <Chart data={statics.last12MonthsPaidAmount} />
-      <Widget students={statics.totalStudents} courses={statics.totalCourses} discount={statics.totalDiscount} paidAmount={statics.totalPaidAmount} />
+      <Widget courseEnrollmentCounts={statics.courseEnrollmentCounts} students={statics.totalStudents} courses={statics.totalCourses} discount={statics.totalDiscount} paidAmount={statics.totalPaidAmount} />
     </div>
   );
 }

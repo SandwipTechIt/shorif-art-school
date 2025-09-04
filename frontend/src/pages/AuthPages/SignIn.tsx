@@ -40,7 +40,9 @@ export default () => {
             const response = await postApi("loginAdmin", loginData);
             setState((prev)=>({...prev,admin:response,islogin:true}));
         } catch (error) {
-            setState((prev)=>({...prev,error:true}));
+            console.log(error.message);
+            const message = error.response.data.error || error.message || "Your name and password do not match";
+            setState((prev)=>({...prev,error:message}));
         } finally {
             setState((prev)=>({...prev,isFeatching:false}));
         }
@@ -89,13 +91,13 @@ export default () => {
                             </div>
                         </div>
                     </div>
-                    {state.error && <p className='error'>Your name and password do not match</p>}
+                    {state.error && <p className='error'>{state.error}</p>}
                     <button
                         type="submit"
                         disabled={state.isFeatching}
                         className="login__button"
                     >
-                        Login
+                        {state.isFeatching ? "Logging in..." : "Login"}
                     </button>
                 </form>
             </div>

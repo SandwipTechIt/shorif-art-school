@@ -2,13 +2,15 @@
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { getApi, postApi } from "../../api";
 import Loader from "../../components/ui/loader";
 import { ErrorMessage } from "../../components/ui/errorMessage";
 import { MultiSelect } from "../../components/ui/multiselect";
 import "react-datepicker/dist/react-datepicker.css";
+import { useReactToPrint } from "react-to-print";
+import { formateDate } from "../../utiils/formateDate";
 
 
 
@@ -118,6 +120,55 @@ const ImageInput = ({ label, onChange, preview, onRemove, error }) => (
   </div>
 );
 
+
+const Invoice = ({ student, courses, totalAmountPaid, invoiceID }) => {
+  return (
+    <div className="p-6">
+      <div className="flex justify-between">
+        <p className="text-lg font-semibold">Student Payment Invoice</p>
+        <p className="text-lg font-semibold">Date: <span className="font-normal">{formateDate(new Date())}</span></p>
+      </div>
+      <hr className="my-4" style={{ color: "black" }} />
+      <div className="grid grid-cols-2 gap-4">
+        <p className="font-semibold">Student Name: <span className="font-normal">{student?.name}</span></p>
+        <p className="font-semibold">Invoice ID: <span className="font-normal uppercase">{invoiceID}</span></p>
+        <p className="font-semibold">Student ID: <span className="font-normal">{student?.id}</span></p>
+        <p className="font-semibold">Payment: <span className="font-normal">{totalAmountPaid}</span></p>
+        <p className="font-semibold">Course: <span className="font-normal">{courses?.map((course) => course.courseName).join(", ")}</span></p>
+        <p className="font-semibold">Remaining Due: <span className="font-normal">0</span></p>
+      </div>
+      <hr className="my-4" style={{ color: "black" }} />
+      <div className="flex items-center justify-evenly">
+        <div>
+          <p className="text-center mt-2">__________________</p>
+          <p className="text-center">Guardian Signature</p>
+        </div>
+        <div>
+          <p className="text-center mt-2">__________________</p>
+          <p className="text-center">Student Signature</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+const MonthNames = [
+  { label: "Select Month", value: "" },
+  { label: "January", value: "0" },
+  { label: "February", value: "1" },
+  { label: "March", value: "2" },
+  { label: "April", value: "3" },
+  { label: "May", value: "4" },
+  { label: "June", value: "5" },
+  { label: "July", value: "6" },
+  { label: "August", value: "7" },
+  { label: "September", value: "8" },
+  { label: "October", value: "9" },
+  { label: "November", value: "10" },
+  { label: "December", value: "11" }
+];
+
 export default function AddStudent() {
 
 
@@ -142,12 +193,13 @@ export default function AddStudent() {
     address: "",
     mobileNumber: "",
     whatsAppNumber: "",
-    courses: [], // Array of course IDs
-    courseTimes: {}, // Object: {courseId: selectedTimeSlot}
+    courses: [],
+    courseTimes: {},
+    month: "",
     admissionFee: "",
     image: null,
   });
-
+  const [response, setResponse] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
   // Get selected courses to show available time slots
@@ -219,6 +271,7 @@ export default function AddStudent() {
     if (!form.fatherName) newErrors.fatherName = "Father's name is required";
     if (!form.motherName) newErrors.motherName = "Mother's name is required";
     if (!form.gender) newErrors.gender = "Gender is required";
+    if (!form.month) newErrors.month = "Please select payment month";
     if (!form.mobileNumber)
       newErrors.mobileNumber = "Mobile number is required";
     else if (!/^[0-9]{10,15}$/.test(form.mobileNumber))
@@ -245,14 +298,12 @@ export default function AddStudent() {
     }
 
     // Format date for backend
-    const formattedDate = form.dob ? form.dob.toISOString().split('T')[0] : '';
+    // const formattedDate = form.dob ? form.dob.toISOString().split('T')[0] : '';
 
     // Create FormData for file upload
     const formData = new FormData();
     Object.keys(form).forEach(key => {
-      if (key === 'dob') {
-        formData.append(key, formattedDate);
-      } else if (key === 'courses') {
+      if (key === 'courses') {
         formData.append(key, JSON.stringify(form.courses));
       } else if (key === 'courseTimes') {
         formData.append(key, JSON.stringify(form.courseTimes));
@@ -264,11 +315,12 @@ export default function AddStudent() {
     });
 
     try {
-      await postApi("createStudent", formData, {
+      const response = await postApi("createStudent", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      setResponse(response.student);
       toast.success("Student added successfully!", {
         autoClose: 3000,
         hideProgressBar: false,
@@ -308,6 +360,9 @@ export default function AddStudent() {
     }
   };
 
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef })
+
   if (isLoading) {
     return (
       <Loader />
@@ -324,6 +379,10 @@ export default function AddStudent() {
       </div>
     );
   }
+
+
+  console.log(form.dob);
+
   return (
     <div className="flex flex-col items-center md:py-10 md:px-4">
       <div className="bgGlass shadow-xl rounded-lg w-full p-8">
@@ -332,7 +391,16 @@ export default function AddStudent() {
           Student
         </h1>
 
-
+        <div className="hidden">
+          <div ref={contentRef}>
+            <Invoice
+              student={response}
+              courses={response?.courses}
+              totalAmountPaid={response?.totalAmountPaid}
+              invoiceID={response?.invoiceID}
+            />
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
@@ -455,20 +523,8 @@ export default function AddStudent() {
             />
           </div>
 
-          <div className="grid md:grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 mb-6">
-            {/* Courses Selection */}
-            <div >
-              <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
-                <i className="fas fa-graduation-cap mr-2"></i>
-                Select Courses
-              </label>
-              <MultiSelect
-                options={courses.map((c) => ({ label: c.name, value: c._id }))}
-                selectedOptions={form.courses}
-                onSelectionChange={handleCourseSelection}
-              />
-              {errors.courses && <p className="text-red-500 text-sm mt-1">{errors.courses}</p>}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 mb-6">
+
             <Input
               label="Admission Fee"
               name="admissionFee"
@@ -477,14 +533,38 @@ export default function AddStudent() {
               icon="fas fa-money-bill-alt"
               placeholder="Enter admission fee"
             />
+
+            <Select
+              label="Payment Month"
+              name="month"
+              value={form.month}
+              onChange={handleChange}
+              options={MonthNames}
+              error={errors.month}
+              icon="fas fa-calendar"
+              placeholder="Select month"
+            />
           </div>
 
 
-          <div className="grid md:grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
+              {/* Courses Selection */}
+              <div >
+                <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
+                  <i className="fas fa-graduation-cap mr-2"></i>
+                  Select Courses
+                </label>
+                <MultiSelect
+                  options={courses.map((c) => ({ label: c.name, value: c._id }))}
+                  selectedOptions={form.courses}
+                  onSelectionChange={handleCourseSelection}
+                />
+                {errors.courses && <p className="text-red-500 text-sm mt-1">{errors.courses}</p>}
+              </div>
               {/* Time Slots Selection for Each Course */}
               {selectedCourses.length > 0 && (
-                <div>
+                <div className="mt-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-white">
                     <i className="fas fa-clock mr-2"></i>
                     Select Time Slots for Each Course
@@ -537,6 +617,17 @@ export default function AddStudent() {
             )}
           </button>
         </form>
+        {
+          response && (
+            <button
+              onClick={reactToPrintFn}
+              className="w-full mt-4 max-w-md mx-auto flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg py-3 transition duration-200 disabled:opacity-50"
+            >
+              Print Invoice
+            </button>
+          )
+        }
+
       </div>
     </div>
   );

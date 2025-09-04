@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>শরীফ আর্ট স্কুল - সুন্দর হাতের লেখা এবং ড্রয়িং শিখুন</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap");
+
+    @import url("https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&display=swap");
+
+    :root {
+      --primary: #6366f1;
+      --secondary: #8b5cf6;
+      --accent: #ec4899;
+      --dark: #1e293b;
+      --light: #f8fafc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Tiro Bangla", "Noto Sans Bengali", sans-serif;
+      overflow-x: hidden;
+      background-color: var(--light);
+    }
+
+    .form-input {
+      @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300;
+    }
+
+    .btn-primary {
+      @apply w-full text-lg py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .animate-fadeInUp {
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Gradient Backgrounds */
+    .gradient-primary {
+      background: linear-gradient(135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%);
+    }
+
+    .gradient-accent {
+      background: linear-gradient(135deg,
+          var(--accent) 0%,
+          var(--secondary) 100%);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Hero Pattern */
+    .hero-pattern {
+      background-image: radial-gradient(circle at 20% 50%,
+          rgba(99, 102, 241, 0.1) 0%,
+          transparent 50%),
+        radial-gradient(circle at 80% 80%,
+          rgba(236, 72, 153, 0.1) 0%,
+          transparent 50%),
+        radial-gradient(circle at 40% 20%,
+          rgba(139, 92, 246, 0.1) 0%,
+          transparent 50%);
+    }
+
+    /* Card Styles */
+    .card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Button Styles */
+    .btn-primary {
+      @apply bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300;
+    }
+
+    .btn-secondary {
+      @apply border-2 border-indigo-600 text-indigo-600 px-6 py-3 rounded-full font-semibold hover:bg-indigo-600 hover:text-white transition-all duration-300;
+    }
+
+    /* Navigation */
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .mobile-menu.active {
+      transform: translateX(0);
+    }
+
+    /* Gallery Hover Effect */
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-item img {
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    /* Form Styles */
+    .form-input {
+      @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition;
+    }
+
+    /* Testimonial Card */
+    .testimonial-card {
+      @apply bg-white p-6 rounded-xl shadow-lg relative;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      font-size: 60px;
+      color: var(--primary);
+      opacity: 0.2;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Responsive Utilities */
+    @media (max-width: 768px) {
+      .hero-text {
+        font-size: 2.5rem !important;
+      }
+
+      .section-padding {
+        padding: 4rem 0;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-text {
+        font-size: 2rem !important;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    /* FAQ Accordion */
+    .faq-item {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .faq-question {
+      @apply w-full text-left py-4 font-semibold text-gray-800 hover:text-indigo-600 transition cursor-pointer;
+    }
+
+    .faq-answer {
+      @apply pb-4 text-gray-600 hidden;
+    }
+
+    .faq-item.active .faq-answer {
+      @apply block;
+    }
+
+    .faq-item.active .faq-question::after {
+      content: "-";
+      @apply absolute right-0 top-4 text-2xl;
+    }
+
+    .faq-item:not(.active) .faq-question::after {
+      content: "+";
+      @apply absolute right-0 top-4 text-2xl;
+    }
+
+    /* Back to Top Button */
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--primary);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    #backToTop.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #backToTop:hover {
+      background: var(--secondary);
+      transform: translateY(-5px);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-md z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+          <img src="https://i.ibb.co/qY8wgT24/logo.png" class="w-10 h-10" alt="" />
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#home" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">হোম</a>
+          <a href="#about" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">আমাদের সম্পর্কে</a>
+          <a href="#courses" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">কোর্স</a>
+          <a href="#methodology" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">পদ্ধতি</a>
+          <a href="#faq" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">FAQ</a>
+          <a href="#contact" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">যোগাযোগ</a>
+          <a href="tel:01616-010205"
+            class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
+            <i class="fas fa-phone-alt mr-3 text-xl "></i>
+            এখনই ভর্তি হন
+            <svg class="ml-2 w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu bg-white fixed top-0 right-0 w-64 h-full shadow-lg md:hidden">
+      <div class="p-4 bg-white h-screen">
+        <button id="closeMobileMenu" class="text-gray-700 float-right">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+        <div class="clear-both mt-8 space-y-4">
+          <a href="#home" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">হোম</a>
+          <a href="#about" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">আমাদের সম্পর্কে</a>
+          <a href="#courses" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">কোর্স</a>
+          <a href="#methodology" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">পদ্ধতি</a>
+          <a href="#gallery" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">গ্যালারি</a>
+          <a href="#faq" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">FAQ</a>
+          <a href="#contact" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">যোগাযোগ</a>
+          <a href="tel:01616-010205"
+            class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
+            <i class="fas fa-phone-alt mr-3 text-xl "></i>
+            এখনই ভর্তি হন
+            <svg class="ml-2 w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="pt-16 min-h-screen flex items-center hero-pattern">
+    <div class="container mx-auto px-4 py-20">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="animate-fadeInUp">
+          <h2 class="hero-text text-4xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">
+            আপনার সন্তানের
+            <span class="gradient-text">সৃজনশীলতা</span> উন্মোচন করুন
+          </h2>
+          <p class="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
+            শরীফ আর্ট স্কুলে আমরা শিশুদের সুন্দর হাতের লেখা এবং বিভিন্ন ধরনের
+            ড্রয়িং শেখাই। আমাদের অভিজ্ঞ শিক্ষকরা আপনার সন্তানের প্রতিভা
+            বিকাশে সাহায্য করবে। আমরা বিশ্বাস করি প্রতিটি শিশুর মধ্যেই একজন
+            শিল্পী লুকিয়ে আছে, আমরা সেই শিল্পীকে বের করে আনতে সাহায্য করি।
+          </p>
+          <div class="flex flex-col sm:flex-row gap-6">
+            <!-- Modern Primary Button -->
+            <button onclick="scrollToSection('contact')"
+              class="group relative px-8 py-4 bg-indigo-600 text-white font-medium rounded-full text-lg transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30">
+              <span class="flex items-center">
+                <i class="fas fa-graduation-cap mr-3 text-lg group-hover:animate-bounce"></i>
+                এখনই ভর্তি হন
+                <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <!-- Modern Secondary Button -->
+            <button onclick="scrollToSection('courses')"
+              class="group relative px-8 py-4 bg-transparent text-indigo-600 font-medium rounded-full text-lg border-2 border-indigo-600 transition-all duration-300 hover:bg-indigo-600 hover:text-white hover:shadow-lg hover:shadow-indigo-500/30">
+              <span class="flex items-center">
+                <i class="fas fa-book-open mr-3 text-lg group-hover:animate-pulse"></i>
+                কোর্স দেখুন
+                <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
+                  </path>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-4 mt-12">
+            <div class="text-center">
+              <h3 class="text-3xl font-bold gradient-text">500+</h3>
+              <p class="text-gray-600">সন্তুষ্ট শিক্ষার্থী</p>
+            </div>
+            <div class="text-center">
+              <h3 class="text-3xl font-bold gradient-text">15+</h3>
+              <p class="text-gray-600">অভিজ্ঞ শিক্ষক</p>
+            </div>
+            <div class="text-center">
+              <h3 class="text-3xl font-bold gradient-text">10+</h3>
+              <p class="text-gray-600">বছরের অভিজ্ঞতা</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="animate-float">
+            <img src="https://i.ibb.co.com/V0LNvHDL/486662046-1100705152096961-7890605817667825983-n.jpg"
+              alt="Art School" class="rounded-2xl h-[350px] shadow-2xl w-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section-padding py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          আমাদের সম্পর্কে
+        </h3>
+        <p class="text-gray-600 max-w-3xl mx-auto text-lg">
+          শরীফ আর্ট স্কুল প্রতিষ্ঠিত হয়েছে ২০১৪ সালে। আমরা শিশুদের সৃজনশীলতা
+          বিকাশে নিবেদিত। আমাদের লক্ষ্য হলো প্রতিটি শিশুর মধ্যে থাকা শৈল্পিক
+          দক্ষতা বের করে আনা এবং তাদের আত্মবিশ্বাস বাড়ানো।
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <img src="https://i.ibb.co.com/cKkPVvkH/486662046-1100705152096961-7890605817667825983-n.jpg" alt="About Us"
+            class="rounded-2xl shadow-xl h-[400px] w-full" />
+        </div>
+        <div>
+          <h4 class="text-2xl font-bold mb-4">আমাদের মিশন</h4>
+          <p class="text-gray-600 mb-6">
+            শিশুদের সুন্দর হাতের লেখা এবং ড্রয়িং শেখানোর মাধ্যমে তাদের
+            সৃজনশীলতা বিকাশ করা। আমরা বিশ্বাস করি যে সুন্দর হাতের লেখা একটি
+            শিশুর ব্যক্তিত্বের প্রতিফলন, এবং ড্রয়িং তাদের কল্পনাশক্তি
+            বাড়ায়।
+          </p>
+
+          <h4 class="text-2xl font-bold mb-4">আমাদের ভিশন</h4>
+          <p class="text-gray-600 mb-6">
+            বাংলাদেশের সেরা আর্ট স্কুল হওয়া যেখানে শিশুরা তাদের পূর্ণ
+            সম্ভাবনা বাস্তবায়ন করতে পারে। আমরা চাই আমাদের শিক্ষার্থীরা
+            ভবিষ্যতে দেশের শিল্প-সংস্কৃতিতে গুরুত্বপূর্ণ অবদান রাখুক।
+          </p>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-center p-4 bg-indigo-50 rounded-lg">
+              <i class="fas fa-heart text-indigo-600 text-3xl mb-2"></i>
+              <p class="font-semibold">যত্নশীল পরিবেশ</p>
+            </div>
+            <div class="text-center p-4 bg-purple-50 rounded-lg">
+              <i class="fas fa-trophy text-purple-600 text-3xl mb-2"></i>
+              <p class="font-semibold">মানসম্মত শিক্ষা</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section-padding py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          কেন শরীফ আর্ট স্কুল বেছে নেবেন?
+        </h3>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          আমরা শিশুদের সৃজনশীলতা বিকাশে প্রতিশ্রুতিবদ্ধ
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8 card-grid">
+        <div class="card p-8 text-center">
+          <div class="w-20 h-20 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-chalkboard-teacher text-white text-3xl"></i>
+          </div>
+          <h4 class="text-xl font-semibold mb-3">অভিজ্ঞ শিক্ষক</h4>
+          <p class="text-gray-600">
+            আমাদের শিক্ষকরা ফাইন আর্টসে স্নাতক এবং শিশুদের শিক্ষায় ১০+ বছরের
+            অভিজ্ঞতা সম্পন্ন। তারা শিশুদের মনোবিজ্ঞান বুঝে শেখানোর জন্য
+            বিশেষভাবে প্রশিক্ষিত।
+          </p>
+        </div>
+
+        <div class="card p-8 text-center">
+          <div class="w-20 h-20 gradient-accent rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-paint-brush text-white text-3xl"></i>
+          </div>
+          <h4 class="text-xl font-semibold mb-3">ক্রিয়েটিভ কারিকুলাম</h4>
+          <p class="text-gray-600">
+            আমরা আন্তর্জাতিক মানের কারিকুলাম অনুসরণ করি যা শিশুদের বয়স ও
+            দক্ষতা অনুযায়ী তৈরি। প্রতিটি ক্লাসে নতুন নতুন কৌশল শেখানো হয় যা
+            শিশুদের আগ্রহ ধরে রাখে।
+          </p>
+        </div>
+
+        <div class="card p-8 text-center">
+          <div
+            class="w-20 h-20 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-award text-white text-3xl"></i>
+          </div>
+          <h4 class="text-xl font-semibold mb-3">সার্টিফিকেশন</h4>
+          <p class="text-gray-600">
+            প্রতিটি কোর্স সম্পন্ন করলে শিক্ষার্থীরা স্বীকৃত সার্টিফিকেট পায়।
+            বার্ষিক প্রতিযোগিতায় অংশগ্রহণ করে পুরস্কার জেতার সুযোগ রয়েছে।
+          </p>
+        </div>
+
+        <div class="card p-8 text-center">
+          <div
+            class="w-20 h-20 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-users text-white text-3xl"></i>
+          </div>
+          <h4 class="text-xl font-semibold mb-3">ছোট ব্যাচ সাইজ</h4>
+          <p class="text-gray-600">
+            প্রতিটি ব্যাচে সর্বোচ্চ ৮-১০ জন শিক্ষার্থী থাকে যাতে প্রতিটি
+            শিক্ষার্থীকে ব্যক্তিগত মনোযোগ দেওয়া যায়। এতে শিক্ষার্থীরা দ্রুত
+            শিখতে পারে।
+          </p>
+        </div>
+
+        <div class="card p-8 text-center">
+          <div
+            class="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-calendar-check text-white text-3xl"></i>
+          </div>
+          <h4 class="text-xl font-semibold mb-3">ফ্লেক্সিবল সময়সূচী</h4>
+          <p class="text-gray-600">
+            আমরা সপ্তাহের ৭ দিনই ক্লাস নিই। শিক্ষার্থীরা তাদের সুবিধামতো সময়
+            বেছে নিতে পারে। স্কুলের পরে বা ছুটির দিনে ক্লাস করার সুবিধা
+            রয়েছে।
+          </p>
+        </div>
+
+        <div class="card p-8 text-center">
+          <div
+            class="w-20 h-20 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-child text-white text-3xl"></i>
+          </div>
+          <h4 class="text-xl font-semibold mb-3">শিশুবান্ধব পরিবেশ</h4>
+          <p class="text-gray-600">
+            আমাদের ক্লাসরুম রঙিন এবং শিশুদের জন্য আকর্ষণীয়ভাবে সাজানো।
+            খেলাধুলার সুবিধা এবং নিরাপদ পরিবেশে শিশুরা স্বাচ্ছন্দ্যে শিখতে
+            পারে।
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Courses Section -->
+<section id="courses" class="section-padding py-20 bg-gradient-to-br from-indigo-50 to-blue-100 relative overflow-hidden">
+  <!-- Background decoration -->
+  <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+    <div class="absolute -top-20 -right-20 w-64 h-64 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+    <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+  </div>
+  
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="text-center mb-16">
+      <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 relative inline-block">
+        আমাদের কোর্সসমূহ
+        <span class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></span>
+      </h3>
+      <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+        বিভিন্ন বয়সের শিশুদের জন্য বিশেষভাবে ডিজাইন করা কোর্স
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Handwriting Course -->
+      <div class="course-card group overflow-hidden bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="h-48 bg-gradient-to-r from-blue-500 to-blue-700 flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          <i class="fas fa-pen-fancy text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-500"></i>
+          <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-white/10 rounded-full"></div>
+          <div class="absolute -top-6 -left-6 w-16 h-16 bg-white/10 rounded-full"></div>
+        </div>
+        <div class="p-6">
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-blue-600 transition-colors duration-300">সুন্দর হাতের লেখা</h4>
+          <p class="text-gray-600 mb-4">এই কোর্সে শিশুরা শিখবে:</p>
+          <ul class="text-gray-600 mb-4 space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>সঠিক পেন্সিল ধরার কৌশল</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>বাংলা ও ইংরেজি অক্ষরের সঠিক আকার</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>লাইন মেনে লেখা</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>গতি এবং নিয়ন্ত্রণ বাড়ানো</span>
+            </li>
+          </ul>
+          <div class="flex items-center justify-between mb-4 pt-2 border-t border-gray-100">
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-clock mr-2 text-blue-500"></i>৩ মাস
+            </span>
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-users mr-2 text-blue-500"></i>৫-১২ বছর
+            </span>
+          </div>
+          <button onclick="enrollCourse('handwriting')" class="btn-primary w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+            ভর্তি হন
+          </button>
+        </div>
+      </div>
+      
+      <!-- Basic Drawing Course -->
+      <div class="course-card group overflow-hidden bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="h-48 bg-gradient-to-r from-green-500 to-green-700 flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          <i class="fas fa-pencil-alt text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-500"></i>
+          <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-white/10 rounded-full"></div>
+          <div class="absolute -top-6 -left-6 w-16 h-16 bg-white/10 rounded-full"></div>
+        </div>
+        <div class="p-6">
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-green-600 transition-colors duration-300">বেসিক ড্রয়িং</h4>
+          <p class="text-gray-600 mb-4">এই কোর্সে শিশুরা শিখবে:</p>
+          <ul class="text-gray-600 mb-4 space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>বেসিক শেপ ড্রয়িং</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>রঙ তত্ত্ব ও ব্যবহার</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>শেডিং কৌশল</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>প্রাণী ও প্রকৃতি আঁকা</span>
+            </li>
+          </ul>
+          <div class="flex items-center justify-between mb-4 pt-2 border-t border-gray-100">
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-clock mr-2 text-green-500"></i>৪ মাস
+            </span>
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-users mr-2 text-green-500"></i>৬-১৪ বছর
+            </span>
+          </div>
+          <button onclick="enrollCourse('basic-drawing')" class="btn-primary w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+            ভর্তি হন
+          </button>
+        </div>
+      </div>
+      
+      <!-- Advanced Art Course -->
+      <div class="course-card group overflow-hidden bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="h-48 bg-gradient-to-r from-purple-500 to-purple-700 flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          <i class="fas fa-palette text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-500"></i>
+          <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-white/10 rounded-full"></div>
+          <div class="absolute -top-6 -left-6 w-16 h-16 bg-white/10 rounded-full"></div>
+        </div>
+        <div class="p-6">
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-purple-600 transition-colors duration-300">অ্যাডভান্সড আর্ট</h4>
+          <p class="text-gray-600 mb-4">এই কোর্সে শিশুরা শিখবে:</p>
+          <ul class="text-gray-600 mb-4 space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>ওয়াটার কালার পেইন্টিং</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>অয়েল পেস্টেল কৌশল</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>ক্যারিকেচার আঁকা</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>পোর্ট্রেট ড্রয়িং</span>
+            </li>
+          </ul>
+          <div class="flex items-center justify-between mb-4 pt-2 border-t border-gray-100">
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-clock mr-2 text-purple-500"></i>৬ মাস
+            </span>
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-users mr-2 text-purple-500"></i>১০-১৮ বছর
+            </span>
+          </div>
+          <button onclick="enrollCourse('advanced-art')" class="btn-primary w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+            ভর্তি হন
+          </button>
+        </div>
+      </div>
+      
+      <!-- Calligraphy Course -->
+      <div class="course-card group overflow-hidden bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="h-48 bg-gradient-to-r from-red-500 to-pink-700 flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          <i class="fas fa-feather-alt text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-500"></i>
+          <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-white/10 rounded-full"></div>
+          <div class="absolute -top-6 -left-6 w-16 h-16 bg-white/10 rounded-full"></div>
+        </div>
+        <div class="p-6">
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-red-600 transition-colors duration-300">ক্যালিগ্রাফি</h4>
+          <p class="text-gray-600 mb-4">এই কোর্সে শিশুরা শিখবে:</p>
+          <ul class="text-gray-600 mb-4 space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>আরবি ক্যালিগ্রাফি</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>ইংরেজি কার্সিভ লেখা</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>ডিজাইন লেটারিং</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>কার্ড ও ব্যানার তৈরি</span>
+            </li>
+          </ul>
+          <div class="flex items-center justify-between mb-4 pt-2 border-t border-gray-100">
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-clock mr-2 text-red-500"></i>৪ মাস
+            </span>
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-users mr-2 text-red-500"></i>৮-১৬ বছর
+            </span>
+          </div>
+          <button onclick="enrollCourse('calligraphy')" class="btn-primary w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+            ভর্তি হন
+          </button>
+        </div>
+      </div>
+      
+      <!-- Craft Course -->
+      <div class="course-card group overflow-hidden bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="h-48 bg-gradient-to-r from-yellow-500 to-orange-700 flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          <i class="fas fa-cut text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-500"></i>
+          <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-white/10 rounded-full"></div>
+          <div class="absolute -top-6 -left-6 w-16 h-16 bg-white/10 rounded-full"></div>
+        </div>
+        <div class="p-6">
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-yellow-600 transition-colors duration-300">ক্রাফট ওয়ার্কশপ</h4>
+          <p class="text-gray-600 mb-4">এই কোর্সে শিশুরা শিখবে:</p>
+          <ul class="text-gray-600 mb-4 space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>পেপার ক্রাফটিং</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>ক্লে মডেলিং</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>রিসাইকেল আর্ট</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>সিজনাল ডেকোরেশন</span>
+            </li>
+          </ul>
+          <div class="flex items-center justify-between mb-4 pt-2 border-t border-gray-100">
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-clock mr-2 text-yellow-500"></i>৩ মাস
+            </span>
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-users mr-2 text-yellow-500"></i>৫-১৫ বছর
+            </span>
+          </div>
+          <button onclick="enrollCourse('craft')" class="btn-primary w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+            ভর্তি হন
+          </button>
+        </div>
+      </div>
+      
+      <!-- Digital Art Course -->
+      <div class="course-card group overflow-hidden bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="h-48 bg-gradient-to-r from-teal-500 to-cyan-700 flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          <i class="fas fa-laptop text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-500"></i>
+          <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-white/10 rounded-full"></div>
+          <div class="absolute -top-6 -left-6 w-16 h-16 bg-white/10 rounded-full"></div>
+        </div>
+        <div class="p-6">
+          <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-teal-600 transition-colors duration-300">ডিজিটাল আর্ট</h4>
+          <p class="text-gray-600 mb-4">এই কোর্সে শিশুরা শিখবে:</p>
+          <ul class="text-gray-600 mb-4 space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>বেসিক ফটোশপ</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>ডিজিটাল পেইন্টিং</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>গ্রাফিক ডিজাইন</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+              <span>অ্যানিমেশন বেসিক</span>
+            </li>
+          </ul>
+          <div class="flex items-center justify-between mb-4 pt-2 border-t border-gray-100">
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-clock mr-2 text-teal-500"></i>৬ মাস
+            </span>
+            <span class="text-sm text-gray-500 flex items-center">
+              <i class="fas fa-users mr-2 text-teal-500"></i>১২-১৮ বছর
+            </span>
+          </div>
+          <button onclick="enrollCourse('digital-art')" class="btn-primary w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+            ভর্তি হন
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Custom CSS for animations -->
+  <style>
+    @keyframes blob {
+      0% {
+        transform: translate(0px, 0px) scale(1);
+      }
+      33% {
+        transform: translate(30px, -50px) scale(1.1);
+      }
+      66% {
+        transform: translate(-20px, 20px) scale(0.9);
+      }
+      100% {
+        transform: translate(0px, 0px) scale(1);
+      }
+    }
+    .animate-blob {
+      animation: blob 7s infinite;
+    }
+    .animation-delay-2000 {
+      animation-delay: 2s;
+    }
+    .animation-delay-4000 {
+      animation-delay: 4s;
+    }
+  </style>
+</section>
+
+  <!-- Teaching Methodology Section -->
+  <section id="methodology" class="section-padding py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          আমাদের শিক্ষা পদ্ধতি
+        </h3>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          আমরা শিশুদের শেখার অভিজ্ঞতাকে আনন্দময় করে তুলি
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-gamepad text-indigo-600 text-2xl"></i>
+          </div>
+          <h4 class="font-semibold mb-2">গেমিফাইড লার্নিং</h4>
+          <p class="text-gray-600 text-sm">
+            খেলার মাধ্যমে শেখানো যা শিশুদের আগ্রহ বাড়ায়
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-hands-helping text-purple-600 text-2xl"></i>
+          </div>
+          <h4 class="font-semibold mb-2">প্র্যাকটিক্যাল অ্যাপ্রোচ</h4>
+          <p class="text-gray-600 text-sm">
+            তত্ত্বের পাশাপাশি ব্যবহারিক কাজের উপর জোর
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-star text-pink-600 text-2xl"></i>
+          </div>
+          <h4 class="font-semibold mb-2">পজিটিভ রিইনফোর্সমেন্ট</h4>
+          <p class="text-gray-600 text-sm">
+            প্রতিটি ছোট অর্জনের জন্য প্রশংসা ও পুরস্কার
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-users text-green-600 text-2xl"></i>
+          </div>
+          <h4 class="font-semibold mb-2">গ্রুপ অ্যাক্টিভিটি</h4>
+          <p class="text-gray-600 text-sm">
+            দলগত কাজের মাধ্যমে সামাজিক দক্ষতা বিকাশ
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="section-padding py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          অভিভাবকদের মতামত
+        </h3>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          আমাদের সেবা নিয়ে অভিভাবকদের অভিজ্ঞতা
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div
+          class="testimonial-card bg-white rounded-2xl shadow-xl p-6 max-w-sm mx-auto transform hover:shadow-2xl transition-shadow">
+          <div class="flex items-center mb-4">
+            <div
+              class="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mr-4 shadow-md">
+              <i class="fas fa-user text-xl text-indigo-600"></i>
+            </div>
+            <div>
+              <h5 class="font-bold text-gray-800">রহিমা বেগম</h5>
+              <p class="text-sm text-gray-500 flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-indigo-400"></i>মিরপুর, ঢাকা
+              </p>
+              <div class="flex text-yellow-400 mt-1 space-x-1">
+                <i class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i><i
+                  class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i>
+              </div>
+            </div>
+          </div>
+          <blockquote class="text-gray-700 italic leading-relaxed">
+            "আমার মেয়ে রিয়া শরীফ আর্ট স্কুলে ৬ মাস ধরে পড়ছে। তার হাতের লেখা অনেক সুন্দর হয়েছে। শিক্ষকরা খুব যত্নশীল
+            এবং শিশুদের সাথে ভালো ব্যবহার করেন। আমি খুব খুশি."
+          </blockquote>
+        </div>
+
+        <div
+          class="testimonial-card bg-white rounded-2xl shadow-xl p-6 max-w-sm mx-auto transform hover:shadow-2xl transition-shadow">
+          <div class="flex items-center mb-4">
+            <div
+              class="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mr-4 shadow-md">
+              <i class="fas fa-user text-xl text-indigo-600"></i>
+            </div>
+            <div>
+              <h5 class="font-bold text-gray-800">মোঃ রফিকুল ইসলাম</h5>
+              <p class="text-sm text-gray-500 flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-indigo-400"></i>মিরপুর, ঢাকা
+              </p>
+              <div class="flex text-yellow-400 mt-1 space-x-1">
+                <i class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i><i
+                  class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i>
+              </div>
+            </div>
+          </div>
+          <blockquote class="text-gray-700 italic leading-relaxed">
+            "আমি অনেক আর্ট স্কুল দেখেছি, কিন্তু শরীফ আর্ট স্কুলের মতো পেশাদার
+            আর কোথাও দেখিনি। তাদের শিক্ষা পদ্ধতি অসাধারণ। আমার মেয়ে এখন
+            স্বাধীনভাবে নিজের আইডিয়া নিয়ে আঁকতে পারে।"
+          </blockquote>
+        </div>
+
+        <div
+          class="testimonial-card bg-white rounded-2xl shadow-xl p-6 max-w-sm mx-auto transform hover:shadow-2xl transition-shadow">
+          <div class="flex items-center mb-4">
+            <div
+              class="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mr-4 shadow-md">
+              <i class="fas fa-user text-xl text-indigo-600"></i>
+            </div>
+            <div>
+              <h5 class="font-bold text-gray-800">কামাল হোসেন</h5>
+              <p class="text-sm text-gray-500 flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-indigo-400"></i>গুলশান, ঢাকা
+              </p>
+              <div class="flex text-yellow-400 mt-1 space-x-1">
+                <i class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i><i
+                  class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i><i class="fas fa-star text-sm"></i>
+              </div>
+            </div>
+          </div>
+          <blockquote class="text-gray-700 italic leading-relaxed">
+            "আমার ছেলে আরিফ এখানে ড্রয়িং শিখে অনেক উন্নতি করেছে। সে এখন
+            স্কুলের আর্ট প্রতিযোগিতায় প্রথম হয়েছে। পরিবেশ খুব ভালো এবং
+            শিক্ষকরা অসাধারণ। সবাইকে এখানে ভর্তি করার পরামর্শ দেব।"
+          </blockquote>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Achievements Section -->
+  <section class="section-padding py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          আমাদের অর্জন
+        </h3>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          শিক্ষার্থীদের সাফল্য আমাদের প্রেরণা
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="w-24 h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-trophy text-white text-4xl"></i>
+          </div>
+          <h4 class="text-3xl font-bold gradient-text mb-2">50+</h4>
+          <p class="text-gray-600">জাতীয় পুরস্কার</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-24 h-24 gradient-accent rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-medal text-white text-4xl"></i>
+          </div>
+          <h4 class="text-3xl font-bold gradient-text mb-2">100+</h4>
+          <p class="text-gray-600">আন্তঃস্কুল প্রতিযোগিতা</p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-24 h-24 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-certificate text-white text-4xl"></i>
+          </div>
+          <h4 class="text-3xl font-bold gradient-text mb-2">1000+</h4>
+          <p class="text-gray-600">সার্টিফিকেট প্রদান</p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-24 h-24 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-palette text-white text-4xl"></i>
+          </div>
+          <h4 class="text-3xl font-bold gradient-text mb-2">200+</h4>
+          <p class="text-gray-600">আর্ট প্রদর্শনী</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <div class="container mx-auto px-4">
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <span
+          class="inline-block bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-sm font-semibold mb-4">FAQ</span>
+        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">সচরাচর জিজ্ঞাসা</h3>
+        <p class="text-gray-600 max-w-md mx-auto">আপনার প্রশ্নের উত্তর এক ক্লিকে</p>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-4">
+        <!-- FAQ Item -->
+        <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
+          <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+            <h4 class="font-semibold text-gray-800 text-lg">কত বয়স থেকে শিশুরা ভর্তি হতে পারে?</h4>
+            <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+            আমরা ৫ বছর বয়স থেকে শিশুদের ভর্তি নিই। তবে বিশেষ ক্ষেত্রে ৪ বছর বয়সী শিশুদেরও ভর্তি করা হয়। প্রতিটি
+            বয়সের জন্য আলাদা কোর্স এবং শিক্ষা পদ্ধতি রয়েছে।
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
+          <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+            <h4 class="font-semibold text-gray-800 text-lg">ক্লাসের সময়সূচী কেমন?</h4>
+            <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+            আমরা সপ্তাহের ৭ দিনই ক্লাস নিই। শনি-বৃহস্পতি সকাল ৯টা-সন্ধ্যা ৬টা, শুক্র সকাল ৯টা-দুপুর ২টা। শিক্ষার্থীরা
+            সপ্তাহে ২ দিন ক্লাস করতে পারে।
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
+          <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+            <h4 class="font-semibold text-gray-800 text-lg">কোর্স ফি কত?</h4>
+            <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+            বেসিক কোর্স মাসিক ১৫০০ টাকা, অ্যাডভান্সড ২৫০০ টাকা। ভর্তির সময় এককালীন ৫০০ টাকা রেজিস্ট্রেশন ফি। সকল কোর্স
+            মেটেরিয়াল ফ্রি।
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
+          <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+            <h4 class="font-semibold text-gray-800 text-lg">শিক্ষকরা কতটা অভিজ্ঞ?</h4>
+            <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+            সকল শিক্ষক ফাইন আর্টস স্নাতক ও শিশু শিক্ষায় ৫+ বছর অভিজ্ঞ। অনেকে জাতীয় পুরস্কারপ্রাপ্ত এবং নিয়মিত শিশু
+            মনোবিজ্ঞান ট্রেনিং নেন।
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
+          <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+            <h4 class="font-semibold text-gray-800 text-lg">কোর্স শেষে কি সার্টিফিকেট দেওয়া হয়?</h4>
+            <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+            প্রতিটি কোর্স সম্পন্নে সার্টিফিকেট প্রদান করা হয়। বার্ষিক প্রতিযোগিতায় অংশগ্রহণকারীদের জন্য বিশেষ
+            সার্টিফিকেট ও অনেক স্কুলে এক্সট্রা কারিকুলার ক্রেডিট।
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
+          <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+            <h4 class="font-semibold text-gray-800 text-lg">কিভাবে ভর্তি হতে পারি?</h4>
+            <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+            সরাসরি স্কুলে এসে অথবা ওয়েবসাইটের যোগাযোগ ফর্ম পূরণ করে ভর্তি করতে পারেন। প্রয়োজন: বয়স প্রমাণ ও ২ কপি
+            ছবি। প্রতি মাসের প্রথম সপ্তাহে নতুন ব্যাচ শুরু।
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-20 bg-gradient-to-br from-gray-50 via-white to-indigo-50">
+    <div class="container mx-auto px-4">
+      <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-16">
+          <h3 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">যোগাযোগ করুন</h3>
+          <p class="text-gray-600 max-w-md mx-auto">আপনার সন্তানের ভবিষ্যত গড়তে আজই যোগাযোগ করুন</p>
+        </div>
+
+        <div class="grid lg:grid-cols-5 gap-8 items-start">
+          <!-- Form -->
+          <div class="lg:col-span-3">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+              <form id="contactForm" class="space-y-6">
+                <div class="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">আপনার নাম *</label>
+                    <input type="text" name="name" required
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                      placeholder="আপনার নাম" />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">ফোন নম্বর *</label>
+                    <input type="tel" name="phone" required
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                      placeholder="০১৭১২-৩৪৫৬৭৮" />
+                  </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">ইমেইল *</label>
+                    <input type="email" name="email" required
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                      placeholder="example@email.com" />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">শিশুর বয়স *</label>
+                    <input type="number" name="childAge" required
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                      placeholder="৫" />
+                  </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">কোর্স নির্বাচন *</label>
+                    <select name="course" required
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+                      <option value="">কোর্স নির্বাচন করুন</option>
+                      <option value="handwriting">সুন্দর হাতের লেখা</option>
+                      <option value="basic-drawing">বেসিক ড্রয়িং</option>
+                      <option value="advanced-art">অ্যাডভান্সড আর্ট</option>
+                      <option value="calligraphy">ক্যালিগ্রাফি</option>
+                      <option value="craft">ক্রাফট ওয়ার্কশপ</option>
+                      <option value="digital-art">ডিজিটাল আর্ট</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">পছন্দের সময়</label>
+                    <select name="preferredTime"
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+                      <option value="">সময় নির্বাচন করুন</option>
+                      <option value="morning">সকাল (৯-১২)</option>
+                      <option value="afternoon">দুপুর (১২-৩)</option>
+                      <option value="evening">বিকাল (৩-৬)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">বার্তা</label>
+                  <textarea name="message" rows="4"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                    placeholder="আপনার বার্তা..."></textarea>
+                </div>
+
+                <button type="submit"
+                  class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-4 rounded-xl hover:shadow-lg transform hover:-translate-y-1 transition-all">
+                  <i class="fas fa-paper-plane mr-2"></i> জমা দিন
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Info Cards -->
+          <div class="lg:col-span-2 space-y-6">
+            <!-- Contact Info -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+              <h4 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-info-circle text-indigo-600 mr-2"></i>যোগাযোগের তথ্য
+              </h4>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-map-marker-alt text-indigo-600"></i>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800">প্রধান শাখা</p>
+                    <p class="text-sm text-gray-600">সড়ক নং ১, ব্লক-এ, হালিশহর, চট্টগ্রাম</p>
+                  </div>
+                </div>
+
+                <div class="flex items-start">
+                  <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-phone text-green-600"></i>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800">ফোন</p>
+                    <p class="text-sm text-gray-600">+880 1616 010205</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-envelope text-red-600"></i>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800">ইমেইল</p>
+                    <p class="text-sm text-gray-600">shorifu48@gmail.com</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social -->
+            <div class="text-center">
+              <h4 class="text-lg font-bold mb-4">আমাদের অনুসরণ করুন</h4>
+              <div class="flex justify-center space-x-3">
+                <a href="https://www.facebook.com/shorifartschool"
+                  class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center hover:shadow-lg transform hover:scale-110 transition">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/shorifartschool"
+                  class="w-12 h-12 bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-full flex items-center justify-center hover:shadow-lg transform hover:scale-110 transition">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://wa.me/8801644636608"
+                  class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full flex items-center justify-center hover:shadow-lg transform hover:scale-110 transition">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://www.youtube.com/@shorifartschool6559"
+                  class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full flex items-center justify-center hover:shadow-lg transform hover:scale-110 transition">
+                  <i class="fab fa-youtube"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 gradient-primary rounded-full flex items-center justify-center">
+              <i class="fas fa-palette text-white text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold">শরীফ আর্ট স্কুল</h3>
+          </div>
+          <p class="text-gray-400 mb-4">
+            শিশুদের সৃজনশীলতা বিকাশে প্রতিশ্রুতিবদ্ধ। আমরা বিশ্বাস করি প্রতিটি
+            শিশুর মধ্যেই একজন শিল্পী লুকিয়ে আছে।
+          </p>
+          <div class="flex space-x-4">
+            <a href="https://www.facebook.com/shorifartschool" class="text-gray-400 hover:text-white transition">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.instagram.com/shorifartschool" class="text-gray-400 hover:text-white transition">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4">দ্রুত লিংক</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="#home" class="text-gray-400 hover:text-white transition">হোম</a>
+            </li>
+            <li>
+              <a href="#about" class="text-gray-400 hover:text-white transition">আমাদের সম্পর্কে</a>
+            </li>
+            <li>
+              <a href="#courses" class="text-gray-400 hover:text-white transition">কোর্স</a>
+            </li>
+            <li>
+              <a href="#methodology" class="text-gray-400 hover:text-white transition">পদ্ধতি</a>
+            </li>
+            <li>
+              <a href="#gallery" class="text-gray-400 hover:text-white transition">গ্যালারি</a>
+            </li>
+            <li>
+              <a href="#faq" class="text-gray-400 hover:text-white transition">FAQ</a>
+            </li>
+            <li>
+              <a href="#contact" class="text-gray-400 hover:text-white transition">যোগাযোগ</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4">কোর্সসমূহ</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition">সুন্দর হাতের লেখা</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition">বেসিক ড্রয়িং</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition">অ্যাডভান্সড আর্ট</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition">ক্যালিগ্রাফি</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition">ক্রাফট ওয়ার্কশপ</a>
+            </li>
+            <li>
+              <a href="#" class="text-gray-400 hover:text-white transition">ডিজিটাল আর্ট</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4">নিউজলেটার</h4>
+          <p class="text-gray-400 mb-4">
+            আমাদের সর্বশেষ আপডেট, ইভেন্ট এবং অফার পেতে সাবস্ক্রাইব করুন
+          </p>
+          <form id="newsletterForm" class="flex">
+            <input type="email" placeholder="আপনার ইমেইল"
+              class="px-4 py-2 rounded-l-lg text-gray-900 flex-1 focus:outline-none" />
+            <button type="submit" class="bg-indigo-600 px-4 py-2 rounded-r-lg hover:bg-indigo-700 transition">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+          <div class="mt-4">
+            <p class="text-sm text-gray-400">আমাদের অ্যাপ ডাউনলোড করুন</p>
+            <div class="flex space-x-2 mt-2">
+              <a href="#" class="bg-gray-800 px-3 py-2 rounded text-sm hover:bg-gray-700 transition">
+                <i class="fab fa-apple mr-1"></i> App Store
+              </a>
+              <a href="#" class="bg-gray-800 px-3 py-2 rounded text-sm hover:bg-gray-700 transition">
+                <i class="fab fa-google-play mr-1"></i> Play Store
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <p>
+          &copy; 2025 শরীফ আর্ট স্কুল। সর্বস্বত্ব সংরক্ষিত। | ডেভেলপড বাই
+          <a href="#" class="hover:text-white transition">TechCraft</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <div id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-xl max-w-md mx-4 transform scale-95 transition-transform">
+      <div class="text-center">
+        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-check text-green-600 text-3xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">সফল!</h3>
+        <p class="text-gray-600 mb-6" id="modalMessage">
+          আপনার তথ্য সফলভাবে জমা হয়েছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।
+        </p>
+        <button onclick="closeModal()" class="btn-primary">ঠিক আছে</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const closeMobileMenu = document.getElementById("closeMobileMenu");
+
+    mobileMenuBtn.addEventListener("click", () => {
+      mobileMenu.classList.add("active");
+    });
+
+    closeMobileMenu.addEventListener("click", () => {
+      mobileMenu.classList.remove("active");
+    });
+
+    // Close mobile menu when clicking on a link
+    mobileMenu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        mobileMenu.classList.remove("active");
+      });
+    });
+
+    // Smooth scroll to section
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Handle contact form submission
+    document
+      .getElementById("contactForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<div class="spinner mx-auto"></div>';
+        submitBtn.disabled = true;
+
+        // Simulate form submission
+        setTimeout(() => {
+          showModal(
+            "আপনার ভর্তির আবেদন সফলভাবে জমা হয়েছে। আমরা ২৪ ঘন্টার মধ্যে আপনার সাথে যোগাযোগ করব।"
+          );
+          this.reset();
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }, 1500);
+      });
+
+    // Handle newsletter subscription
+    document
+      .getElementById("newsletterForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+        showModal(
+          "আপনি সফলভাবে নিউজলেটারে সাবস্ক্রাইব করেছেন। সর্বশেষ আপডেট পেতে আমাদের অনুসরণ করুন।"
+        );
+        this.reset();
+      });
+
+    // Handle course enrollment
+    function enrollCourse(courseName) {
+      const courseNames = {
+        handwriting: "সুন্দর হাতের লেখা",
+        "basic-drawing": "বেসিক ড্রয়িং",
+        "advanced-art": "অ্যাডভান্সড আর্ট",
+        calligraphy: "ক্যালিগ্রাফি",
+        craft: "ক্রাফট ওয়ার্কশপ",
+        "digital-art": "ডিজিটাল আর্ট",
+      };
+
+      showModal(
+        `আপনি "${courseNames[courseName]}" কোর্সে ভর্তির জন্য আগ্রহ প্রকাশ করেছেন। ভর্তি ফর্ম পূরণ করতে নিচে নামুন।`
+      );
+      scrollToSection("contact");
+    }
+
+    // Show modal
+    function showModal(message) {
+      document.getElementById("modalMessage").textContent = message;
+      const modal = document.getElementById("successModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      setTimeout(() => {
+        modal.querySelector("div").classList.remove("scale-95");
+        modal.querySelector("div").classList.add("scale-100");
+      }, 10);
+    }
+
+    // Close modal
+    function closeModal() {
+      const modal = document.getElementById("successModal");
+      modal.querySelector("div").classList.remove("scale-100");
+      modal.querySelector("div").classList.add("scale-95");
+      setTimeout(() => {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }, 200);
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll(".faq-question").forEach((question) => {
+      question.addEventListener("click", () => {
+        const faqItem = question.parentElement;
+        const isActive = faqItem.classList.contains("active");
+
+        // Close all FAQ items
+        document.querySelectorAll(".faq-item").forEach((item) => {
+          item.classList.remove("active");
+        });
+
+        // Open clicked item if it wasn't active
+        if (!isActive) {
+          faqItem.classList.add("active");
+        }
+      });
+    });
+
+    // Back to top button
+    const backToTopButton = document.getElementById("backToTop");
+
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.add("visible");
+      } else {
+        backToTopButton.classList.remove("visible");
+      }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+
+    // Add scroll effect to navigation
+    window.addEventListener("scroll", function () {
+      const nav = document.querySelector("nav");
+      if (window.scrollY > 50) {
+        nav.classList.add("shadow-xl");
+      } else {
+        nav.classList.remove("shadow-xl");
+      }
+    });
+
+    // Add animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -100px 0px",
+    };
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animate-fadeInUp");
+        }
+      });
+    }, observerOptions);
+
+    // Observe all sections
+    document.querySelectorAll("section").forEach((section) => {
+      observer.observe(section);
+    });
+  </script>
+</body>
+
+</html>

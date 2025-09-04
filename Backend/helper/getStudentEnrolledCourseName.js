@@ -2,15 +2,17 @@ import Enrollment from "../models/enrollment.model.js";
 import Course from "../models/course.model.js";
 export const getStudentEnrolledCourseName = async (studentId) => {
     try {
-        const enrollments = await Enrollment.find({ studentId }).select('courseName fee');
+        const enrollments = await Enrollment.find({ studentId }).select('courseName courseTime fee');
         if (!enrollments || enrollments.length === 0) {
             return "Not Enrolled";
         }
         const courseNames = enrollments.map(e => e.courseName).join(', ');
+        const courseTimes = enrollments.map(e => e.courseTime).join(', ');
         const totalFee = enrollments.reduce((sum, e) => Number(sum) + Number(e.fee), 0);
 
         return {
             courseNames,
+            courseTimes,
             totalFee,
         };
     } catch (error) {

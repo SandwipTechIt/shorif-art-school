@@ -202,10 +202,11 @@ import Course from "../models/course.model.js";
 import Enrollment from "../models/enrollment.model.js";
 import Counter from "../models/studentID.model.js";
 import Payment from "../models/payment.model.js";
+import Invoice from "../models/invoice.model.js";
+import Transaction from "../models/transaction.model.js";
 
 import { deleteImage, getImageUrl, getFilenameFromUrl } from "../utils/imageUtils.js";
 import { getStudentEnrolledCourseName, createEnrollmentsForStudent } from "../helper/getStudentEnrolledCourseName.js";
-
 
 
 
@@ -228,6 +229,18 @@ export const createStudent = async (req, res) => {
       const baseUrl = `${req.protocol}://${req.get("host")}`;
       rest.img = getImageUrl(req.files.image[0].filename, baseUrl)
     }
+    if (rest.month) {
+      // Assuming month is 1-12 (January=1, February=2, etc.)
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const monthIndex = rest.month ;
+      rest.createdAt = new Date(year, monthIndex);
+
+      // OR for UTC (recommended for servers):
+      // rest.createdAt = new Date(Date.UTC(year, monthIndex, 1));
+    }
+
+
     await Counter.findByIdAndUpdate(
       "studentId",
       { $setOnInsert: { seq: 1000 } },
@@ -242,18 +255,44 @@ export const createStudent = async (req, res) => {
 
     const paymentData = {
       studentId: response._id,
-      month: new Date().getMonth(),
+      month: rest.month || new Date().getMonth(),
       year: new Date().getFullYear(),
       amount: totalFee
     }
     const payment = new Payment(paymentData);
     await payment.save();
 
+    const invoiceData = {
+      studentId: response._id,
+      studentID: student.id,
+      months: [rest.month || new Date().getMonth()],
+      amount: totalFee,
+      due: "0",
+      paymentIds: [payment.id]
+    }
+    const invoice = new Invoice(invoiceData);
+    await invoice.save();
 
+
+    const transactionData = {
+      title: "Student Admission",
+      amount: totalFee + Number(response.admissionFee),
+      type: "income",
+      createdAt: new Date()
+    }
+    const transaction = new Transaction(transactionData);
+    await transaction.save();
+
+    const toatalAmountPaid = totalFee + Number(response.admissionFee);
+
+    const newResponse = response.toObject();
+    newResponse.totalAmountPaid = toatalAmountPaid;
+    newResponse.courses = studentEnrollment;
+    newResponse.invoiceID = invoice._id;
     res.status(201).json({
       success: true,
       message: "Student created successfully",
-      student: response
+      student: newResponse,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -297,7 +336,6 @@ export const getStudents = async (req, res) => {
     const students = await Student.find(query)
       .select("id img name fatherName motherName mobileNumber whatsAppNumber createdAt courseId")
       .sort({ _id: -1 })
-      .limit(200)
 
 
     // await createManyStudents();
@@ -306,8 +344,9 @@ export const getStudents = async (req, res) => {
     const studentsWithCourseData = await Promise.all(
       students.map(async (student) => {
         const studentObj = student.toObject();
-        const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id);
+        const { courseNames, courseTimes, totalFee } = await getStudentEnrolledCourseName(student._id);
         studentObj.courseName = courseNames;
+        studentObj.courseTimes = courseTimes;
         studentObj.totalFee = totalFee;
         return studentObj;
       })
@@ -322,28 +361,39 @@ export const getStudents = async (req, res) => {
 export const searchStudents = async (req, res) => {
   const status = req.query.status || "active";
   try {
-    const students = await Student.find({
-      status,
-    })
-      .select("name fatherName motherName mobileNumber createdAt")
-      // .populate({
-      //   path: "courseId",
-      //   select: "name", // Only fetch the 'name' field from Course
-      // })
-      .sort({ _id: -1 });
 
-    // const transformedStudents = students.map((student) => {
-    //   const studentObj = student.toObject();
-    //   if (studentObj) {
-    //     studentObj.courseName = studentObj.courseId.name;
-    //     delete studentObj.courseId; // Remove the original courseID
-    //   }
-    //   return studentObj;
-    // });
+    const query = req.params.query;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape regex chars
 
-    console.log(students);
+    const filter = {
+      $or: [
+        { name: { $regex: escaped, $options: "i" } },
+        { fatherName: { $regex: escaped, $options: "i" } },
+        { motherName: { $regex: escaped, $options: "i" } },
+        { profession: { $regex: escaped, $options: "i" } },
+        { schoolName: { $regex: escaped, $options: "i" } },
+        { address: { $regex: escaped, $options: "i" } },
+        { mobileNumber: { $regex: escaped, $options: "i" } },
+        { whatsAppNumber: { $regex: escaped, $options: "i" } },
+        { admissionFee: { $regex: escaped, $options: "i" } },
+      ]
+    };
 
-    res.status(200).json(students);
+    const students = await Student.find(filter);
+
+    const studentsWithCourseData = await Promise.all(
+      students.map(async (student) => {
+        const studentObj = student.toObject();
+        const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id);
+        studentObj.courseName = courseNames;
+        studentObj.totalFee = totalFee;
+        return studentObj;
+      })
+    );
+
+    console.log(studentsWithCourseData);
+
+    res.status(200).json(studentsWithCourseData);
   } catch (error) {
     console.log(error);
 

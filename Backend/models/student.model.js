@@ -23,7 +23,7 @@ const studentSchema = new mongoose.Schema(
       trim: true,
     },
     dob: {
-      type: Date,
+      type: String,
     },
     profession: {
       type: String,

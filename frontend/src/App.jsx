@@ -29,7 +29,8 @@ import AddPayment from "./pages/payment/addPayment";
 import AllPayment from "./pages/payment/allPayment";
 import DuePayment from "./pages/payment/duePayment";
 
-
+import AddTransaction from "./pages/transaction/addTransaction";
+import AllTransaction from "./pages/transaction/showTransactions";
 
 import MainMessage from "./pages/message/mainMessage";
 import WhatsappMessage from "./pages/message/whatsappMessage";
@@ -67,6 +68,9 @@ export default function App() {
               <Route path="/payment/add/:id" element={<AddPayment />} />
               <Route path="/payment/all" element={<AllPayment />} />
               <Route path="/payment/due" element={<DuePayment />} />
+              {/* Transaction routes */}
+              <Route path="/addTransaction" element={<AddTransaction />} />
+              <Route path="/transactions" element={<AllTransaction />} />
               {/* Message routes */}
               <Route path="/message/main" element={<MainMessage />} />  
               <Route path="/message/whatsapp" element={<WhatsappMessage />} />

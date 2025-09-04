@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 const AllStudents = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const queryClient = useQueryClient();
 
   // Fetch students data using React Query
@@ -57,6 +59,17 @@ const AllStudents = () => {
     setCurrentPage(1); // Reset to the first page on a new search
   };
 
+  const handleCourseChange = (e) => {
+    setSelectedCourse(e.target.value);
+    setSelectedTime(""); // Reset time when course changes
+    setCurrentPage(1);
+  };
+
+  const handleTimeChange = (e) => {
+    setSelectedTime(e.target.value);
+    setCurrentPage(1);
+  };
+
 
 
 
@@ -72,20 +85,22 @@ const AllStudents = () => {
       />
     );
   }
-  // Filter students based on the search term
+  // Filter students based on the search term, selected course, and time
   const filteredStudents = data.filter((student) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const courseMatch = !selectedCourse || student.courseName?.includes(selectedCourse);
+    const timeMatch = !selectedTime || student.courseTimes?.includes(selectedTime);
+
+    const searchMatch = (
       String(student.id).toLowerCase().includes(term) ||
       student.name.toLowerCase().includes(term) ||
-      (student.fatherName &&
-        student.fatherName.toLowerCase().includes(term)) ||
-      (student.motherName &&
-        student.motherName.toLowerCase().includes(term)) ||
-      (student.courseName &&
-        student.courseName.toLowerCase().includes(term)) ||
+      (student.fatherName && student.fatherName.toLowerCase().includes(term)) ||
+      (student.motherName && student.motherName.toLowerCase().includes(term)) ||
+      (student.courseName && student.courseName.toLowerCase().includes(term)) ||
       (student.mobileNumber && student.mobileNumber.toLowerCase().includes(term))
     );
+
+    return courseMatch && timeMatch && searchMatch;
   });
 
   // Calculate pagination values
@@ -103,7 +118,11 @@ const AllStudents = () => {
         <StudentHeader
           searchTerm={searchTerm}
           onSearchChange={handleSearchChange}
-          status="inactive"
+          status="Active"
+          selectedCourse={selectedCourse}
+          selectedTime={selectedTime}
+          onCourseChange={handleCourseChange}
+          onTimeChange={handleTimeChange}
         />
 
         <div className="studentTable">
