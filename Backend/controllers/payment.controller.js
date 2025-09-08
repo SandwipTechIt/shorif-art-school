@@ -101,7 +101,7 @@ export const createPayment = async (req, res, next) => {
 
 export const getAllPayments = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = 5;
+  const limit = 20;
   const skip = (page - 1) * limit;
 
 

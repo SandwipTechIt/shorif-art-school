@@ -526,6 +526,9 @@ export const updateStudent = async (req, res) => {
 export const deleteStudent = async (req, res) => {
   try {
     const student = await Student.findByIdAndDelete(req.params.id);
+    await Enrollment.deleteMany({ studentId: req.params.id });
+    await Payment.deleteMany({ studentId: req.params.id });
+    await Invoice.deleteMany({ studentId: req.params.id });
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }

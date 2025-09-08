@@ -83,6 +83,10 @@ const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
 const Invoice = ({ student, courseName, invoiceId, payment, due, studentID }) => {
     return (
         <div className="p-6">
+            <div className="flex justify-between items-center">
+                <h1 className="text-3xl font-bold uppercase">Invoice</h1>
+                <img src="/logo.png" className="w-24" alt="" />
+            </div>
             <div className="flex justify-between">
                 <p className="text-lg font-semibold">Student Payment Invoice</p>
                 <p className="text-lg font-semibold">Date: <span className="font-normal">{formateDate(new Date())}</span></p>
@@ -112,23 +116,29 @@ const Invoice = ({ student, courseName, invoiceId, payment, due, studentID }) =>
 }
 
 const StudentTableRow = ({ student, onDeleteRequest }) => {
+    console.log(student);
+
     // Each row now gets its own ref and its own print handler
     const contentRef = useRef(null);
     const reactToPrintFn = useReactToPrint({ contentRef })
-    
+
     return (
         <tr className="mb-4 block rounded-lg border border-b-2 hover:bg-gray-50 dark:hover:bg-gray-500 even:bg-gray-50 dark:even:bg-gray-dark md:mb-0 md:table-row md:border-0 md:border-b dark:text-white">
             <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Image</span>
                 <img
-                  src={student.studentId.img || "/default.png"}
-                  className="h-[50px] w-[50px] object-contain"
-                  alt={student.name || "Student"}
+                    src={student.studentId.img || "/default.png"}
+                    className="h-[50px] w-[50px] object-contain"
+                    alt={student.name || "Student"}
                 />
             </td>
             <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Id</span>
-                {String(student.studentID)}
+                {String(student?.studentID)}
+            </td>
+            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
+                <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Id</span>
+                {String(student?.studentId?.name)}
             </td>
             <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Month</span>
@@ -223,6 +233,7 @@ export default ({ students, onDeleteStudent }) => {
                     <tr>
                         <th className="bg-[#721c24] p-4 text-left text-white">Image</th>
                         <th className="bg-[#721c24] p-4 text-left text-white">Id</th>
+                        <th className="bg-[#721c24] p-4 text-left text-white">Name</th>
                         <th className="bg-[#721c24] p-4 text-left text-white">Month</th>
                         <th className="bg-[#721c24] p-4 text-left text-white">Amount</th>
                         <th className="bg-[#721c24] p-4 text-left text-white">Due</th>

@@ -124,6 +124,10 @@ const ImageInput = ({ label, onChange, preview, onRemove, error }) => (
 const Invoice = ({ student, courses, totalAmountPaid, invoiceID }) => {
   return (
     <div className="p-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold uppercase">Invoice</h1>
+        <img src="/logo.png" className="w-24" alt="" />
+      </div>
       <div className="flex justify-between">
         <p className="text-lg font-semibold">Student Payment Invoice</p>
         <p className="text-lg font-semibold">Date: <span className="font-normal">{formateDate(new Date())}</span></p>
@@ -140,11 +144,11 @@ const Invoice = ({ student, courses, totalAmountPaid, invoiceID }) => {
       <hr className="my-4" style={{ color: "black" }} />
       <div className="flex items-center justify-evenly">
         <div>
-          <p className="text-center mt-2">__________________</p>
+          <p className="text-center mt-5">__________________</p>
           <p className="text-center">Guardian Signature</p>
         </div>
         <div>
-          <p className="text-center mt-2">__________________</p>
+          <p className="text-center mt-5">__________________</p>
           <p className="text-center">Student Signature</p>
         </div>
       </div>

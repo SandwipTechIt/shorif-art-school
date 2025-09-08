@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>সকল ছাত্রছাত্রী - শরীফ আর্ট স্কুল</title>
+  <link rel="icon" href="logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&display=swap");
+
+    :root {
+      --primary: #6366f1;
+      --secondary: #8b5cf6;
+      --accent: #ec4899;
+      --dark: #1e293b;
+      --light: #f8fafc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Tiro Bangla", "Noto Sans Bengali", sans-serif;
+      overflow-x: hidden;
+      background-color: var(--light);
+    }
+
+    /* Navigation */
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .mobile-menu.active {
+      transform: translateX(0);
+    }
+
+    /* Student Cards */
+    .student-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .student-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .student-info {
+      padding: 1rem;
+    }
+
+    .student-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .student-course {
+      color: var(--primary);
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .student-id {
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fadeInUp {
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    /* Gradient Backgrounds */
+    .gradient-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+
+    /* Back to Top Button */
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--primary);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    #backToTop.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #backToTop:hover {
+      background: var(--secondary);
+      transform: translateY(-5px);
+    }
+
+    /* Section Styles */
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 2px;
+    }
+
+    .section-subtitle {
+      color: #6b7280;
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Course Section Styles */
+    .course-section {
+      margin-bottom: 4rem;
+    }
+
+    .course-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--dark);
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .course-title.drawing {
+      color: var(--primary);
+    }
+
+    .course-title.handwriting {
+      color: var(--secondary);
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-md z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+          <img src="https://i.ibb.co/qY8wgT24/logo.png" class="w-10 h-10" alt="" />
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html#home" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">হোম</a>
+          <a href="index.html#about" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">আমাদের সম্পর্কে</a>
+          <a href="index.html#courses" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">কোর্স</a>
+          <a href="index.html#methodology" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">পদ্ধতি</a>
+          <a href="index.html#gallery" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">গ্যালারি</a>
+          <a href="index.html#faq" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">FAQ</a>
+          <a href="index.html#contact" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">যোগাযোগ</a>
+          <a href="tel:01616-010205"
+            class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
+            <i class="fas fa-phone-alt mr-3 text-xl "></i>
+            ভর্তি হন
+            <svg class="ml-2 w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu bg-white fixed top-0 right-0 w-64 h-full shadow-lg md:hidden">
+      <div class="p-4 bg-white h-screen">
+        <button id="closeMobileMenu" class="text-gray-700 float-right">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+        <div class="clear-both mt-8 space-y-4">
+          <a href="index.html#home" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">হোম</a>
+          <a href="index.html#about" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">আমাদের সম্পর্কে</a>
+          <a href="index.html#courses" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">কোর্স</a>
+          <a href="index.html#methodology" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">পদ্ধতি</a>
+          <a href="index.html#gallery" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">গ্যালারি</a>
+          <a href="index.html#faq" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">FAQ</a>
+          <a href="index.html#contact" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">যোগাযোগ</a>
+          <a href="tel:01616-010205"
+            class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
+            <i class="fas fa-phone-alt mr-3 text-xl "></i>
+            ভর্তি হন
+            <svg class="ml-2 w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div class="container mx-auto px-4 py-12">
+      
+      <!-- Page Header -->
+      <div class="section-header">
+        <h1 class="section-title">আমাদের সকল ছাত্রছাত্রী</h1>
+        <p class="section-subtitle">
+          শরীফ আর্ট স্কুলের প্রতিভাবান শিক্ষার্থীরা যারা বিভিন্ন কোর্সে অংশগ্রহণ করে তাদের দক্ষতা বিকাশ করছে
+        </p>
+        
+        <!-- Back to Home Button -->
+        <div class="mt-8">
+          <a href="index.html" 
+            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
+            <i class="fas fa-home mr-2"></i>
+            হোম পেজে ফিরে যান
+          </a>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="studentsLoading" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <p class="mt-4 text-gray-600">ছাত্রছাত্রীদের তথ্য লোড হচ্ছে...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="studentsError" class="hidden text-center py-12">
+        <div class="text-red-500 mb-4">
+          <i class="fas fa-exclamation-triangle text-4xl"></i>
+        </div>
+        <p class="text-gray-600 mb-4">ছাত্রছাত্রীদের তথ্য লোড করতে সমস্যা হয়েছে।</p>
+        <button onclick="loadAllStudents()"
+          class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+          আবার চেষ্টা করুন
+        </button>
+      </div>
+
+      <!-- Students Container -->
+      <div id="studentsContainer" class="hidden">
+        
+        <!-- Drawing Students Section -->
+        <div id="drawingSection" class="course-section">
+          <h2 class="course-title drawing">
+            <i class="fas fa-paint-brush mr-3"></i>
+            চিত্রাংকন কোর্সের ছাত্রছাত্রী
+          </h2>
+          <div id="drawingStudents" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <!-- Drawing students will be populated here -->
+          </div>
+        </div>
+
+        <!-- Handwriting Students Section -->
+        <div id="handwritingSection" class="course-section">
+          <h2 class="course-title handwriting">
+            <i class="fas fa-pen-fancy mr-3"></i>
+            সুন্দর হাতের লেখা কোর্সের ছাত্রছাত্রী
+          </h2>
+          <div id="handwritingStudents" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <!-- Handwriting students will be populated here -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 gradient-primary rounded-full flex items-center justify-center">
+              <i class="fas fa-palette text-white text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold">শরীফ আর্ট স্কুল</h3>
+          </div>
+          <p class="text-gray-400 mb-4">
+            শিশুদের সৃজনশীলতা বিকাশে প্রতিশ্রুতিবদ্ধ। আমরা বিশ্বাস করি প্রতিটি
+            শিশুর মধ্যেই একজন শিল্পী লুকিয়ে আছে।
+          </p>
+          <div class="flex space-x-4">
+            <a href="https://www.facebook.com/shorifartschool" class="text-gray-400 hover:text-white transition">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.instagram.com/shorifartschool" class="text-gray-400 hover:text-white transition">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4">দ্রুত লিংক</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="index.html#home" class="text-gray-400 hover:text-white transition">হোম</a>
+            </li>
+            <li>
+              <a href="index.html#about" class="text-gray-400 hover:text-white transition">আমাদের সম্পর্কে</a>
+            </li>
+            <li>
+              <a href="index.html#courses" class="text-gray-400 hover:text-white transition">কোর্স</a>
+            </li>
+            <li>
+              <a href="index.html#methodology" class="text-gray-400 hover:text-white transition">পদ্ধতি</a>
+            </li>
+            <li>
+              <a href="index.html#gallery" class="text-gray-400 hover:text-white transition">গ্যালারি</a>
+            </li>
+            <li>
+              <a href="index.html#faq" class="text-gray-400 hover:text-white transition">FAQ</a>
+            </li>
+            <li>
+              <a href="index.html#contact" class="text-gray-400 hover:text-white transition">যোগাযোগ</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4">কোর্সসমূহ</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="index.html#courses" class="text-gray-400 hover:text-white transition">সুন্দর হাতের লেখা</a>
+            </li>
+            <li>
+              <a href="index.html#courses" class="text-gray-400 hover:text-white transition">বেসিক ড্রয়িং</a>
+            </li>
+            <li>
+              <a href="index.html#courses" class="text-gray-400 hover:text-white transition">অ্যাডভান্সড আর্ট</a>
+            </li>
+            <li>
+              <a href="index.html#courses" class="text-gray-400 hover:text-white transition">ক্যালিগ্রাফি</a>
+            </li>
+            <li>
+              <a href="index.html#courses" class="text-gray-400 hover:text-white transition">ক্রাফট ওয়ার্কশপ</a>
+            </li>
+            <li>
+              <a href="index.html#courses" class="text-gray-400 hover:text-white transition">ডিজিটাল আর্ট</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4">যোগাযোগ</h4>
+          <div class="space-y-3 text-gray-400">
+            <div class="flex items-center">
+              <i class="fas fa-phone mr-3"></i>
+              <span>01616-010205</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-envelope mr-3"></i>
+              <span>info@shorifartschool.com</span>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-map-marker-alt mr-3 mt-1"></i>
+              <span>চট্টগ্রাম, বাংলাদেশ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <p>
+          &copy; 2025 শরীফ আর্ট স্কুল। সর্বস্বত্ব সংরক্ষিত। | ডেভেলপড বাই
+          <a href="#" class="hover:text-white transition">TechCraft</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <div id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <script>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const closeMobileMenu = document.getElementById("closeMobileMenu");
+
+    mobileMenuBtn.addEventListener("click", () => {
+      mobileMenu.classList.add("active");
+    });
+
+    closeMobileMenu.addEventListener("click", () => {
+      mobileMenu.classList.remove("active");
+    });
+
+    // Close mobile menu when clicking on a link
+    mobileMenu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        mobileMenu.classList.remove("active");
+      });
+    });
+
+    // Back to top button
+    const backToTopButton = document.getElementById("backToTop");
+
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.add("visible");
+      } else {
+        backToTopButton.classList.remove("visible");
+      }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+
+    // Add scroll effect to navigation
+    window.addEventListener("scroll", function () {
+      const nav = document.querySelector("nav");
+      if (window.scrollY > 50) {
+        nav.classList.add("shadow-xl");
+      } else {
+        nav.classList.remove("shadow-xl");
+      }
+    });
+
+    // Students functionality
+    let allStudents = [];
+
+    // Load students on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      loadAllStudents();
+    });
+
+    // Load students from API
+    async function loadAllStudents() {
+      try {
+        showStudentsLoading();
+        const response = await fetch('https://api.shorifartschool.com/getStudents');
+
+        if (response.ok) {
+          allStudents = await response.json();
+          hideStudentsLoading();
+          displayAllStudents();
+        } else {
+          throw new Error('Failed to fetch students');
+        }
+      } catch (error) {
+        console.error('Error loading students:', error);
+        showStudentsError();
+      }
+    }
+
+    // Show loading state
+    function showStudentsLoading() {
+      document.getElementById('studentsLoading').classList.remove('hidden');
+      document.getElementById('studentsContainer').classList.add('hidden');
+      document.getElementById('studentsError').classList.add('hidden');
+    }
+
+    // Hide loading state
+    function hideStudentsLoading() {
+      document.getElementById('studentsLoading').classList.add('hidden');
+      document.getElementById('studentsContainer').classList.remove('hidden');
+      document.getElementById('studentsError').classList.add('hidden');
+    }
+
+    // Show error state
+    function showStudentsError() {
+      document.getElementById('studentsLoading').classList.add('hidden');
+      document.getElementById('studentsContainer').classList.add('hidden');
+      document.getElementById('studentsError').classList.remove('hidden');
+    }
+
+    // Display all students by course type
+    function displayAllStudents() {
+      if (allStudents.length === 0) return;
+
+      // Filter and display drawing students
+      const drawingStudents = filterStudentsByType('drawing');
+      const drawingStudentsWithImages = drawingStudents.filter(student => student.img);
+      displayStudentsInContainer('drawingStudents', drawingStudentsWithImages);
+
+      // Filter and display handwriting students
+      const handwritingStudents = filterStudentsByType('handwriting');
+      const handwritingStudentsWithImages = handwritingStudents.filter(student => student.img);
+      displayStudentsInContainer('handwritingStudents', handwritingStudentsWithImages);
+
+      // Hide sections if no students
+      if (drawingStudentsWithImages.length === 0) {
+        document.getElementById('drawingSection').style.display = 'none';
+      }
+      if (handwritingStudentsWithImages.length === 0) {
+        document.getElementById('handwritingSection').style.display = 'none';
+      }
+    }
+
+    // Filter students by course type
+    function filterStudentsByType(type) {
+      return allStudents.filter(student => {
+        const courseName = student.courseName.toLowerCase();
+
+        switch (type) {
+          case 'drawing':
+            return courseName.includes('drawing') || courseName.includes('art') || courseName.includes('sketch');
+          case 'handwriting':
+            return courseName.includes('handwriting') || courseName.includes('writing');
+          default:
+            return false;
+        }
+      });
+    }
+
+    // Display students in specific container
+    function displayStudentsInContainer(containerId, students) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      students.forEach(student => {
+        const studentCard = createStudentCard(student);
+        container.appendChild(studentCard);
+      });
+    }
+
+    // Create student card element
+    function createStudentCard(student) {
+      const card = document.createElement('div');
+      card.className = 'student-card animate-fadeInUp';
+
+      // Convert course names to Bengali
+      const bengaliCourseName = convertCourseToBengali(student.courseName);
+
+      card.innerHTML = `
+        <img src="${student.img}" alt="${student.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTA4LjI4NCA3MCA5NS4wNCA3MCA5NS4wNCA3MEM5NS4wNCA3MCA5NS4wNCA4Mi45NiA5NS4wNCA4Mi45NkM5NS4wNCA4Mi45NiAxMDQuOTYgODIuOTYgMTA0Ljk2IDgyLjk2QzEwNC45NiA4Mi45NiAxMDQuOTYgNzAgMTA0Ljk2IDcwWiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'">
+        <div class="student-info">
+          <div class="student-name">${student.name}</div>
+          <div class="student-course">${bengaliCourseName}</div>
+          <div class="student-id">ID: ${student.id}</div>
+        </div>
+      `;
+
+      return card;
+    }
+
+    // Convert English course names to Bengali
+    function convertCourseToBengali(courseName) {
+      const courseMap = {
+        'handwriting': 'সুন্দর হাতের লেখা',
+        'writing': 'সুন্দর হাতের লেখা',
+        'calligraphy': 'ক্যালিগ্রাফি',
+        'drawing': 'চিত্রাংকন',
+        'art': 'চিত্রাংকন',
+        'sketch': 'চিত্রাংকন'
+      };
+
+      let bengaliName = courseName;
+
+      // Replace common English terms with Bengali
+      Object.keys(courseMap).forEach(english => {
+        const regex = new RegExp(english, 'gi');
+        bengaliName = bengaliName.replace(regex, courseMap[english]);
+      });
+
+      return bengaliName;
+    }
+  </script>
+</body>
+</html>

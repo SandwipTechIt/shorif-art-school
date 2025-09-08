@@ -1,7 +1,8 @@
 import Student from "../models/student.model.js";
 import Message from "../models/message.model.js";
 import Payment from "../models/payment.model.js";
-import {getStudentEnrolledCourseName} from "../helper/getStudentEnrolledCourseName.js";
+import { getStudentEnrolledCourseName } from "../helper/getStudentEnrolledCourseName.js";
+import { getTotalPaid } from "../helper/dues.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -101,18 +102,11 @@ export const getMessages = async (req, res) => {
     }
 };
 export const getMessageExample = async (req, res) => {
+
+
+    const message = "প্রিয় ইমরান ইফাদ আইডি 1001 কোর্স Drawing,Handwriting আপনার ফি 1600 টাকা এখনো পরিশোধ হয়নি। অনুগ্রহ করে পরিশোধ করার জন্য বিনীতভাবে অনুরোধ করা হচ্ছে   ধন্যবাদ।"
     try {
-        const messageTemplate = await Message.findOne();
-        const message = messageTemplate.message
-            .replace("{{studentName}}", "ইমরান ইফাদ")
-            .replace("{{dueAmount}}", "২০০০")
-            .replace("{{currentMonthNameYear}}", new Date().toLocaleString("bn-BD", { month: "long", year: "numeric" }))
-            .replace("{{monthName}}", (() => {
-                const now = new Date();
-                const previousMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-                return previousMonthDate.toLocaleString("bn-BD", { month: "long" });
-            })());
-        console.log(message);
+
         res.status(200).json(message);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -159,39 +153,106 @@ export const sendMessage = async (req, res) => {
     }
 };
 
-export const sendDueMessage = async (req, res) => {
+// export const sendDueMessage = async (req, res) => {
+//     try {
+//         const messageTemplate = await Message.findOne();
+
+//         const students = await Student.find({ status: "active" })
+//             .select("mobileNumber name createdAt ");
+
+
+
+//         let totalSentMessageAmount = 0;
+//         for (const student of students) {
+//             const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id);
+//             const message = messageTemplate.message
+//                 .replace("{{studentName}}", student.name)
+//                 .replace("{{dueAmount}}", totalFee)
+//                 .replace("{{currentMonthNameYear}}", new Date().toLocaleString("bn-BD", { month: "long", year: "numeric" }))
+//                 .replace("{{monthName}}", courseNames);
+
+//             if (totalDue > 0) {
+//                 try {
+//                     const response = await fetch(message_URL + "/sms?ApiKey=" + apiKey + "&SenderId=" + senderId + "&IsUnicode=1" + "&number=" + student.mobileNumber + "&sms=" + message);
+//                     const data = await response.json();
+//                     if (data?.ErrorCode === "1") totalSentMessageAmount += 1;
+//                     console.log(data);
+//                 } catch (error) {
+//                     console.log(error);
+//                 }
+//             }
+//         }
+
+
+//         res.status(200).json({ message: "Message sent successfully", totalSentMessageAmount, totalStudent: students.length });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// };
+
+
+export const sendDueMessage = async (req, res, next) => {
+
     try {
-        const messageTemplate = await Message.findOne();
+        const students = await Student.find({}).sort({ createdAt: 1 }).select("name id mobileNumber createdAt")
 
-        const students = await Student.find({ status: "active" })
-            .select("mobileNumber name createdAt ");
 
+        const studentsWithDues = await Promise.all(
+            students.map(async (student) => {
+                const amountPaid = await getTotalPaid(student._id.toString());
+                const currentDate = new Date();
+                const monthsEnrolled = (currentDate.getFullYear() - student.createdAt.getFullYear()) * 12 +
+                    (currentDate.getMonth() - student.createdAt.getMonth()) + 1;
+                const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id.toString());
+
+                const totalExpected = totalFee * monthsEnrolled;
+                const outstandingDues = totalExpected - amountPaid;
+
+
+                const studentObj = student.toObject(); // or student.toJSON()
+                studentObj.courseNames = courseNames;
+                studentObj.dues = outstandingDues;
+                return studentObj;
+            })
+        );
+
+        const studentsWithOutstandingDues = studentsWithDues.filter(student => student.dues > 0);
+        console.log(studentsWithOutstandingDues);
 
 
         let totalSentMessageAmount = 0;
-        for (const student of students) {
-            const { courseNames, totalFee } = await getStudentEnrolledCourseName(student._id);
-            const message = messageTemplate.message
-                .replace("{{studentName}}", student.name)
-                .replace("{{dueAmount}}", totalFee)
-                .replace("{{currentMonthNameYear}}", new Date().toLocaleString("bn-BD", { month: "long", year: "numeric" }))
-                .replace("{{monthName}}", courseNames);
+        const smsResults = [];
+        for (const student of studentsWithOutstandingDues) {
+            const message = `প্রিয় ${student.name} আইডি ${student.id} কোর্স ${student.courseNames} আপনার ফি ${student.dues} টাকা এখনো পরিশোধ হয়নি। অনুগ্রহ করে পরিশোধ করার জন্য বিনীতভাবে অনুরোধ করা হচ্ছে ধন্যবাদ।`;
 
-            if (totalDue > 0) {
-                try {
-                    const response = await fetch(message_URL + "/sms?ApiKey=" + apiKey + "&SenderId=" + senderId + "&IsUnicode=1" + "&number=" + student.mobileNumber + "&sms=" + message);
-                    const data = await response.json();
-                    if(data?.ErrorCode === "1") totalSentMessageAmount += 1;
-                    console.log(data);
-                } catch (error) {
-                    console.log(error);
+            const url = `${message_URL}/sms?ApiKey=${apiKey}&SenderId=${senderId}&IsUnicode=1&number=${student.mobileNumber}&sms=${encodeURIComponent(message)}`;
+
+            try {
+                // const response = await fetch(url);
+                const response = await fetch(message_URL + "/sms?ApiKey=" + apiKey + "&SenderID=" + senderId + "&IsUnicode=1" + "&number=" + student.mobileNumber + "&sms=" + message);
+
+                const data = await response.json();
+
+                if (data?.ErrorCode === "1") {
+                    totalSentMessageAmount += 1;
                 }
+                smsResults.push({ studentId: student.id, status: "sent", response: data });
+            } catch (err) {
+                console.error(`Failed to send SMS to student ${student.id}:`, err);
+                smsResults.push({ studentId: student.id, status: "failed", error: err.message });
             }
         }
 
+        console.log(smsResults);
 
-        res.status(200).json({ message: "Message sent successfully", totalSentMessageAmount, totalStudent: students.length });
+        return res.status(200).json({
+            success: true,
+            totalSent: totalSentMessageAmount,
+            data: studentsWithOutstandingDues,
+            smsResults,
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return next(createError(500, error.message || "Internal server error"));
     }
 };
+
