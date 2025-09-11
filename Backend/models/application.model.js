@@ -5,10 +5,10 @@ const ApplicationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email: {
+    phone: {
         type: String
     },
-    phone: {
+    whatsappNumber: {
         type: String
     },
     gender: {

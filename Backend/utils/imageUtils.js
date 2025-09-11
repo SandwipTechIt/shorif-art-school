@@ -24,7 +24,7 @@ export const deleteImage = async (filename) => {
 
 export const getImageUrl = (filename, baseUrl = '') => {
     if (!filename) return null;
-    return `${baseUrl}/images/${filename} `;
+    return `${baseUrl}/images/${filename}`;
 };
 
 export const getFilenameFromUrl = (imageUrl) => {

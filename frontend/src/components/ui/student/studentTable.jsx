@@ -134,7 +134,7 @@ export const StudentTable = ({ students, onDeleteStudent, searchTerm }) => {
           <tr>
             {/* <th className="bg-[#721c24] p-4 text-left text-white">Image</th> */}
             <th className="bg-[#721c24] p-4 text-left text-white">Img</th>
-            <th className="bg-[#721c24] p-4 text-left text-white">Id</th>
+            <th className="bg-[#721c24] p-4 text-left text-white">ID</th>
             <th className="bg-[#721c24] p-4 text-left text-white">Name</th>
             <th className="bg-[#721c24] p-4 text-left text-white">Father</th>
             <th className="bg-[#721c24] p-4 text-left text-white">Mother</th>
@@ -169,7 +169,7 @@ export const StudentTable = ({ students, onDeleteStudent, searchTerm }) => {
               </td>
               <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">
-                  Id
+                  ID
                 </span>
                 {getHighlightedText(String(student.id), searchTerm)}
               </td>

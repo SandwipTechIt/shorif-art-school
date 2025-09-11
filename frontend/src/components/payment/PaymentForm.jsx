@@ -5,36 +5,7 @@ import { MultiSelect } from "../../components/ui/multiselect";
 import { calculateMonthlyDues } from "../../utiils/paymentLogic";
 import { postApi } from "../../api";
 import { toast } from "react-toastify";
-const Invoice = ({ student, courseName, invoiceId, payment, due }) => {
-  return (
-    <div className="p-6">
-      <div className="flex justify-between">
-        <p className="text-lg font-semibold">Student Payment Invoice</p>
-        <p className="text-lg font-semibold">Date: <span className="font-normal">{formateDate(new Date())}</span></p>
-      </div>
-      <hr className="my-4" style={{ color: "black" }} />
-      <div className="grid grid-cols-2 gap-4">
-        <p className="font-semibold">Student Name: <span className="font-normal">{student?.name}</span></p>
-        <p className="font-semibold">Invoice ID: <span className="font-normal uppercase">{invoiceId}</span></p>
-        <p className="font-semibold">Father Name: <span className="font-normal">{student?.fatherName}</span></p>
-        <p className="font-semibold">Payment: <span className="font-normal">{payment}</span></p>
-        <p className="font-semibold">Course: <span className="font-normal">{courseName}</span></p>
-        <p className="font-semibold">Remaining Due: <span className="font-normal">{Math.max(due, 0)}</span></p>
-      </div>
-      <hr className="my-4" style={{ color: "black" }} />
-      <div className="flex items-center justify-evenly">
-        <div>
-          <p className="text-center mt-2">__________________</p>
-          <p className="text-center">Guardian Signature</p>
-        </div>
-        <div>
-          <p className="text-center mt-2">__________________</p>
-          <p className="text-center">Student Signature</p>
-        </div>
-      </div>
-    </div>
-  )
-}
+
 
 
 const months = [
@@ -51,6 +22,145 @@ const months = [
   { label: "November", value: "10" },
   { label: "December", value: "11" },
 ];
+function getMonthNames(indices) {
+  if (!indices || !Array.isArray(indices)) return "";
+  return indices
+    .map(i => {
+      const month = months.find(m => m.value === String(i));
+      return month ? month.label : null;
+    })
+    .filter(Boolean) // removes nulls in case of invalid indices
+    .join(", ");
+}
+
+// const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth }) => {
+//   const monthNames = getMonthNames(paymentMonth)
+
+//   return (
+//     <div className="p-6">
+//       <div className="flex justify-between items-center">
+//         <h1 className="text-3xl font-bold uppercase">Invoice</h1>
+//         <img src="/logo.png" className="w-24" alt="" />
+//       </div>
+//       <div className="flex justify-between">
+//         <p className="text-lg font-semibold">Student Payment Invoice</p>
+//         <p className="text-lg font-semibold">Date: <span className="font-normal">{formateDate(new Date())}</span></p>
+//       </div>
+//       <hr className="my-4" style={{ color: "black" }} />
+//       <div className="grid grid-cols-2 gap-4">
+//         <p className="font-semibold">Invoice ID: <span className="font-normal uppercase">{invoiceId}</span></p>
+//         <p className="font-semibold">Month: <span className="font-normal">{monthNames}</span></p>
+//         <p className="font-semibold">Name: <span className="font-normal">{student?.name}</span></p>
+//         <p className="font-semibold">Payment: <span className="font-normal">{payment}</span></p>
+//         <p className="font-semibold">Course: <span className="font-normal">{courseName}</span></p>
+//         <p className="font-semibold">Remaining Due: <span className="font-normal">{Math.max(due, 0)}</span></p>
+//       </div>
+//       <hr className="my-4" style={{ color: "black" }} />
+//       <div className="flex items-center justify-evenly">
+//         <div>
+//           <p className="text-center mt-2">__________________</p>
+//           <p className="text-center">Guardian Signature</p>
+//         </div>
+//         <div>
+//           <p className="text-center mt-2">__________________</p>
+//           <p className="text-center">Student Signature</p>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth }) => {
+  const monthNames = getMonthNames(paymentMonth);
+
+  return (
+    <div className="max-h-[148.5mm] w-full bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-lg px-8 pt-6 pb-2 flex flex-col">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-2">
+        <div className="flex items-center space-x-4">
+          <div className="bg-white p-2 rounded-lg shadow-sm">
+            <img src="/logo.png" className="w-16 h-16" alt="Shorif Art School" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-indigo-900">Shorif Art School</h1>
+            <p className="text-sm text-indigo-600">Halishahar, Chittagong</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-lg font-semibold text-gray-700">Payment Invoice</p>
+          <p className="text-sm text-gray-500">{formateDate(new Date())}</p>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-indigo-200 to-transparent my-4"></div>
+
+      {/* Invoice Details */}
+      <div className="bg-white rounded-xl p-6 shadow-sm mb-6 flex-grow">
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Invoice Details</p>
+              <div className="mt-2 space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Invoice ID:</span>
+                  <span className="font-medium text-gray-800">{invoiceId}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Month:</span>
+                  <span className="font-medium text-gray-800">{monthNames}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs font-semibold text-purple-600 uppercase tracking-wider">Student Information</p>
+              <div className="mt-2 space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Name:</span>
+                  <span className="font-medium text-gray-800">{student?.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Course:</span>
+                  <span className="font-medium text-gray-800">{courseName}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Payment Summary */}
+        <div className="mt-6 pt-4 border-t border-gray-100">
+          <div className="flex justify-between">
+            <div>
+              <p className="text-sm text-gray-500">Payment Amount</p>
+              <p className="text-xl font-bold text-indigo-700">{payment}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-gray-500">Remaining Due</p>
+              <p className="text-xl font-bold text-purple-700">{due}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Signature Section */}
+      <div className="flex justify-evenly items-center mt-4">
+        <div className="text-center">
+          <div className="h-px w-32 bg-gradient-to-r from-transparent via-gray-300 to-transparent mb-1"></div>
+          <p className="text-xs text-gray-500">Guardian Signature</p>
+        </div>
+        <div className="text-center">
+          <div className="h-px w-32 bg-gradient-to-r from-transparent via-gray-300 to-transparent mb-1"></div>
+          <p className="text-xs text-gray-500">Student Signature</p>
+        </div>
+
+      </div>
+    </div>
+  );
+};
 
 const PaymentForm = ({ student, courseName, totalFee, paymentSummary, refetch }) => {
   const contentRef = useRef(null);
@@ -182,6 +292,7 @@ const PaymentForm = ({ student, courseName, totalFee, paymentSummary, refetch })
               invoiceId={response?._id?.toString()}
               payment={response?.amount}
               due={TotalDue}
+              paymentMonth={response?.months}
             />
           </div>
         </div>

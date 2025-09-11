@@ -1,7 +1,7 @@
 import express from "express";
 const Router = express.Router();
 
-import { middleware } from "../middleware/middleware.js";
+import { authMiddleware } from "../middleware/middleware.js";
 import { uploadCategoryImage, handleUploadError } from "../middleware/upload.middleware.js";
 
 
@@ -19,10 +19,10 @@ Router.post("/updateStudent/:id", uploadCategoryImage, handleUploadError, update
 
 
 
-Router.get("/getStudents", middleware, getStudents);
-Router.get("/searchStudents/:query", searchStudents);
-Router.get("/getStudent/:id", getStudentById);
-Router.delete("/deleteStudent/:id", deleteStudent);
+Router.get("/getStudents", authMiddleware, getStudents);
+Router.get("/searchStudents/:query", authMiddleware, searchStudents);
+Router.get("/getStudent/:id", authMiddleware, getStudentById);
+Router.delete("/deleteStudent/:id", authMiddleware, deleteStudent);
 
 
 

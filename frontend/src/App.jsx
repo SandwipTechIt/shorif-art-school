@@ -32,11 +32,14 @@ import DuePayment from "./pages/payment/duePayment";
 import AddTransaction from "./pages/transaction/addTransaction";
 import AllTransaction from "./pages/transaction/showTransactions";
 
+import Gallery from "./pages/gallery/gallery";
+
 import MainMessage from "./pages/message/mainMessage";
 import WhatsappMessage from "./pages/message/whatsappMessage";
 import MessageTemplete from "./pages/message/messageTemplete";
 import SendDueMessage from "./pages/message/sendDueMessage.jsx";
 
+import Applications from "./pages/application/applications";
 
 export default function App() {
   const { state } = setContext();
@@ -71,6 +74,11 @@ export default function App() {
               {/* Transaction routes */}
               <Route path="/addTransaction" element={<AddTransaction />} />
               <Route path="/transactions" element={<AllTransaction />} />
+
+              {/* Gallery routes */}
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/applications" element={<Applications />} />
+
               {/* Message routes */}
               <Route path="/message/main" element={<MainMessage />} />  
               <Route path="/message/whatsapp" element={<WhatsappMessage />} />

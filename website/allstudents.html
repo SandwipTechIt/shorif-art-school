@@ -128,15 +128,15 @@
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     }
 
-    /* Back to Top Button */
-    #backToTop {
+    /* WhatsApp Chat Button */
+    #whatsappChat {
       position: fixed;
       bottom: 30px;
       right: 30px;
-      background: var(--primary);
+      background: #25D366;
       color: white;
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -146,16 +146,35 @@
       visibility: hidden;
       transition: all 0.3s ease;
       z-index: 1000;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
     }
 
-    #backToTop.visible {
+    #whatsappChat.visible {
       opacity: 1;
       visibility: visible;
     }
 
-    #backToTop:hover {
-      background: var(--secondary);
-      transform: translateY(-5px);
+    #whatsappChat:hover {
+      background: #128C7E;
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+    }
+
+    #whatsappChat i {
+      font-size: 24px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     /* Section Styles */
@@ -212,6 +231,10 @@
 
     .course-title.handwriting {
       color: var(--secondary);
+    }
+
+    .course-title.calligraphy {
+      color: var(--accent);
     }
 
     /* Loading Spinner */
@@ -360,6 +383,17 @@
           </div>
         </div>
 
+        <!-- Calligraphy Students Section -->
+        <div id="calligraphySection" class="course-section">
+          <h2 class="course-title calligraphy">
+            <i class="fas fa-feather-alt mr-3"></i>
+            ক্যালিগ্রাফি কোর্সের ছাত্রছাত্রী
+          </h2>
+          <div id="calligraphyStudents" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <!-- Calligraphy students will be populated here -->
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
@@ -474,9 +508,9 @@
     </div>
   </footer>
 
-  <!-- Back to Top Button -->
-  <div id="backToTop">
-    <i class="fas fa-arrow-up"></i>
+  <!-- WhatsApp Chat Button -->
+  <div id="whatsappChat">
+    <i class="fab fa-whatsapp"></i>
   </div>
 
   <script>
@@ -500,22 +534,19 @@
       });
     });
 
-    // Back to top button
-    const backToTopButton = document.getElementById("backToTop");
+    // WhatsApp chat button
+    const whatsappChatButton = document.getElementById("whatsappChat");
 
     window.addEventListener("scroll", () => {
       if (window.pageYOffset > 300) {
-        backToTopButton.classList.add("visible");
+        whatsappChatButton.classList.add("visible");
       } else {
-        backToTopButton.classList.remove("visible");
+        whatsappChatButton.classList.remove("visible");
       }
     });
 
-    backToTopButton.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+    whatsappChatButton.addEventListener("click", () => {
+      window.open("https://wa.me/8801644636608?text=আসসালামু আলাইকুম! আমি শরীফ আর্ট স্কুল সম্পর্কে জানতে চাই।", "_blank");
     });
 
     // Add scroll effect to navigation
@@ -590,12 +621,20 @@
       const handwritingStudentsWithImages = handwritingStudents.filter(student => student.img);
       displayStudentsInContainer('handwritingStudents', handwritingStudentsWithImages);
 
+      // Filter and display calligraphy students
+      const calligraphyStudents = filterStudentsByType('calligraphy');
+      const calligraphyStudentsWithImages = calligraphyStudents.filter(student => student.img);
+      displayStudentsInContainer('calligraphyStudents', calligraphyStudentsWithImages);
+
       // Hide sections if no students
       if (drawingStudentsWithImages.length === 0) {
         document.getElementById('drawingSection').style.display = 'none';
       }
       if (handwritingStudentsWithImages.length === 0) {
         document.getElementById('handwritingSection').style.display = 'none';
+      }
+      if (calligraphyStudentsWithImages.length === 0) {
+        document.getElementById('calligraphySection').style.display = 'none';
       }
     }
 
@@ -609,6 +648,8 @@
             return courseName.includes('drawing') || courseName.includes('art') || courseName.includes('sketch');
           case 'handwriting':
             return courseName.includes('handwriting') || courseName.includes('writing');
+          case 'calligraphy':
+            return courseName.includes('calligraphy');
           default:
             return false;
         }

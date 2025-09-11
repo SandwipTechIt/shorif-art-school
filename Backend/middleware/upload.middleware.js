@@ -46,6 +46,9 @@ export const uploadCategoryImage = upload.fields([
     { name: 'image', maxCount: 1 }
 ]);
 
+export const uploadGalleryImage = upload.fields([
+    { name: 'image', maxCount: 10 }
+]);
 
 // Middleware for handling upload errors
 export const handleUploadError = (err, req, res, next) => {

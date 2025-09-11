@@ -8,12 +8,16 @@
   <link rel="icon" href="logo.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- jQuery and Isotope for filtering animation -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
 
     @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap");
 
-    @import url("https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&display=swap");
+    /* @import url("https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&display=swap"); */
 
     :root {
       --primary: #6366f1;
@@ -30,7 +34,7 @@
     }
 
     body {
-      font-family: "Tiro Bangla", "Noto Sans Bengali", sans-serif;
+      font-family: "Hind Siliguri", sans-serif;
       overflow-x: hidden;
       background-color: var(--light);
     }
@@ -349,8 +353,10 @@
 
     .gallery-item img {
       width: 100%;
-      height: auto;
+      height: 300px;
       display: block;
+      object-fit: cover;
+      object-position: center;
       transition: transform 0.4s ease;
       border-radius: 15px;
     }
@@ -433,8 +439,8 @@
     }
 
     .lightbox img {
-      width: 100%;
-      height: auto;
+      width: auto;
+      max-height: 80dvh;
       border-radius: 10px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     }
@@ -484,15 +490,15 @@
       }
     }
 
-    /* Back to Top Button */
-    #backToTop {
+    /* WhatsApp Chat Button */
+    #whatsappChat {
       position: fixed;
       bottom: 30px;
       right: 30px;
-      background: var(--primary);
+      background: #25D366;
       color: white;
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -502,16 +508,23 @@
       visibility: hidden;
       transition: all 0.3s ease;
       z-index: 1000;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
     }
 
-    #backToTop.visible {
+    #whatsappChat.visible {
       opacity: 1;
       visibility: visible;
     }
 
-    #backToTop:hover {
-      background: var(--secondary);
-      transform: translateY(-5px);
+    #whatsappChat:hover {
+      background: #128C7E;
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+    }
+
+    #whatsappChat i {
+      font-size: 24px;
+      animation: pulse 2s infinite;
     }
 
     /* Testimonials Marquee Styles */
@@ -655,6 +668,7 @@
           <a href="#methodology" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">পদ্ধতি</a>
           <a href="#gallery" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">গ্যালারি</a>
           <a href="#faq" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">FAQ</a>
+          <a href="#teachers" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">শিক্ষকমণ্ডলী</a>
           <a href="#contact" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">যোগাযোগ</a>
           <a href="tel:01616-010205"
             class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
@@ -1584,125 +1598,24 @@
       </div>
 
       <!-- Gallery Grid -->
-      <div class="gallery-grid">
-        <!-- Gallery Item 1 -->
-        <div class="gallery-item" onclick="openLightbox('images/486264149_1100142852153191_7193975944761775615_n.jpg')">
-          <img src="images/486264149_1100142852153191_7193975944761775615_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
+      <div id="galleryGrid" class="gallery-grid">
+        <!-- Loading Spinner -->
+        <div id="galleryLoading" class="col-span-full flex justify-center items-center py-20">
+          <div class="spinner"></div>
+          <span class="ml-4 text-gray-600">গ্যালারি লোড হচ্ছে...</span>
         </div>
+      </div>
 
-        <!-- Gallery Item 2 -->
-        <div class="gallery-item" onclick="openLightbox('images/486483915_1102659878568155_1084454426915798958_n.jpg')">
-          <img src="images/486483915_1102659878568155_1084454426915798958_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery Item 3 -->
-        <div class="gallery-item" onclick="openLightbox('images/486634228_1100142652153211_7092519055782441640_n.jpg')">
-          <img src="images/486634228_1100142652153211_7092519055782441640_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery Item 4 -->
-        <div class="gallery-item" onclick="openLightbox('images/486679479_1102660095234800_603847106721844496_n.jpg')">
-          <img src="images/486679479_1102660095234800_603847106721844496_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery Item 5 -->
-        <div class="gallery-item" onclick="openLightbox('images/486764022_1102659921901484_355219242864609531_n.jpg')">
-          <img src="images/486764022_1102659921901484_355219242864609531_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery Item 6 -->
-        <div class="gallery-item" onclick="openLightbox('images/540205145_1235744888592986_8651024850110471212_n.jpg')">
-          <img src="images/540205145_1235744888592986_8651024850110471212_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery Item 7 -->
-        <div class="gallery-item" onclick="openLightbox('images/540943118_1239634161537392_701935794007113645_n.jpg')">
-          <img src="images/540943118_1239634161537392_701935794007113645_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery Item 8 -->
-        <div class="gallery-item" onclick="openLightbox('images/541157261_1239633558204119_1045127663186512369_n.jpg')">
-          <img src="images/541157261_1239633558204119_1045127663186512369_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery Item 9 -->
-        <div class="gallery-item" onclick="openLightbox('images/542088064_1239633994870742_1619115058311635568_n.jpg')">
-          <img src="images/542088064_1239633994870742_1619115058311635568_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery Item 10 -->
-        <div class="gallery-item" onclick="openLightbox('images/543393939_1239634181537390_4886758744355188602_n.jpg')">
-          <img src="images/543393939_1239634181537390_4886758744355188602_n.jpg" alt="শিক্ষার্থীর শিল্পকর্ম"
-            loading="lazy">
-          <div class="gallery-overlay">
-            <div class="gallery-overlay-content">
-              <i class="fas fa-search-plus"></i>
-              <p>বিস্তারিত দেখুন</p>
-            </div>
-          </div>
+      <!-- Error Message -->
+      <div id="galleryError" class="hidden text-center py-10">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+          <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-4"></i>
+          <h4 class="text-lg font-semibold text-red-800 mb-2">গ্যালারি লোড করতে সমস্যা হয়েছে</h4>
+          <p class="text-red-600 mb-4">দয়া করে পরে আবার চেষ্টা করুন</p>
+          <button onclick="loadGallery()"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+            আবার চেষ্টা করুন
+          </button>
         </div>
       </div>
 
@@ -1747,15 +1660,19 @@
       </div>
 
       <!-- Tabs -->
-      <div class="flex justify-center mb-12">
+      <div class="flex justify-center items-center mb-12">
         <div class="bg-white rounded-full p-2 shadow-lg">
           <button onclick="switchTab('drawing')" id="tab-drawing"
-            class="student-tab active px-6 py-3 rounded-full font-semibold transition-all duration-300">
+            class="student-tab active px-3 md:px-6 py-2 md:py-3 rounded-full font-semibold transition-all duration-300">
             চিত্রাংকন
           </button>
           <button onclick="switchTab('handwriting')" id="tab-handwriting"
-            class="student-tab px-6 py-3 rounded-full font-semibold transition-all duration-300">
+            class="student-tab px-3 md:px-6 py-2 md:py-3 rounded-full font-semibold transition-all duration-300">
             সুন্দর হাতের লেখা
+          </button>
+          <button onclick="switchTab('calligraphy')" id="tab-calligraphy"
+            class="student-tab px-3 md:px-6 py-2 md:py-3 rounded-full font-semibold transition-all duration-300">
+            ক্যালিগ্রাফি
           </button>
         </div>
       </div>
@@ -1777,6 +1694,13 @@
 
         <!-- Handwriting Students -->
         <div id="handwriting-students" class="student-content hidden">
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            <!-- Students will be populated here -->
+          </div>
+        </div>
+
+        <!-- Calligraphy Students -->
+        <div id="calligraphy-students" class="student-content hidden">
           <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
             <!-- Students will be populated here -->
           </div>
@@ -1814,18 +1738,17 @@
   </section>
 
 
-<!-- FAQ and Managing Director Section -->
-<section class="flex flex-col lg:flex-row gap-8 justify-between w-full py-12">
   <!-- FAQ Section -->
-  <section id="faq" class="w-full lg:w-1/2 bg-gradient-to-b from-gray-50 to-white rounded-3xl shadow-xl p-8">
+  <section id="faq" class="w-full bg-gradient-to-b from-gray-50 to-white rounded-3xl shadow-xl p-8">
     <div class="container mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-16">
-        <span class="inline-block bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-sm font-semibold mb-4">FAQ</span>
+        <span
+          class="inline-block bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-sm font-semibold mb-4">FAQ</span>
         <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">সচরাচর জিজ্ঞাসা</h3>
         <p class="text-gray-600 max-w-md mx-auto">আপনার প্রশ্নের উত্তর এক ক্লিকে</p>
       </div>
-      
+
       <div class="max-w-3xl mx-auto space-y-4">
         <!-- FAQ Items -->
         <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
@@ -1834,10 +1757,11 @@
             <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
           </summary>
           <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-            আমরা ৫ বছর বয়স থেকে শিশুদের ভর্তি নিই। তবে বিশেষ ক্ষেত্রে ৪ বছর বয়সী শিশুদেরও ভর্তি করা হয়। প্রতিটি বয়সের জন্য আলাদা কোর্স এবং শিক্ষা পদ্ধতি রয়েছে।
+            আমরা ৫ বছর বয়স থেকে শিশুদের ভর্তি নিই। তবে বিশেষ ক্ষেত্রে ৪ বছর বয়সী শিশুদেরও ভর্তি করা হয়। প্রতিটি
+            বয়সের জন্য আলাদা কোর্স এবং শিক্ষা পদ্ধতি রয়েছে।
           </div>
         </details>
-        
+
         <!-- Repeat for other FAQ items with same structure -->
         <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
           <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
@@ -1845,87 +1769,442 @@
             <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
           </summary>
           <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-            আমরা সপ্তাহের ৭ দিনই ক্লাস নিই। শনি-বৃহস্পতি সকাল ৯টা-সন্ধ্যা ৬টা, শুক্র সকাল ৯টা-দুপুর ২টা। শিক্ষার্থীরা সপ্তাহে ২ দিন ক্লাস করতে পারে।
+            আমরা সপ্তাহের ৭ দিনই ক্লাস নিই। শনি-বৃহস্পতি সকাল ৯টা-সন্ধ্যা ৬টা, শুক্র সকাল ৯টা-দুপুর ২টা। শিক্ষার্থীরা
+            সপ্তাহে ২ দিন ক্লাস করতে পারে।
           </div>
         </details>
-        
+
         <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
           <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
             <h4 class="font-semibold text-gray-800 text-lg">কোর্স ফি কত?</h4>
             <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
           </summary>
           <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-            বেসিক কোর্স মাসিক ১৫০০ টাকা, অ্যাডভান্সড ২৫০০ টাকা। ভর্তির সময় এককালীন ৫০০ টাকা রেজিস্ট্রেশন ফি। সকল কোর্স মেটেরিয়াল ফ্রি।
+            বেসিক কোর্স মাসিক ১৫০০ টাকা, অ্যাডভান্সড ২৫০০ টাকা। ভর্তির সময় এককালীন ৫০০ টাকা রেজিস্ট্রেশন ফি। সকল কোর্স
+            মেটেরিয়াল ফ্রি।
           </div>
         </details>
-        
+
         <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
           <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
             <h4 class="font-semibold text-gray-800 text-lg">শিক্ষকরা কতটা অভিজ্ঞ?</h4>
             <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
           </summary>
           <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-            সকল শিক্ষক ফাইন আর্টস স্নাতক ও শিশু শিক্ষায় ৫+ বছর অভিজ্ঞ। অনেকে জাতীয় পুরস্কারপ্রাপ্ত এবং নিয়মিত শিশু মনোবিজ্ঞান ট্রেনিং নেন।
+            সকল শিক্ষক ফাইন আর্টস স্নাতক ও শিশু শিক্ষায় ৫+ বছর অভিজ্ঞ। অনেকে জাতীয় পুরস্কারপ্রাপ্ত এবং নিয়মিত শিশু
+            মনোবিজ্ঞান ট্রেনিং নেন।
           </div>
         </details>
-        
+
         <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
           <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
             <h4 class="font-semibold text-gray-800 text-lg">কোর্স শেষে কি সার্টিফিকেট দেওয়া হয়?</h4>
             <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
           </summary>
           <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-            প্রতিটি কোর্স সম্পন্নে সার্টিফিকেট প্রদান করা হয়। বার্ষিক প্রতিযোগিতায় অংশগ্রহণকারীদের জন্য বিশেষ সার্টিফিকেট ও অনেক স্কুলে এক্সট্রা কারিকুলার ক্রেডিট।
+            প্রতিটি কোর্স সম্পন্নে সার্টিফিকেট প্রদান করা হয়। বার্ষিক প্রতিযোগিতায় অংশগ্রহণকারীদের জন্য বিশেষ
+            সার্টিফিকেট ও অনেক স্কুলে এক্সট্রা কারিকুলার ক্রেডিট।
           </div>
         </details>
-        
+
         <details class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all">
           <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
             <h4 class="font-semibold text-gray-800 text-lg">কিভাবে ভর্তি হতে পারি?</h4>
             <i class="fas fa-chevron-down text-indigo-500 group-open:rotate-180 transition-transform"></i>
           </summary>
           <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-            সরাসরি স্কুলে এসে অথবা ওয়েবসাইটের যোগাযোগ ফর্ম পূরণ করে ভর্তি করতে পারেন। প্রয়োজন: বয়স প্রমাণ ও ২ কপি ছবি। প্রতি মাসের প্রথম সপ্তাহে নতুন ব্যাচ শুরু।
+            সরাসরি স্কুলে এসে অথবা ওয়েবসাইটের যোগাযোগ ফর্ম পূরণ করে ভর্তি করতে পারেন। প্রয়োজন: বয়স প্রমাণ ও ২ কপি
+            ছবি। প্রতি মাসের প্রথম সপ্তাহে নতুন ব্যাচ শুরু।
           </div>
         </details>
       </div>
     </div>
   </section>
-  
+
   <!-- Managing Director Section -->
-  <section class="w-full lg:w-1/2 flex items-center justify-center">
-    <div class="w-full max-w-md p-10 rounded-xl text-gray-800 dark:text-gray-400 overflow-hidden shadow-2xl shadow-sky-500/50">
-      <figure class="relative w-52 h-52 m-0 mx-auto rounded-full outline outline-offset-4 outline-sky-400 before:content-[''] before:absolute before:block before:pointer-events-none before:rounded-full before:h-full before:w-full before:bg-sky-500 before:-z-[1] before:scale-[2.5] before:origin-center">
-        <img class="rounded-full block max-w-full bg-sky-500 object-cover z-10 relative" src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="Avatar" />
-      </figure>
-      <header class="">
-        <h3 class="font-semibold text-3xl text-center text-gray-50 dark:text-gray-800 mt-8 relative">
-          Leonard Massey
+  <section class="py-20 bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+    <div class="container mx-auto px-4">
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 relative inline-block">
+          সম্মানিত ম্যানেজিং ডিরেক্টর
+          <span
+            class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full"></span>
         </h3>
-        <p class="text-center text-gray-50 dark:text-gray-800 relative text-lg">
-          Designer & Webdeveloper
-        </p>
-      </header>
-      <ul class="flex justify-center space-x-6 mt-16 text-sky-500 relative">
-        <li class="">
-          <a href="https://www.facebook.com/share/16usVL5qsu/" aria-label="Visit me on Facebook">
-            <i class="fab fa-facebook h-7 w-7"></i>
-          </a>
-        </li>
-        <li class="">
-          <a href="https://www.instagram.com/memranrafid?igsh=cWsxMjRxbDNidGFh" class="" aria-label="Visit me on Instagram">
-            <i class="fab fa-instagram h-7 w-7"></i>
-          </a>
-        </li>
-        <li class="">
-          <a href="https://wa.me/01644636608" class="" aria-label="Send me a message on WhatsApp">
-            <i class="fab fa-whatsapp h-7 w-7"></i>
-          </a>
-        </li>
-      </ul>
+      </div>
+
+      <div class="max-w-6xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-12 items-start">
+          <!-- Founder Image -->
+          <div class="relative">
+            <div class="relative overflow-hidden rounded-3xl shadow-2xl">
+              <img src="manager.jpg" alt="শরীফ উদ্দিন শিশির"
+                class="w-full h-[500px] object-cover transform hover:scale-105 transition-transform duration-500" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            </div>
+            <!-- Decorative Elements -->
+            <div class="absolute -top-6 -right-6 w-24 h-24 bg-indigo-200 rounded-full opacity-60"></div>
+            <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-blue-200 rounded-full opacity-40"></div>
+          </div>
+
+          <!-- Founder Info -->
+          <div class="space-y-6">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+              <div class="flex items-center mb-6">
+                <div
+                  class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
+                  <i class="fas fa-user-tie text-white text-2xl"></i>
+                </div>
+                <div>
+                  <h4 class="text-2xl font-bold text-gray-800">ইমরান হোসাইন রাফিদ                  </h4>
+                  <p class="text-indigo-600 font-semibold">ব্যবস্থাপনা পরিচালক</p>
+                </div>
+              </div>
+
+              <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p>
+                    ইমরান হোসাইন রাফিদ বর্তমানে <strong>শরীফ আর্ট স্কুল</strong>-এর ম্যানেজিং ডিরেক্টর হিসেবে দায়িত্ব পালন করছেন। 
+                    শিল্প ও ডিজাইন ক্ষেত্রে তাঁর দীর্ঘ অভিজ্ঞতা রয়েছে, এবং তিনি শিক্ষার্থীদের মধ্যে সৃজনশীল মান উন্নয়ন ও ভালো 
+                    শিল্পিক দৃষ্টিভঙ্গি গঠন করতে উৎসর্গবদ্ধ।
+                </p>
+                
+                <p>
+                    তাঁর নেতৃত্বে, স্কুল নতুন প্রোগ্রাম ও ওয়ার্কশপ চালু করেছে যা শিল্প শিক্ষা ও দৃষ্টিভঙ্গিকে বৈচিত্র্যময় ও আধুনিক রেখেছে। 
+                    প্রযুক্তিগতভাবে দক্ষ রাফিদ সাহেবের রয়েছে বিভিন্ন <strong>ডিজিটাল স্কিল</strong>, যার মধ্যে 
+                    <em>গ্রাফিক ডিজাইন, ডিজিটাল ইলাস্ট্রেশন</em> এবং 
+                    <em>অনলাইন লার্নিং প্ল্যাটফর্ম ব্যবস্থাপনা</em> উল্লেখযোগ্য।
+                </p>                
+                <p>
+                  তিনি শিল্প ও শিক্ষা ক্ষেত্রে শিক্ষার্থীদের উৎসাহিত করতে বিশ্বাস রাখেন, এবং তাঁর উদ্দেশ্য 
+                    শরীফ আর্ট স্কুলকে একটি <strong>শিল্প‐সৃষ্টির কেন্দ্র</strong> হিসেবে প্রতিষ্ঠিত করা।
+                </p>
+                
+              </div>
+
+              <!-- Contact Information -->
+              <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t border-gray-100">
+                <div class="text-center">
+                  <a href="tel:01616010205" class="flex flex-col items-center p-3 rounded-lg hover:bg-indigo-50 transition-colors duration-300">
+                    <i class="fas fa-phone text-2xl text-indigo-600 mb-2"></i>
+                    <div class="text-sm text-gray-600">মোবাইল</div>
+                    <div class="text-xs text-indigo-600 font-medium">01616010205</div>
+                  </a>
+                </div>
+                <div class="text-center">
+                  <a href="https://wa.me/8801644636608" target="_blank" class="flex flex-col items-center p-3 rounded-lg hover:bg-green-50 transition-colors duration-300">
+                    <i class="fab fa-whatsapp text-2xl text-green-600 mb-2"></i>
+                    <div class="text-sm text-gray-600">হোয়াটসঅ্যাপ</div>
+                    <div class="text-xs text-green-600 font-medium">01644636608</div>
+                  </a>
+                </div>
+                <div class="text-center">
+                  <a href="https://www.facebook.com/share/16usVL5qsu/" target="_blank" class="flex flex-col items-center p-3 rounded-lg hover:bg-blue-50 transition-colors duration-300">
+                    <i class="fab fa-facebook text-2xl text-blue-600 mb-2"></i>
+                    <div class="text-sm text-gray-600">ফেসবুক</div>
+                  </a>
+                </div>
+                <div class="text-center">
+                  <a href="https://www.instagram.com/memranrafid?igsh=cWsxMjRxbDNidGFh" target="_blank" class="flex flex-col items-center p-3 rounded-lg hover:bg-pink-50 transition-colors duration-300">
+                    <i class="fab fa-instagram text-2xl text-pink-600 mb-2"></i>
+                    <div class="text-sm text-gray-600">ইনস্টাগ্রাম</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
-</section>
+
+  <!-- Teacher Section -->
+  <section id="teachers" class="py-20 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div class="container mx-auto px-4">
+      <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-16">
+          <h3 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">আমাদের সম্মানিত শিক্ষকমণ্ডলী</h3>
+          <p class="text-gray-600 max-w-2xl mx-auto">অভিজ্ঞ ও দক্ষ শিক্ষকদের তত্ত্বাবধানে শিখুন সুন্দর হাতের লেখা এবং ড্রয়িং</p>
+        </div>
+
+        <!-- Teachers Profile Section -->
+        <div class="mb-20">
+          <div class="grid md:grid-cols-3 gap-8">
+            <!-- Teacher 1 -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+              <div class="relative">
+                <img src="images/teachers/teacher1.jpeg" alt="মোহাম্মদ জাহিদুল ইসলাম" class="w-full h-64 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              </div>
+              <div class="p-6">
+                <h5 class="text-xl font-bold text-gray-800 mb-2">মোহাম্মদ জাহিদুল ইসলাম</h5>
+                <div class="text-indigo-600 font-semibold mb-2">ড্রয়িং শিক্ষক</div>
+                <div class="text-gray-600 text-sm mb-3">
+                  <p><strong>যোগ্যতা:</strong> চারুকলায় অনার্স</p>
+                  <p>চট্টগ্রাম বিশ্ববিদ্যালয়</p>
+                </div>
+                <div class="flex items-center text-sm text-gray-500">
+                  <i class="fas fa-palette mr-2"></i>
+                  <span>Drawing Specialist</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Teacher 2 -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+              <div class="relative">
+                <img src="images/teachers/teacher2.jpeg" alt="জহীর উদ্দীন" class="w-full h-64 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              </div>
+              <div class="p-6">
+                <h5 class="text-xl font-bold text-gray-800 mb-2">জহীর উদ্দীন</h5>
+                <div class="text-indigo-600 font-semibold mb-2">সুন্দর হাতের লেখা বিভাগ</div>
+                <div class="text-gray-600 text-sm mb-3">
+                  <p><strong>যোগ্যতা:</strong> আলিম</p>
+                  <p>শরীফ আর্ট স্কুল</p>
+                </div>
+                <div class="flex items-center text-sm text-gray-500">
+                  <i class="fas fa-pen-fancy mr-2"></i>
+                  <span>Handwriting Expert</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Teacher 3 -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+              <div class="relative">
+                <img src="images/teachers/teacher3.jpeg" alt="Sadia Jahan" class="w-full h-64 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              </div>
+              <div class="p-6">
+                <h5 class="text-xl font-bold text-gray-800 mb-2">Sadia Jahan</h5>
+                <div class="text-indigo-600 font-semibold mb-2">ড্রয়িং শিক্ষক</div>
+                <div class="flex items-center text-sm text-gray-500">
+                  <i class="fas fa-palette mr-2"></i>
+                  <span>Drawing Teacher</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Teachers Works Section -->
+        <div>
+          <h4 class="text-3xl font-bold text-center text-gray-800 mb-8">শিক্ষকদের শিল্পকর্ম সমূহ</h4>
+          
+          <!-- Filter Buttons -->
+          <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <button class="filter-btn active px-6 py-3 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105" data-filter="*">
+              সকল কাজ
+            </button>
+            <button class="filter-btn px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold hover:bg-indigo-600 hover:text-white transition-all duration-300 transform hover:scale-105" data-filter=".teacher1">
+              মোহাম্মদ জাহিদুল ইসলাম
+            </button>
+            <button class="filter-btn px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold hover:bg-indigo-600 hover:text-white transition-all duration-300 transform hover:scale-105" data-filter=".teacher2">
+              জহীর উদ্দীন
+            </button>
+            <button class="filter-btn px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold hover:bg-indigo-600 hover:text-white transition-all duration-300 transform hover:scale-105" data-filter=".teacher3">
+              Sadia Jahan
+            </button>
+          </div>
+
+          <!-- Works Grid -->
+          <div class="works-grid grid grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
+            <!-- Teacher 1 Works -->
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing1.jpeg')">
+              <img src="images/teachers/teacher1_drawing1.jpeg" alt="Teacher 1 Work 1" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing2.jpeg')">
+              <img src="images/teachers/teacher1_drawing2.jpeg" alt="Teacher 1 Work 2" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing3.jpeg')">
+              <img src="images/teachers/teacher1_drawing3.jpeg" alt="Teacher 1 Work 3" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing4.jpeg')">
+              <img src="images/teachers/teacher1_drawing4.jpeg" alt="Teacher 1 Work 4" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing5.jpeg')">
+              <img src="images/teachers/teacher1_drawing5.jpeg" alt="Teacher 1 Work 5" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing6.jpeg')">
+              <img src="images/teachers/teacher1_drawing6.jpeg" alt="Teacher 1 Work 6" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing7.jpeg')">
+              <img src="images/teachers/teacher1_drawing7.jpeg" alt="Teacher 1 Work 7" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing8.jpeg')">
+              <img src="images/teachers/teacher1_drawing8.jpeg" alt="Teacher 1 Work 8" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing9.jpeg')">
+              <img src="images/teachers/teacher1_drawing9.jpeg" alt="Teacher 1 Work 9" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing10.jpeg')">
+              <img src="images/teachers/teacher1_drawing10.jpeg" alt="Teacher 1 Work 10" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher1 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher1_drawing11.jpeg')">
+              <img src="images/teachers/teacher1_drawing11.jpeg" alt="Teacher 1 Work 11" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Teacher 2 Works -->
+            <div class="work-item gallery-item m-2 teacher2 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher2_drawing1.jpeg')">
+              <img src="images/teachers/teacher2_drawing1.jpeg" alt="Teacher 2 Work 1" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher2 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher2_drawing2.jpeg')">
+              <img src="images/teachers/teacher2_drawing2.jpeg" alt="Teacher 2 Work 2" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher2 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher2_drawing3.jpeg')">
+              <img src="images/teachers/teacher2_drawing3.jpeg" alt="Teacher 2 Work 3" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher2 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher2_drawing4.jpeg')">
+              <img src="images/teachers/teacher2_drawing4.jpeg" alt="Teacher 2 Work 4" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher2 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher2_drawing5.jpeg')">
+              <img src="images/teachers/teacher2_drawing5.jpeg" alt="Teacher 2 Work 5" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher2 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher2_drawing6.jpeg')">
+              <img src="images/teachers/teacher2_drawing6.jpeg" alt="Teacher 2 Work 6" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-item gallery-item m-2 teacher2 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher2_drawing7.jpeg')">
+              <img src="images/teachers/teacher2_drawing7.jpeg" alt="Teacher 2 Work 7" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+            <div class="work-item gallery-item m-2 teacher3 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" onclick="openLightbox('images/teachers/teacher3_drawing1.jpeg')">
+              <img src="images/teachers/teacher3_drawing1.jpeg" alt="Teacher 3 Work 1" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Contact Section -->
   <section id="contact" class="py-20 bg-gradient-to-br from-gray-50 via-white to-indigo-50">
@@ -1959,10 +2238,10 @@
 
                 <div class="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">ইমেইল</label>
-                    <input type="email" name="email"
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">হোয়াটসঅ্যাপ নম্বর *</label>
+                    <input type="tel" name="whatsappNumber" required
                       class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                      placeholder="example@email.com" />
+                      placeholder="০১৭১২-৩৪৫৬৭৮" />
                   </div>
                   <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">লিঙ্গ *</label>
@@ -2089,8 +2368,8 @@
       <div class="grid md:grid-cols-4 gap-8">
         <div>
           <div class="flex items-center space-x-3 mb-4">
-            <div class="w-10 h-10 gradient-primary rounded-full flex items-center justify-center">
-              <i class="fas fa-palette text-white text-xl"></i>
+            <div class="w-10 h-10 rounded-full flex items-center justify-center">
+              <img src="logo.png" class="w-10 h-10" alt="">
             </div>
             <h3 class="text-xl font-bold">শরীফ আর্ট স্কুল</h3>
           </div>
@@ -2193,16 +2472,17 @@
 
       <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
         <p>
-          &copy; 2025 শরীফ আর্ট স্কুল। সর্বস্বত্ব সংরক্ষিত। | ডেভেলপড বাই
-          <a href="#" class="hover:text-white transition">TechCraft</a>
+          &copy; 2025 শরীফ আর্ট স্কুল। সর্বস্বত্ব সংরক্ষিত। 
+          <br> ডেভেলপড বাই
+          <a href="https://mdshahid001.netlify.app" target="_blank" class="text-[#ff0081] transition">MD Shahid</a>
         </p>
       </div>
     </div>
   </footer>
 
-  <!-- Back to Top Button -->
-  <div id="backToTop">
-    <i class="fas fa-arrow-up"></i>
+  <!-- WhatsApp Chat Button -->
+  <div id="whatsappChat">
+    <i class="fab fa-whatsapp"></i>
   </div>
 
   <!-- Success Modal -->
@@ -2264,7 +2544,7 @@
         const formData = new FormData(this);
         const applicationData = {
           name: formData.get('name'),
-          email: formData.get('email'),
+          whatsappNumber: formData.get('whatsappNumber'),
           phone: formData.get('phone'),
           gender: formData.get('gender'),
           course: formData.get('course'),
@@ -2275,7 +2555,6 @@
         try {
           // Make API call
           const response = await fetch('https://api.shorifartschool.com/createApplication', {
-            // const response = await fetch('http://192.168.0.197:5000/createApplication', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -2374,22 +2653,19 @@
       });
     });
 
-    // Back to top button
-    const backToTopButton = document.getElementById("backToTop");
+    // WhatsApp chat button
+    const whatsappChatButton = document.getElementById("whatsappChat");
 
     window.addEventListener("scroll", () => {
       if (window.pageYOffset > 300) {
-        backToTopButton.classList.add("visible");
+        whatsappChatButton.classList.add("visible");
       } else {
-        backToTopButton.classList.remove("visible");
+        whatsappChatButton.classList.remove("visible");
       }
     });
 
-    backToTopButton.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+    whatsappChatButton.addEventListener("click", () => {
+      window.open("https://wa.me/8801644636608?text=আসসালামু আলাইকুম! আমি শরীফ আর্ট স্কুল সম্পর্কে জানতে চাই।", "_blank");
     });
 
     // Add scroll effect to navigation
@@ -2682,11 +2958,122 @@
       }
     });
 
+    // Gallery functionality
+    // Load gallery on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      loadGallery();
+    });
+
+    // Load gallery from API
+    async function loadGallery() {
+      try {
+        showGalleryLoading();
+        const response = await fetch('https://api.shorifartschool.com/getAllGallery');
+        if (response.ok) {
+          const galleryData = await response.json();
+          hideGalleryLoading();
+          displayGallery(galleryData);
+        } else {
+          throw new Error('Failed to fetch gallery');
+        }
+      } catch (error) {
+        console.error('Error loading gallery:', error);
+        showGalleryError();
+      }
+    }
+
+    // Show gallery loading state
+    function showGalleryLoading() {
+      document.getElementById('galleryLoading').classList.remove('hidden');
+      document.getElementById('galleryError').classList.add('hidden');
+    }
+
+    // Hide gallery loading state
+    function hideGalleryLoading() {
+      document.getElementById('galleryLoading').classList.add('hidden');
+      document.getElementById('galleryError').classList.add('hidden');
+    }
+
+    // Show gallery error state
+    function showGalleryError() {
+      document.getElementById('galleryLoading').classList.add('hidden');
+      document.getElementById('galleryError').classList.remove('hidden');
+    }
+
+    // Display gallery images
+    function displayGallery(galleryData) {
+      const galleryGrid = document.getElementById('galleryGrid');
+
+      // Clear loading content
+      galleryGrid.innerHTML = '';
+
+      // Check if we have gallery data
+      if (!galleryData || galleryData.length === 0) {
+        galleryGrid.innerHTML = `
+          <div class="col-span-full text-center py-10">
+            <i class="fas fa-images text-gray-400 text-6xl mb-4"></i>
+            <h4 class="text-xl font-semibold text-gray-600 mb-2">কোন ছবি পাওয়া যায়নি</h4>
+            <p class="text-gray-500">শীঘ্রই আরো ছবি যোগ করা হবে</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Create gallery items
+      galleryData.forEach((item, index) => {
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        galleryItem.onclick = () => openLightbox(item.img);
+
+        galleryItem.innerHTML = `
+          <img src="${item.img}" alt="শিক্ষার্থীর শিল্পকর্ম ${index + 1}" loading="lazy" onerror="this.parentElement.style.display='none'">
+          <div class="gallery-overlay">
+            <div class="gallery-overlay-content">
+              <i class="fas fa-search-plus"></i>
+              <p>বিস্তারিত দেখুন</p>
+            </div>
+          </div>
+        `;
+
+        galleryGrid.appendChild(galleryItem);
+      });
+    }
+
     // Make functions globally available
     window.openLightbox = openLightbox;
     window.closeLightbox = closeLightbox;
     window.switchTab = switchTab;
     window.loadStudents = loadStudents;
+    window.loadGallery = loadGallery;
+
+    // Teacher Works Isotope Filtering
+    $(document).ready(function() {
+      // Initialize Isotope
+      var $grid = $('.works-grid').isotope({
+        itemSelector: '.work-item',
+        layoutMode: 'fitRows',
+        transitionDuration: '0.6s'
+      });
+
+      // Filter items on button click
+      $('.filter-btn').on('click', function() {
+        var filterValue = $(this).attr('data-filter');
+        
+        // Remove active class from all buttons
+        $('.filter-btn').removeClass('active').removeClass('bg-indigo-600 text-white').addClass('bg-gray-200 text-gray-700');
+        
+        // Add active class to clicked button
+        $(this).addClass('active').removeClass('bg-gray-200 text-gray-700').addClass('bg-indigo-600 text-white');
+        
+        // Filter items
+        $grid.isotope({ filter: filterValue });
+      });
+
+      // Layout Isotope after each image loads
+      $grid.imagesLoaded().progress(function() {
+        $grid.isotope('layout');
+      });
+    });
   </script>
 </body>
 

@@ -2,7 +2,7 @@ import express from "express";
 const Router = express.Router();
 
 // import {middleware} from "../utils/verifyToken.js";
-import { middleware } from "../middleware/middleware.js";
+import { authMiddleware } from "../middleware/middleware.js";
 
 import {
   getStudentPayment,
@@ -16,12 +16,12 @@ import {
 
 // Legacy routes (for backward compatibility)
 Router.post("/createPayment/:studentId", createPayment);
-Router.get("/getStudentPayment/:studentId", middleware, getStudentPayment);
-Router.get("/getAllPayments", middleware, getAllPayments);
-Router.post("/searchPayments", middleware, searchPayments);
-Router.delete("/deletePayment/:studentId", middleware, deletePayment);
+Router.get("/getStudentPayment/:studentId", authMiddleware, getStudentPayment);
+Router.get("/getAllPayments", authMiddleware, getAllPayments);
+Router.post("/searchPayments", authMiddleware, searchPayments);
+Router.delete("/deletePayment/:studentId", authMiddleware, deletePayment);
 
-Router.get("/getAllDues", middleware, getAllDues);
-Router.post("/searchDues", middleware, searchDues);
+Router.get("/getAllDues", authMiddleware, getAllDues);
+Router.post("/searchDues", authMiddleware, searchDues);
 
 export default Router;

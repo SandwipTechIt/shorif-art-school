@@ -19,7 +19,6 @@ const queryClient = new QueryClient({
 });
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
@@ -35,5 +34,4 @@ createRoot(document.getElementById("root")!).render(
         </QueryClientProvider>
       </AuthProvider>
     </BrowserRouter>
-  </StrictMode>
 );

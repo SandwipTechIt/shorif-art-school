@@ -59,8 +59,17 @@ const navItems: NavItem[] = [
       { name: "Send Message", path: "/message/main" },
       { name: "Send Due Message", path: "/message/due" },
       { name: "Whatsapp Message", path: "/message/whatsapp" },
-      { name: "Message Templete", path: "/message/templete" },
     ],
+  },
+  {
+    name: "Gallery",
+    icon: "fa-solid fa-image",
+    path: "/gallery",
+  },
+  {
+    name: "Applications",
+    icon: "fa-solid fa-book",
+    path: "/applications",
   }
 ];
 

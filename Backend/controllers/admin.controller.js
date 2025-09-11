@@ -14,13 +14,12 @@ export const loginAdmin = async (req, res) => {
         if (admin.password !== req.body.password) {
             return res.status(401).json({ error: "Invalid password" });
         }
-        const token = jwt.sign({ id: admin._id }, secret, { expiresIn: "1h" });
+        const token = jwt.sign({ id: admin._id }, secret);
 
         res.cookie("token", token, {
             httpOnly: true, 
             secure: true,
             sameSite: "Lax",
-            maxAge: 30 * 24 * 60 * 60 * 1000, 
             path: "/",
         });
         

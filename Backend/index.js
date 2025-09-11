@@ -14,6 +14,7 @@ import staticsRoutes from "./routes/statics.route.js";
 import enrollmentRoutes from "./routes/enrollment.route.js";
 import transectionRoutes from "./routes/transection.routes.js";
 import applicationRoutes from "./routes/application.route.js";
+import galleryRoutes from "./routes/gallery.route.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -49,6 +50,7 @@ app.use(staticsRoutes);
 app.use(enrollmentRoutes);
 app.use(transectionRoutes);
 app.use(applicationRoutes);
+app.use(galleryRoutes);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

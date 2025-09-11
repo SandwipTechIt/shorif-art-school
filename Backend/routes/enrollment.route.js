@@ -1,7 +1,7 @@
 import express from "express";
 const Router = express.Router();
 
-import { middleware } from "../middleware/middleware.js";
+import { authMiddleware } from "../middleware/middleware.js";
 
 import {
   createEnrollment,
@@ -14,18 +14,18 @@ import {
 } from "../controllers/enrollment.controller.js";
 
 // Enrollment CRUD operations
-Router.post("/", middleware, createEnrollment);
-Router.get("/", middleware, getAllEnrollments);
-Router.put("/:id", middleware, updateEnrollment);
-Router.delete("/:id", middleware, deleteEnrollment);
+Router.post("/", authMiddleware, createEnrollment);
+Router.get("/", authMiddleware, getAllEnrollments);
+Router.put("/:id", authMiddleware, updateEnrollment);
+Router.delete("/:id", authMiddleware, deleteEnrollment);
 
 // Get enrollments by student
-Router.get("/student/:studentId", middleware, getStudentEnrollments);
+Router.get("/student/:studentId", authMiddleware, getStudentEnrollments);
 
 // Get enrollments by course
-Router.get("/course/:courseId", middleware, getCourseEnrollments);
+Router.get("/course/:courseId", authMiddleware, getCourseEnrollments);
 
 // Get enrollment statistics
-Router.get("/stats", middleware, getEnrollmentStats);
+Router.get("/stats", authMiddleware, getEnrollmentStats);
 
 export default Router;
