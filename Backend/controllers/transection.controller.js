@@ -12,7 +12,7 @@ export const createTransaction = async (req, res) => {
 
 export const getTransactions = async (req, res) => {
     const { page = 1 } = req.query;
-    const pageLimit = 50;
+    const pageLimit = 20;
     const pageNumber = parseInt(page, 10) || 1;
     const skipCount = (pageNumber - 1) * pageLimit;
     let totalIncome = 0;

@@ -46,9 +46,8 @@ import Admin from "../models/admin.model.js";
 dotenv.config();
 
 export const authMiddleware = async (req, res, next) => {
-    const token = req.cookies.access_token;
+    const token = req.cookies.token;
     const secret = process.env.SECRET_KEY;
-
 
     if (!token) return res.status(401).json({ message: 'No Token Provided' });
 
@@ -60,7 +59,7 @@ export const authMiddleware = async (req, res, next) => {
     if (!admin) {
         return res.status(401).json({ error: 'Admin no longer exists' });
     }
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
         if (err) return res.status(403).json({ message: 'You are not authorized!' });
         next();
     });

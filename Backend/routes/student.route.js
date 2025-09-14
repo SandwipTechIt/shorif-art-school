@@ -19,7 +19,7 @@ Router.post("/updateStudent/:id", uploadCategoryImage, handleUploadError, update
 
 
 
-Router.get("/getStudents", authMiddleware, getStudents);
+Router.get("/getStudents",  getStudents);
 Router.get("/searchStudents/:query", authMiddleware, searchStudents);
 Router.get("/getStudent/:id", authMiddleware, getStudentById);
 Router.delete("/deleteStudent/:id", authMiddleware, deleteStudent);

@@ -1,4 +1,5 @@
 const URL = "mongodb://localhost:27017/shorifArtDB";
+// const URL = "mongodb://localhost:27017/shorifArtDB";
 import mongoose from "mongoose";
 
 const connectDB = async () => {

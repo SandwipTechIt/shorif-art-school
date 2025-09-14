@@ -121,7 +121,7 @@ export async function currentMonthDue() {
 
   // figure out the month and year now
   const now = new Date();
-  const currentMonth = now.getMonth() + 1; // months are 0-based in JS
+  const currentMonth = now.getMonth() ; // months are 0-based in JS
   const currentYear = now.getFullYear();
 
   // fetch all active students

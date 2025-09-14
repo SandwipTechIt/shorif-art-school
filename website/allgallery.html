@@ -78,7 +78,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
-
     @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap");
 
     :root {
@@ -149,202 +148,6 @@
     .mobile-menu.active {
       transform: translateX(0);
     }
-
-    /* Student Cards */
-    .student-card {
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .student-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-
-    .student-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .student-info {
-      padding: 1rem;
-    }
-
-    .student-name {
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: var(--dark);
-      margin-bottom: 0.5rem;
-    }
-
-    .student-course {
-      color: var(--primary);
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-    }
-
-    .student-id {
-      color: #6b7280;
-      font-size: 0.875rem;
-    }
-
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animate-fadeInUp {
-      animation: fadeInUp 0.8s ease-out;
-    }
-
-    /* Gradient Backgrounds */
-    .gradient-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    }
-
-    /* WhatsApp Chat Button */
-    #whatsappChat {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #25D366;
-      color: white;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 1000;
-      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-    }
-
-    #whatsappChat.visible {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    #whatsappChat:hover {
-      background: #128C7E;
-      transform: translateY(-5px) scale(1.1);
-      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
-    }
-
-    #whatsappChat i {
-      font-size: 24px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.05);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    /* Section Styles */
-    .section-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: var(--dark);
-      margin-bottom: 1rem;
-      position: relative;
-      display: inline-block;
-    }
-
-    .section-title::after {
-      content: "";
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      border-radius: 2px;
-    }
-
-    .section-subtitle {
-      color: #6b7280;
-      font-size: 1.125rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    /* Course Section Styles */
-    .course-section {
-      margin-bottom: 4rem;
-    }
-
-    .course-title {
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--dark);
-      margin-bottom: 2rem;
-      text-align: center;
-      position: relative;
-    }
-
-    .course-title.drawing {
-      color: var(--primary);
-    }
-
-    .course-title.handwriting {
-      color: var(--secondary);
-    }
-
-    .course-title.calligraphy {
-      color: var(--accent);
-    }
-
-    /* Loading Spinner */
-    .spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid var(--primary);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
   </style>
 </head>
 
@@ -361,21 +164,17 @@
         <!-- Desktop Menu -->
         <div class="hidden md:flex items-center space-x-8">
           <a href="index.html#home" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">হোম</a>
-          <a href="index.html#about" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">আমাদের
-            সম্পর্কে</a>
+          <a href="index.html#about" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">আমাদের সম্পর্কে</a>
           <a href="index.html#courses" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">কোর্স</a>
           <a href="index.html#students" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">শিক্ষার্থী</a>
           <a href="index.html#gallery" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">গ্যালারি</a>
           <a href="index.html#faq" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">FAQ</a>
-          <a href="index.html#teachers"
-            class="nav-link text-gray-700 hover:text-indigo-600 font-medium">শিক্ষকমণ্ডলী</a>
+          <a href="index.html#teachers" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">শিক্ষকমণ্ডলী</a>
           <a href="index.html#contact" class="nav-link text-gray-700 hover:text-indigo-600 font-medium">যোগাযোগ</a>
-          <a href="tel:01616-010205"
-            class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
+          <a href="tel:01616-010205" class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
             <i class="fas fa-phone-alt mr-3 text-xl "></i>
             ভর্তি হন
-            <svg class="ml-2 w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
+            <svg class="ml-2 w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
           </a>
@@ -396,23 +195,12 @@
         </button>
         <div class="clear-both mt-8 space-y-4">
           <a href="index.html#home" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">হোম</a>
-          <a href="index.html#about" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">আমাদের
-            সম্পর্কে</a>
+          <a href="index.html#about" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">আমাদের সম্পর্কে</a>
           <a href="index.html#courses" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">কোর্স</a>
-          <a href="index.html#students"
-            class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">শিক্ষার্থী</a>
+          <a href="index.html#students" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">শিক্ষার্থী</a>
           <a href="index.html#gallery" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">গ্যালারি</a>
           <a href="index.html#faq" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">FAQ</a>
           <a href="index.html#contact" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">যোগাযোগ</a>
-          <a href="tel:01616-010205"
-            class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
-            <i class="fas fa-phone-alt mr-3 text-xl "></i>
-            ভর্তি হন
-            <svg class="ml-2 w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-            </svg>
-          </a>
         </div>
       </div>
     </div>
@@ -421,81 +209,87 @@
   <!-- Main Content -->
   <main class="pt-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
     <div class="container mx-auto px-4 py-12">
-
       <!-- Page Header -->
-      <div class="section-header">
-        <h1 class="section-title">আমাদের সকল ছাত্রছাত্রী</h1>
-        <p class="section-subtitle">
-          শরীফ আর্ট স্কুলের প্রতিভাবান শিক্ষার্থীরা যারা বিভিন্ন কোর্সে অংশগ্রহণ করে তাদের দক্ষতা বিকাশ করছে
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">ছাত্রছাত্রীদের কাজের গ্যালারি</h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+          আমাদের প্রতিভাবান শিক্ষার্থীদের সৃজনশীল কাজের সংগ্রহ
         </p>
-
+        
         <!-- Back to Home Button -->
-        <div class="mt-8">
-          <a href="index.html"
-            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
+        <div class="mb-8">
+          <a href="index.html" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
             <i class="fas fa-home mr-2"></i>
             হোম পেজে ফিরে যান
           </a>
         </div>
       </div>
 
-      <!-- Loading State -->
-      <div id="studentsLoading" class="text-center py-12">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        <p class="mt-4 text-gray-600">ছাত্রছাত্রীদের তথ্য লোড হচ্ছে...</p>
-      </div>
-
-      <!-- Error State -->
-      <div id="studentsError" class="hidden text-center py-12">
-        <div class="text-red-500 mb-4">
-          <i class="fas fa-exclamation-triangle text-4xl"></i>
+      <!-- Gallery Content -->
+      <div id="galleryContent">
+        <!-- Loading State -->
+        <div id="galleryLoading" class="text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <p class="mt-4 text-gray-600">গ্যালারি লোড হচ্ছে...</p>
         </div>
-        <p class="text-gray-600 mb-4">ছাত্রছাত্রীদের তথ্য লোড করতে সমস্যা হয়েছে।</p>
-        <button onclick="loadAllStudents()"
-          class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
-          আবার চেষ্টা করুন
-        </button>
-      </div>
 
-      <!-- Students Container -->
-      <div id="studentsContainer" class="hidden">
-
-        <!-- Drawing Students Section -->
-        <div id="drawingSection" class="course-section">
-          <h2 class="course-title drawing">
-            <i class="fas fa-paint-brush mr-3"></i>
-            চিত্রাংকন কোর্সের ছাত্রছাত্রী
-          </h2>
-          <div id="drawingStudents"
-            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            <!-- Drawing students will be populated here -->
+        <!-- Error State -->
+        <div id="galleryError" class="hidden text-center py-12">
+          <div class="text-red-500 mb-4">
+            <i class="fas fa-exclamation-triangle text-4xl"></i>
           </div>
+          <p class="text-gray-600 mb-4">গ্যালারি লোড করতে সমস্যা হয়েছে।</p>
+          <button onclick="loadGallery()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+            আবার চেষ্টা করুন
+          </button>
         </div>
 
-        <!-- Handwriting Students Section -->
-        <div id="handwritingSection" class="course-section">
-          <h2 class="course-title handwriting">
-            <i class="fas fa-pen-fancy mr-3"></i>
-            সুন্দর হাতের লেখা কোর্সের ছাত্রছাত্রী
-          </h2>
-          <div id="handwritingStudents"
-            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            <!-- Handwriting students will be populated here -->
+        <!-- Gallery Sections -->
+        <div id="gallerySections" class="hidden space-y-12">
+          
+          <!-- Drawing Section -->
+          <div id="drawingSection" class="gallery-section">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-paint-brush mr-3 text-indigo-600"></i>
+                চিত্রাংকন
+              </h2>
+              <div class="w-20 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full"></div>
+            </div>
+            <div id="drawingGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+              <!-- Drawing images will be populated here -->
+            </div>
           </div>
-        </div>
 
-        <!-- Calligraphy Students Section -->
-        <div id="calligraphySection" class="course-section">
-          <h2 class="course-title calligraphy">
-            <i class="fas fa-feather-alt mr-3"></i>
-            ক্যালিগ্রাফি কোর্সের ছাত্রছাত্রী
-          </h2>
-          <div id="calligraphyStudents"
-            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            <!-- Calligraphy students will be populated here -->
+          <!-- Handwriting Section -->
+          <div id="handwritingSection" class="gallery-section">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-pen-fancy mr-3 text-purple-600"></i>
+                সুন্দর হাতের লেখা
+              </h2>
+              <div class="w-20 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto rounded-full"></div>
+            </div>
+            <div id="handwritingGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+              <!-- Handwriting images will be populated here -->
+            </div>
           </div>
-        </div>
 
+          <!-- Calligraphy Section -->
+          <div id="calligraphySection" class="gallery-section">
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-feather-alt mr-3 text-pink-600"></i>
+                ক্যালিগ্রাফি
+              </h2>
+              <div class="w-20 h-1 bg-gradient-to-r from-pink-600 to-red-500 mx-auto rounded-full"></div>
+            </div>
+            <div id="calligraphyGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+              <!-- Calligraphy images will be populated here -->
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </main>
@@ -618,9 +412,38 @@
     </div>
   </footer>
 
+  <!-- Image Modal -->
+  <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden items-center justify-center p-4">
+    <div class="relative max-w-4xl max-h-full">
+      <!-- Close Button -->
+      <button onclick="closeModal()" class="absolute -top-12 right-0 text-white text-2xl hover:text-gray-300 transition z-10">
+        <i class="fas fa-times"></i>
+      </button>
+      
+      <!-- Previous Button -->
+      <button onclick="previousImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-300 transition z-10 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <!-- Next Button -->
+      <button onclick="nextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-300 transition z-10 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      
+      <!-- Image -->
+      <img id="modalImage" src="" alt="" class="w-auto h-[90dvh]  rounded-lg shadow-2xl">
+      
+      <!-- Image Info -->
+      <div class="absolute bottom-4 left-4 right-4 text-white text-center bg-black bg-opacity-50 rounded-lg p-3">
+        <p id="modalImageInfo" class="text-lg font-semibold"></p>
+        <p id="modalImageIndex" class="text-sm text-gray-300 mt-1"></p>
+      </div>
+    </div>
+  </div>
+
   <!-- WhatsApp Chat Button -->
-  <div id="whatsappChat">
-    <i class="fab fa-whatsapp"></i>
+  <div id="whatsappChat" class="fixed bottom-8 right-8 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center cursor-pointer opacity-0 invisible transition-all duration-300 z-40 shadow-lg hover:bg-green-600 hover:scale-110">
+    <i class="fab fa-whatsapp text-2xl"></i>
   </div>
 
   <script>
@@ -637,21 +460,14 @@
       mobileMenu.classList.remove("active");
     });
 
-    // Close mobile menu when clicking on a link
-    mobileMenu.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        mobileMenu.classList.remove("active");
-      });
-    });
-
     // WhatsApp chat button
     const whatsappChatButton = document.getElementById("whatsappChat");
 
     window.addEventListener("scroll", () => {
       if (window.pageYOffset > 300) {
-        whatsappChatButton.classList.add("visible");
+        whatsappChatButton.classList.remove("opacity-0", "invisible");
       } else {
-        whatsappChatButton.classList.remove("visible");
+        whatsappChatButton.classList.add("opacity-0", "invisible");
       }
     });
 
@@ -659,165 +475,235 @@
       window.open("https://wa.me/8801616010205?text=আসসালামু আলাইকুম! আমি শরীফ আর্ট স্কুল সম্পর্কে জানতে চাই।", "_blank");
     });
 
-    // Add scroll effect to navigation
-    window.addEventListener("scroll", function () {
-      const nav = document.querySelector("nav");
-      if (window.scrollY > 50) {
-        nav.classList.add("shadow-xl");
-      } else {
-        nav.classList.remove("shadow-xl");
-      }
-    });
+    // Gallery functionality
+    let allGalleryImages = [];
+    let filteredImages = [];
+    let currentImageIndex = 0;
 
-    // Students functionality
-    let allStudents = [];
-
-    // Load students on page load
+    // Load gallery on page load
     document.addEventListener('DOMContentLoaded', function () {
-      loadAllStudents();
+      loadGallery();
     });
 
-    // Load students from API
-    async function loadAllStudents() {
+    // Load gallery from API
+    async function loadGallery() {
       try {
-        showStudentsLoading();
-        const response = await fetch('https://api.shorifartschool.com/getStudents');
+        showGalleryLoading();
+        const response = await fetch('https://api.shorifartschool.com/getAllGallery');
 
         if (response.ok) {
-          allStudents = await response.json();
-          hideStudentsLoading();
-          displayAllStudents();
+          allGalleryImages = await response.json();
+          filteredImages = [...allGalleryImages];
+          hideGalleryLoading();
+          displayGallery();
         } else {
-          throw new Error('Failed to fetch students');
+          throw new Error('Failed to fetch gallery');
         }
       } catch (error) {
-        console.error('Error loading students:', error);
-        showStudentsError();
+        console.error('Error loading gallery:', error);
+        showGalleryError();
       }
     }
 
     // Show loading state
-    function showStudentsLoading() {
-      document.getElementById('studentsLoading').classList.remove('hidden');
-      document.getElementById('studentsContainer').classList.add('hidden');
-      document.getElementById('studentsError').classList.add('hidden');
+    function showGalleryLoading() {
+      document.getElementById('galleryLoading').classList.remove('hidden');
+      document.getElementById('gallerySections').classList.add('hidden');
+      document.getElementById('galleryError').classList.add('hidden');
     }
 
     // Hide loading state
-    function hideStudentsLoading() {
-      document.getElementById('studentsLoading').classList.add('hidden');
-      document.getElementById('studentsContainer').classList.remove('hidden');
-      document.getElementById('studentsError').classList.add('hidden');
+    function hideGalleryLoading() {
+      document.getElementById('galleryLoading').classList.add('hidden');
+      document.getElementById('gallerySections').classList.remove('hidden');
+      document.getElementById('galleryError').classList.add('hidden');
     }
 
     // Show error state
-    function showStudentsError() {
-      document.getElementById('studentsLoading').classList.add('hidden');
-      document.getElementById('studentsContainer').classList.add('hidden');
-      document.getElementById('studentsError').classList.remove('hidden');
+    function showGalleryError() {
+      document.getElementById('galleryLoading').classList.add('hidden');
+      document.getElementById('gallerySections').classList.add('hidden');
+      document.getElementById('galleryError').classList.remove('hidden');
     }
 
-    // Display all students by course type
-    function displayAllStudents() {
-      if (allStudents.length === 0) return;
+    // Display gallery images by sections
+    function displayGallery() {
+      // Separate images by category
+      const drawingImages = allGalleryImages.filter(img => img.category === 'Drawing');
+      const handwritingImages = allGalleryImages.filter(img => img.category === 'Handwriting');
+      const calligraphyImages = allGalleryImages.filter(img => img.category === 'Calligraphy');
 
-      // Filter and display drawing students
-      const drawingStudents = filterStudentsByType('drawing');
-      const drawingStudentsWithImages = drawingStudents.filter(student => student.img);
-      displayStudentsInContainer('drawingStudents', drawingStudentsWithImages);
+      // Update filteredImages to include all images for modal navigation
+      filteredImages = [...drawingImages, ...handwritingImages, ...calligraphyImages];
 
-      // Filter and display handwriting students
-      const handwritingStudents = filterStudentsByType('handwriting');
-      const handwritingStudentsWithImages = handwritingStudents.filter(student => student.img);
-      displayStudentsInContainer('handwritingStudents', handwritingStudentsWithImages);
+      // Display each section
+      displaySection('drawingGrid', drawingImages, 0);
+      displaySection('handwritingGrid', handwritingImages, drawingImages.length);
+      displaySection('calligraphyGrid', calligraphyImages, drawingImages.length + handwritingImages.length);
 
-      // Filter and display calligraphy students
-      const calligraphyStudents = filterStudentsByType('calligraphy');
-      const calligraphyStudentsWithImages = calligraphyStudents.filter(student => student.img);
-      displayStudentsInContainer('calligraphyStudents', calligraphyStudentsWithImages);
-
-      // Hide sections if no students
-      if (drawingStudentsWithImages.length === 0) {
-        document.getElementById('drawingSection').style.display = 'none';
-      }
-      if (handwritingStudentsWithImages.length === 0) {
-        document.getElementById('handwritingSection').style.display = 'none';
-      }
-      if (calligraphyStudentsWithImages.length === 0) {
-        document.getElementById('calligraphySection').style.display = 'none';
-      }
+      // Hide sections that have no images
+      toggleSectionVisibility('drawingSection', drawingImages.length > 0);
+      toggleSectionVisibility('handwritingSection', handwritingImages.length > 0);
+      toggleSectionVisibility('calligraphySection', calligraphyImages.length > 0);
     }
 
-    // Filter students by course type
-    function filterStudentsByType(type) {
-      return allStudents.filter(student => {
-        const courseName = student.courseName.toLowerCase();
+    // Display images in a specific section
+    function displaySection(gridId, images, startIndex) {
+      const grid = document.getElementById(gridId);
+      grid.innerHTML = '';
 
-        switch (type) {
-          case 'drawing':
-            return courseName.includes('drawing') || courseName.includes('art') || courseName.includes('sketch');
-          case 'handwriting':
-            return courseName.includes('handwriting') || courseName.includes('writing');
-          case 'calligraphy':
-            return courseName.includes('calligraphy');
-          default:
-            return false;
-        }
+      if (images.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500"><i class="fas fa-images text-3xl mb-2"></i><p>এই বিভাগে কোন ছবি নেই।</p></div>';
+        return;
+      }
+
+      images.forEach((image, index) => {
+        const imageCard = createImageCard(image, startIndex + index);
+        grid.appendChild(imageCard);
       });
     }
 
-    // Display students in specific container
-    function displayStudentsInContainer(containerId, students) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-
-      students.forEach(student => {
-        const studentCard = createStudentCard(student);
-        container.appendChild(studentCard);
-      });
+    // Toggle section visibility
+    function toggleSectionVisibility(sectionId, isVisible) {
+      const section = document.getElementById(sectionId);
+      if (isVisible) {
+        section.classList.remove('hidden');
+      } else {
+        section.classList.add('hidden');
+      }
     }
 
-    // Create student card element
-    function createStudentCard(student) {
+    // Create image card element
+    function createImageCard(image, index) {
       const card = document.createElement('div');
-      card.className = 'student-card animate-fadeInUp';
-
-      // Convert course names to Bengali
-      const bengaliCourseName = convertCourseToBengali(student.courseName);
-
+      card.className = 'group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer bg-white';
+      
+      const categoryBengali = getCategoryInBengali(image.category);
+      
       card.innerHTML = `
-        <img src="${student.img}" alt="${student.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTA4LjI4NCA3MCA5NS4wNCA3MCA5NS4wNCA3MEM5NS4wNCA3MCA5NS4wNCA4Mi45NiA5NS4wNCA4Mi45NkM5NS4wNCA4Mi45NiAxMDQuOTYgODIuOTYgMTA0Ljk2IDgyLjk2QzEwNC45NiA4Mi45NiAxMDQuOTYgNzAgMTA0Ljk2IDcwWiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'">
-        <div class="student-info">
-          <div class="student-name">${student.name}</div>
-          <div class="student-course">${bengaliCourseName}</div>
-          <div class="student-id">ID: ${student.id}</div>
+        <div class="aspect-square overflow-hidden">
+          <img src="${image.img}" alt="${categoryBengali}" 
+               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTA4LjI4NCA3MCA5NS4wNCA3MCA5NS4wNCA3MEM5NS4wNCA3MCA5NS4wNCA4Mi45NiA5NS4wNCA4Mi45NkM5NS4wNCA4Mi45NiAxMDQuOTYgODIuOTYgMTA0Ljk2IDgyLjk2QzEwNC45NiA4Mi45NiAxMDQuOTYgNzAgMTA0Ljk2IDcwWiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K'">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-3 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          <p class="font-semibold text-sm">${categoryBengali}</p>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="bg-white/20 backdrop-blur-sm rounded-full p-3">
+            <i class="fas fa-expand text-white text-xl"></i>
+          </div>
         </div>
       `;
 
+      card.addEventListener('click', () => openModal(index));
       return card;
     }
 
-    // Convert English course names to Bengali
-    function convertCourseToBengali(courseName) {
-      const courseMap = {
-        'handwriting': 'সুন্দর হাতের লেখা',
-        'writing': 'সুন্দর হাতের লেখা',
-        'calligraphy': 'ক্যালিগ্রাফি',
-        'drawing': 'চিত্রাংকন',
-        'art': 'চিত্রাংকন',
-        'sketch': 'চিত্রাংকন'
+    // Get category in Bengali
+    function getCategoryInBengali(category) {
+      const categoryMap = {
+        'Drawing': 'চিত্রাংকন',
+        'Handwriting': 'সুন্দর হাতের লেখা',
+        'Calligraphy': 'ক্যালিগ্রাফি'
       };
-
-      let bengaliName = courseName;
-
-      // Replace common English terms with Bengali
-      Object.keys(courseMap).forEach(english => {
-        const regex = new RegExp(english, 'gi');
-        bengaliName = bengaliName.replace(regex, courseMap[english]);
-      });
-
-      return bengaliName;
+      return categoryMap[category] || category;
     }
+
+
+    // Modal functionality
+    function openModal(index) {
+      currentImageIndex = index;
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      const modalImageInfo = document.getElementById('modalImageInfo');
+      const modalImageIndex = document.getElementById('modalImageIndex');
+
+      const image = filteredImages[currentImageIndex];
+      modalImage.src = image.img;
+      modalImageInfo.textContent = getCategoryInBengali(image.category);
+      modalImageIndex.textContent = `${currentImageIndex + 1} / ${filteredImages.length}`;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    }
+
+    function previousImage() {
+      currentImageIndex = (currentImageIndex - 1 + filteredImages.length) % filteredImages.length;
+      updateModalImage();
+    }
+
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % filteredImages.length;
+      updateModalImage();
+    }
+
+    function updateModalImage() {
+      const modalImage = document.getElementById('modalImage');
+      const modalImageInfo = document.getElementById('modalImageInfo');
+      const modalImageIndex = document.getElementById('modalImageIndex');
+
+      const image = filteredImages[currentImageIndex];
+      modalImage.src = image.img;
+      modalImageInfo.textContent = getCategoryInBengali(image.category);
+      modalImageIndex.textContent = `${currentImageIndex + 1} / ${filteredImages.length}`;
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      const modal = document.getElementById('imageModal');
+      if (!modal.classList.contains('hidden')) {
+        if (e.key === 'Escape') {
+          closeModal();
+        } else if (e.key === 'ArrowLeft') {
+          previousImage();
+        } else if (e.key === 'ArrowRight') {
+          nextImage();
+        }
+      }
+    });
+
+    // Touch/swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.getElementById('imageModal').addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.getElementById('imageModal').addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+          nextImage(); // Swipe left - next image
+        } else {
+          previousImage(); // Swipe right - previous image
+        }
+      }
+    }
+
+    // Close modal when clicking outside the image
+    document.getElementById('imageModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
   </script>
 </body>
 

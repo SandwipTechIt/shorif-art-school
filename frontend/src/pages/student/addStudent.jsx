@@ -121,40 +121,105 @@ const ImageInput = ({ label, onChange, preview, onRemove, error }) => (
 );
 
 
-const Invoice = ({ student, courses, totalAmountPaid, invoiceID }) => {
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold uppercase">Invoice</h1>
-        <img src="/logo.png" className="w-24" alt="" />
-      </div>
-      <div className="flex justify-between">
-        <p className="text-lg font-semibold">Student Payment Invoice</p>
-        <p className="text-lg font-semibold">Date: <span className="font-normal">{formateDate(new Date())}</span></p>
-      </div>
-      <hr className="my-4" style={{ color: "black" }} />
-      <div className="grid grid-cols-2 gap-4">
-        <p className="font-semibold">Student Name: <span className="font-normal">{student?.name}</span></p>
-        <p className="font-semibold">Invoice ID: <span className="font-normal uppercase">{invoiceID}</span></p>
-        <p className="font-semibold">Student ID: <span className="font-normal">{student?.id}</span></p>
-        <p className="font-semibold">Payment: <span className="font-normal">{totalAmountPaid}</span></p>
-        <p className="font-semibold">Course: <span className="font-normal">{courses?.map((course) => course.courseName).join(", ")}</span></p>
-        <p className="font-semibold">Remaining Due: <span className="font-normal">0</span></p>
-      </div>
-      <hr className="my-4" style={{ color: "black" }} />
-      <div className="flex items-center justify-evenly">
-        <div>
-          <p className="text-center mt-5">__________________</p>
-          <p className="text-center">Guardian Signature</p>
-        </div>
-        <div>
-          <p className="text-center mt-5">__________________</p>
-          <p className="text-center">Student Signature</p>
-        </div>
-      </div>
-    </div>
-  )
+
+function getFullMonthName(dateString) {
+  // Convert the input string to a Date object
+  const date = new Date(dateString);
+
+  // Options for full month formatting
+  const options = { month: 'long' };
+
+  // Use Intl.DateTimeFormat for full month name
+  return new Intl.DateTimeFormat('en-US', options).format(date);
 }
+
+const Invoice = ({ student, courses, invoiceID, totalAmountPaid, }) => {
+    const monthNames = formateDate(student?.createdAt || new Date())
+    const month = getFullMonthName(monthNames)
+
+    return (
+        <div className="max-h-[148.5mm] w-full bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-lg px-8 pt-6 pb-2 flex flex-col">
+            {/* Header Section */}
+            <div className="flex justify-between items-center mb-2">
+                <div className="flex items-center space-x-4">
+                    <div className="bg-white p-2 rounded-lg shadow-sm">
+                        <img src="/logo.png" className="w-16 h-16" alt="Shorif Art School" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-indigo-900">Shorif Art School</h1>
+                        <p className="text-sm ">Halishahar, Chittagong</p>
+                    </div>
+                </div>
+                <div className="text-right">
+                    <p className="text-lg font-semibold text-gray-700">Payment Invoice</p>
+                    <p className="text-sm">{formateDate(new Date())}</p>
+                </div>
+            </div>
+
+            {/* Divider */}
+            <div className="h-px border-1 border-black my-4"></div>
+
+            {/* Invoice Details */}
+            <div className="bg-white rounded-xl p-6 border border-black mb-6 flex-grow">
+                <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                        <div>
+                            <p className="text-xs font-semibold text-black uppercase tracking-wider">Invoice Details</p>
+                            <div className="mt-2 space-y-2">
+                                <div className="flex gap-2">
+                                    <span className="text-black">Invoice ID:</span>
+                                    <span className="text-black">{invoiceID}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="text-black">Month:</span>
+                                    <span className="text-black">{month}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div>
+                            <p className="text-xs font-semibold text-black uppercase tracking-wider">Student Information</p>
+                            <div className="mt-2 space-y-2">
+                                <div className="flex gap-2">
+                                    <span className="text-black">Name:</span>
+                                    <span className="text-black">{student?.name}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="text-black">Course:</span>
+                                    <span className="text-black">{courses?.map((course) => course.courseName).join(", ")}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Payment Summary */}
+                <div className="mt-6 pt-4 border-t border-gray-100">
+                    <div className="flex justify-between">
+                        <div>
+                            <p className="text-sm text-black">Payment Amount</p>
+                            <p className="text-xl text-black">{totalAmountPaid}</p>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-sm text-black">Remaining Due</p>
+                            <p className="text-xl text-black">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Signature Section */}
+            <div className="flex justify-evenly items-center mt-4">
+                <div className="text-center">
+                    <div className="h-px w-32 border border-black mb-1"></div>
+                    <p className="text-xs text-black">Authorized</p>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 
 const MonthNames = [
@@ -334,22 +399,23 @@ export default function AddStudent() {
       });
 
       // Reset form after successful submission
-      // setForm({
-      //   name: "",
-      //   fatherName: "",
-      //   motherName: "",
-      //   dob: null,
-      //   profession: "",
-      //   gender: "",
-      //   schoolName: "",
-      //   address: "",
-      //   mobileNumber: "",
-      //   whatsAppNumber: "",
-      //   courses: [],
-      //   courseTimes: {},
-      //   admissionFee: "",
-      //   image: null,
-      // });
+      setForm({
+        name: "",
+        fatherName: "",
+        motherName: "",
+        dob: null,
+        profession: "",
+        gender: "",
+        schoolName: "",
+        address: "",
+        mobileNumber: "",
+        whatsAppNumber: "",
+        courses: [],
+        courseTimes: {},
+        admissionFee: "",
+        month: "",
+        image: null,
+      });
       setImagePreview(null);
     } finally {
     }
@@ -383,9 +449,6 @@ export default function AddStudent() {
       </div>
     );
   }
-
-
-  console.log(form.dob);
 
   return (
     <div className="flex flex-col items-center md:py-10 md:px-4">

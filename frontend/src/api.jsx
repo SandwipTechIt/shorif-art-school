@@ -2,7 +2,6 @@ import axios from "axios";
 
 const apiClient = axios.create({
   baseURL: "https://api.shorifartschool.com",
-  // baseURL: "http://192.168.0.200:5000",
   headers: {
     "Content-Type": "application/json",
   },
@@ -70,9 +69,12 @@ export const messageApi = async (endpoint, data) => {
 };
 
 // Gallery Image Upload API
-export const uploadGalleryImages = async (files, onProgress = null) => {
+export const uploadGalleryImages = async (files, category, onProgress = null) => {
   try {
     const formData = new FormData();
+    
+    // Append category to FormData
+    formData.append('category', category);
     
     // Append all files to FormData
     files.forEach((file, index) => {

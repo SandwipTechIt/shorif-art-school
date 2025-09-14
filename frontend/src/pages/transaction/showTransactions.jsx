@@ -56,7 +56,8 @@ export default function Transaction() {
     };
     const transactions = data?.transactions || [];
     const totalPages = data?.totalPages || 1;
-
+    console.log(totalPages);
+    
     return (
         <div>
             <TransactionSearchForm handleSearch={handleSearch} search={search} setSearch={setSearch} />
@@ -79,13 +80,14 @@ export default function Transaction() {
             }
 
 
-            <Pagination
-                pagination={{
-                    currentPage: page,
-                    totalPages: totalPages,
-                }}
-                onPageChange={handlePageChange}
-            />
+            {/* Only show pagination when not searching */}
+            {!(search.to || search.from || search.search) && (
+                <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+            )}
         </div>
     );
 }

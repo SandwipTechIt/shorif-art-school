@@ -10,10 +10,10 @@ const MONTH_NAMES = [
 
 function getMonthNames(indices) {
     return indices
-      .map(i => MONTH_NAMES[i])  // pick the name at that index
-      .filter(Boolean)           // discard undefined for invalid indexes
-      .join(",");
-  }
+        .map(i => MONTH_NAMES[i])  // pick the name at that index
+        .filter(Boolean)           // discard undefined for invalid indexes
+        .join(",");
+}
 
 
 const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
@@ -127,7 +127,7 @@ const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
 
 const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth }) => {
     const monthNames = getMonthNames(paymentMonth);
-    
+
     return (
         <div className="max-h-[148.5mm] w-full bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-lg px-8 pt-6 pb-2 flex flex-col">
             {/* Header Section */}
@@ -138,80 +138,75 @@ const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth })
                     </div>
                     <div>
                         <h1 className="text-2xl font-bold text-indigo-900">Shorif Art School</h1>
-                        <p className="text-sm text-indigo-600">Halishahar, Chittagong</p>
+                        <p className="text-sm ">Halishahar, Chittagong</p>
                     </div>
                 </div>
                 <div className="text-right">
                     <p className="text-lg font-semibold text-gray-700">Payment Invoice</p>
-                    <p className="text-sm text-gray-500">{formateDate(new Date())}</p>
+                    <p className="text-sm">{formateDate(new Date())}</p>
                 </div>
             </div>
-            
+
             {/* Divider */}
-            <div className="h-px bg-gradient-to-r from-transparent via-indigo-200 to-transparent my-4"></div>
-            
+            <div className="h-px border-1 border-black my-4"></div>
+
             {/* Invoice Details */}
-            <div className="bg-white rounded-xl p-6 shadow-sm mb-6 flex-grow">
+            <div className="bg-white rounded-xl p-6 border border-black mb-6 flex-grow">
                 <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-4">
                         <div>
-                            <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Invoice Details</p>
+                            <p className="text-xs font-semibold text-black uppercase tracking-wider">Invoice Details</p>
                             <div className="mt-2 space-y-2">
-                                <div className="flex justify-between">
-                                    <span className="text-gray-500">Invoice ID:</span>
-                                    <span className="font-medium text-gray-800">{invoiceId}</span>
+                                <div className="flex gap-2">
+                                    <span className="text-black">Invoice ID:</span>
+                                    <span className="text-black">{invoiceId}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-500">Month:</span>
-                                    <span className="font-medium text-gray-800">{monthNames}</span>
+                                <div className="flex gap-2">
+                                    <span className="text-black">Month:</span>
+                                    <span className="text-black">{monthNames}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="space-y-4">
                         <div>
-                            <p className="text-xs font-semibold text-purple-600 uppercase tracking-wider">Student Information</p>
+                            <p className="text-xs font-semibold text-black uppercase tracking-wider">Student Information</p>
                             <div className="mt-2 space-y-2">
-                                <div className="flex justify-between">
-                                    <span className="text-gray-500">Name:</span>
-                                    <span className="font-medium text-gray-800">{student?.name}</span>
+                                <div className="flex gap-2">
+                                    <span className="text-black">Name:</span>
+                                    <span className="text-black">{student?.name}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-500">Course:</span>
-                                    <span className="font-medium text-gray-800">{courseName}</span>
+                                <div className="flex gap-2">
+                                    <span className="text-black">Course:</span>
+                                    <span className="text-black">{courseName}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Payment Summary */}
                 <div className="mt-6 pt-4 border-t border-gray-100">
                     <div className="flex justify-between">
                         <div>
-                            <p className="text-sm text-gray-500">Payment Amount</p>
-                            <p className="text-xl font-bold text-indigo-700">{payment}</p>
+                            <p className="text-sm text-black">Payment Amount</p>
+                            <p className="text-xl text-black">{payment}</p>
                         </div>
                         <div className="text-right">
-                            <p className="text-sm text-gray-500">Remaining Due</p>
-                            <p className="text-xl font-bold text-purple-700">{due}</p>
+                            <p className="text-sm text-black">Remaining Due</p>
+                            <p className="text-xl text-black">{due}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             {/* Signature Section */}
             <div className="flex justify-evenly items-center mt-4">
                 <div className="text-center">
-                    <div className="h-px w-32 bg-gradient-to-r from-transparent via-gray-300 to-transparent mb-1"></div>
-                    <p className="text-xs text-gray-500">Guardian Signature</p>
+                    <div className="h-px w-32 border border-black mb-1"></div>
+                    <p className="text-xs text-black">Authorized</p>
                 </div>
-                <div className="text-center">
-                    <div className="h-px w-32 bg-gradient-to-r from-transparent via-gray-300 to-transparent mb-1"></div>
-                    <p className="text-xs text-gray-500">Student Signature</p>
-                </div>
-                
             </div>
         </div>
     );

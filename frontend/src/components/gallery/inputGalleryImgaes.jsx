@@ -12,7 +12,10 @@ const InputGalleryImages = ({ onImagesSelected, maxFiles = 10, isOpen = false, o
     const [errors, setErrors] = useState([]);
     const [uploadErrors, setUploadErrors] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
     const fileInputRef = useRef(null);
+
+    const categories = ['Calligraphy', 'Handwriting', 'Drawing'];
 
     const validateFile = (file) => {
         const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
@@ -124,6 +127,7 @@ const InputGalleryImages = ({ onImagesSelected, maxFiles = 10, isOpen = false, o
         setUploadErrors([]);
         setSuccessMessage('');
         setUploadProgress(0);
+        setSelectedCategory('');
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -139,6 +143,11 @@ const InputGalleryImages = ({ onImagesSelected, maxFiles = 10, isOpen = false, o
             return;
         }
 
+        if (!selectedCategory) {
+            setUploadErrors(['Please select a category for your images']);
+            return;
+        }
+
         setUploading(true);
         setUploadErrors([]);
         setSuccessMessage('');
@@ -148,6 +157,7 @@ const InputGalleryImages = ({ onImagesSelected, maxFiles = 10, isOpen = false, o
             // Upload images to backend
             const response = await uploadGalleryImages(
                 selectedFiles,
+                selectedCategory,
                 (progress) => setUploadProgress(progress)
             );
 
@@ -253,6 +263,26 @@ const InputGalleryImages = ({ onImagesSelected, maxFiles = 10, isOpen = false, o
                 </div>
                 <div className="modal-body">
                     <div className="input-gallery-images">
+                        {/* Category Selection */}
+                        <div className="category-selection">
+                            <label htmlFor="category-select" className="category-label">
+                                Select Category <span className="required">*</span>
+                            </label>
+                            <select
+                                id="category-select"
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="category-dropdown"
+                            >
+                                <option value="">Choose a category...</option>
+                                {categories.map((category) => (
+                                    <option key={category} value={category}>
+                                        {category}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
                         {/* Upload Area */}
                         <div
                             className={`upload-area ${dragActive ? 'drag-active' : ''} ${selectedFiles.length > 0 ? 'has-files' : ''}`}
@@ -384,7 +414,7 @@ const InputGalleryImages = ({ onImagesSelected, maxFiles = 10, isOpen = false, o
                     <button 
                         className="upload-btn" 
                         onClick={handleUpload}
-                        disabled={selectedFiles.length === 0 || uploading}
+                        disabled={selectedFiles.length === 0 || !selectedCategory || uploading}
                     >
                         {uploading ? (
                             <>
@@ -573,6 +603,45 @@ const InputGalleryImages = ({ onImagesSelected, maxFiles = 10, isOpen = false, o
                     width: 100%;
                     max-width: none;
                     margin: 0;
+                }
+
+                .category-selection {
+                    margin-bottom: 2rem;
+                }
+
+                .category-label {
+                    display: block;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: #374151;
+                    margin-bottom: 0.5rem;
+                }
+
+                .required {
+                    color: #ef4444;
+                    font-weight: 700;
+                }
+
+                .category-dropdown {
+                    width: 100%;
+                    padding: 0.75rem 1rem;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-size: 1rem;
+                    color: #374151;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+
+                .category-dropdown:focus {
+                    outline: none;
+                    border-color: #6366f1;
+                    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+                }
+
+                .category-dropdown:hover {
+                    border-color: #d1d5db;
                 }
 
                 .upload-area {
