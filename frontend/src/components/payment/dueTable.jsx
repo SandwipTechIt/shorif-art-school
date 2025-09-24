@@ -7,7 +7,7 @@ const StudentTableRow = ({ student,handleClick }) => {
 
     return (
         <tr className="mb-4 block rounded-lg border border-b-2 hover:bg-gray-50 dark:hover:bg-gray-500 even:bg-gray-50 dark:even:bg-gray-dark md:mb-0 md:table-row md:border-0 md:border-b dark:text-white cursor-pointer"
-        // onClick={()=>handleClick(student._id)}
+        onClick={()=>handleClick(student._id)}
         >
             <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Image</span>
@@ -37,7 +37,7 @@ const StudentTableRow = ({ student,handleClick }) => {
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Due</span>
                 {student.dues}
             </td>
-            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
+            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white" onClick={(e) => e.stopPropagation()}>
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Options</span>
                 <div className="flex gap-2">
                     <a

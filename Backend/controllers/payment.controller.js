@@ -12,7 +12,7 @@ export const getStudentPayment = async (req, res, next) => {
   try {
     const { studentId } = req.params;
     const student = await Student.findById(studentId)
-      .select("name fatherName mobileNumber createdAt");
+      .select("name id fatherName mobileNumber createdAt");
     if (!student) {
       return next(createError(404, "Student not found"));
     }

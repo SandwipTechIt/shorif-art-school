@@ -125,9 +125,10 @@ const ConfirmDeleteModal = ({ onCancel, onConfirm }) => {
 
 
 
-const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth }) => {
+const Invoice = ({ student, studentId, courseName, invoiceId, payment, due, paymentMonth, date }) => {
     const monthNames = getMonthNames(paymentMonth);
-
+    // console.log( studentId);
+    
     return (
         <div className="max-h-[148.5mm] w-full bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl shadow-lg px-8 pt-6 pb-2 flex flex-col">
             {/* Header Section */}
@@ -142,8 +143,7 @@ const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth })
                     </div>
                 </div>
                 <div className="text-right">
-                    <p className="text-lg font-semibold text-gray-700">Payment Invoice</p>
-                    <p className="text-sm">{formateDate(new Date())}</p>
+                    <p className="text-2xl font-semibold text-gray-700">Payment Invoice</p>
                 </div>
             </div>
 
@@ -159,11 +159,15 @@ const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth })
                             <div className="mt-2 space-y-2">
                                 <div className="flex gap-2">
                                     <span className="text-black">Invoice ID:</span>
-                                    <span className="text-black">{invoiceId}</span>
+                                    <span className="text-black font-semibold">{invoiceId}</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <span className="text-black">Month:</span>
-                                    <span className="text-black">{monthNames}</span>
+                                    <span className="text-black font-semibold">{monthNames}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="text-black">Date:</span>
+                                    <span className="text-black font-semibold">{formateDate(date)}</span>
                                 </div>
                             </div>
                         </div>
@@ -175,11 +179,15 @@ const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth })
                             <div className="mt-2 space-y-2">
                                 <div className="flex gap-2">
                                     <span className="text-black">Name:</span>
-                                    <span className="text-black">{student?.name}</span>
+                                    <span className="text-black font-semibold">{student?.name}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="text-black">ID:</span>
+                                    <span className="text-black font-semibold">{studentId}</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <span className="text-black">Course:</span>
-                                    <span className="text-black">{courseName}</span>
+                                    <span className="text-black font-semibold">{courseName}</span>
                                 </div>
                             </div>
                         </div>
@@ -218,9 +226,10 @@ const StudentTableRow = ({ student, onDeleteRequest }) => {
     // Each row now gets its own ref and its own print handler
     const contentRef = useRef(null);
     const reactToPrintFn = useReactToPrint({ contentRef })
-
+    console.log(student?.studentId?._id);
+    const navigate = useNavigate();
     return (
-        <tr className="mb-4 block rounded-lg border border-b-2 hover:bg-gray-50 dark:hover:bg-gray-500 even:bg-gray-50 dark:even:bg-gray-dark md:mb-0 md:table-row md:border-0 md:border-b dark:text-white">
+        <tr className="mb-4 block rounded-lg border border-b-2 hover:bg-gray-50 dark:hover:bg-gray-500 even:bg-gray-50 dark:even:bg-gray-dark md:mb-0 md:table-row md:border-0 md:border-b dark:text-white cursor-pointer" onClick={() => navigate(`/payment/add/${student?.studentId?._id}`)} >
             <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left dark:text-white">
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Image</span>
                 <img
@@ -253,7 +262,9 @@ const StudentTableRow = ({ student, onDeleteRequest }) => {
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Date</span>
                 {student.createdAt ? formateDate(student.createdAt) : "N/A"}
             </td>
-            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left">
+            <td className="flex items-center justify-between border-b border-gray-200 p-2 text-right md:table-cell md:p-4 md:text-left"
+            onClick={(e) => e.stopPropagation()}
+            >
                 <span className="mr-4 font-semibold text-gray-700 md:hidden dark:text-white">Options</span>
                 <div className="flex items-center gap-2">
                     {/* This div holds the content to be printed, referenced by this component's unique ref */}
@@ -261,12 +272,14 @@ const StudentTableRow = ({ student, onDeleteRequest }) => {
                         <div ref={contentRef}>
                             <Invoice
                                 student={student.studentId}
+                                studentId={student?.studentID}
                                 courseName={student.courseNames}
                                 fee={student.totalFee}
-                                invoiceId={student?._id?.toString()}
+                                invoiceId={student?._id?.toString().toUpperCase()}
                                 payment={student?.amount}
                                 due={student?.due}
                                 paymentMonth={student?.months}
+                                date={student?.createdAt}
                             />
                         </div>
                     </div>

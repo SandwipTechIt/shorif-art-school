@@ -33,42 +33,6 @@ function getMonthNames(indices) {
     .join(", ");
 }
 
-// const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth }) => {
-//   const monthNames = getMonthNames(paymentMonth)
-
-//   return (
-//     <div className="p-6">
-//       <div className="flex justify-between items-center">
-//         <h1 className="text-3xl font-bold uppercase">Invoice</h1>
-//         <img src="/logo.png" className="w-24" alt="" />
-//       </div>
-//       <div className="flex justify-between">
-//         <p className="text-lg font-semibold">Student Payment Invoice</p>
-//         <p className="text-lg font-semibold">Date: <span className="font-normal">{formateDate(new Date())}</span></p>
-//       </div>
-//       <hr className="my-4" style={{ color: "black" }} />
-//       <div className="grid grid-cols-2 gap-4">
-//         <p className="font-semibold">Invoice ID: <span className="font-normal uppercase">{invoiceId}</span></p>
-//         <p className="font-semibold">Month: <span className="font-normal">{monthNames}</span></p>
-//         <p className="font-semibold">Name: <span className="font-normal">{student?.name}</span></p>
-//         <p className="font-semibold">Payment: <span className="font-normal">{payment}</span></p>
-//         <p className="font-semibold">Course: <span className="font-normal">{courseName}</span></p>
-//         <p className="font-semibold">Remaining Due: <span className="font-normal">{Math.max(due, 0)}</span></p>
-//       </div>
-//       <hr className="my-4" style={{ color: "black" }} />
-//       <div className="flex items-center justify-evenly">
-//         <div>
-//           <p className="text-center mt-2">__________________</p>
-//           <p className="text-center">Guardian Signature</p>
-//         </div>
-//         <div>
-//           <p className="text-center mt-2">__________________</p>
-//           <p className="text-center">Student Signature</p>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
 
 const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth }) => {
   const monthNames = getMonthNames(paymentMonth);
@@ -87,8 +51,7 @@ const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth })
           </div>
         </div>
         <div className="text-right">
-          <p className="text-lg font-semibold text-black">Payment Invoice</p>
-          <p className="text-sm text-black">{formateDate(new Date())}</p>
+          <p className="text-2xl font-semibold text-black">Payment Invoice</p>
         </div>
       </div>
 
@@ -104,11 +67,15 @@ const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth })
               <div className="mt-2 space-y-2">
                 <div className="flex gap-2">
                   <span className="text-black">Invoice ID:</span>
-                  <span className="text-black">{invoiceId}</span>
+                  <span className="text-black font-semibold">{invoiceId?.toUpperCase()}</span>
                 </div>
                 <div className="flex gap-2">
                   <span className="text-black">Month:</span>
-                  <span className="text-black">{monthNames}</span>
+                  <span className="text-black font-semibold">{monthNames}</span>
+                </div>
+                <div className="flex gap-2">
+                  <span className="text-black">Date:</span>
+                  <span className="text-black font-semibold">{formateDate(new Date())}</span>
                 </div>
               </div>
             </div>
@@ -120,11 +87,15 @@ const Invoice = ({ student, courseName, invoiceId, payment, due, paymentMonth })
               <div className="mt-2 space-y-2">
                 <div className="flex gap-2">
                   <span className="text-black">Name:</span>
-                  <span className="text-black">{student?.name}</span>
+                  <span className="text-black font-semibold">{student?.name}</span>
+                </div>
+                <div className="flex gap-2">
+                  <span className="text-black">ID:</span>
+                  <span className="text-black font-semibold">{student?.id}</span>
                 </div>
                 <div className="flex gap-2">
                   <span className="text-black">Course:</span>
-                  <span className="text-black">{courseName}</span>
+                  <span className="text-black font-semibold">{courseName}</span>
                 </div>
               </div>
             </div>
@@ -165,8 +136,8 @@ const PaymentForm = ({ student, courseName, totalFee, paymentSummary, refetch })
 
 
   const [state, setState] = useState({
-    amount: "",
-    month: "",
+    amount: totalFee,
+    month: [new Date().getMonth().toString()],
   });
   const [error, setError] = useState(false);
   const [onSuccess, setOnSuccess] = useState(false);
@@ -193,7 +164,6 @@ const PaymentForm = ({ student, courseName, totalFee, paymentSummary, refetch })
     try {
       if (!validate()) return;
 
-      console.log(state);
       setPaymentLoading(true);
       const response = await postApi(`createPayment/${student._id}`, { ...state, due: Math.max(TotalDue - state.amount, 0) });
       if (response.success) {

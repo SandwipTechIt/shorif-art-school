@@ -9,7 +9,6 @@ import { Pagination } from "../../components/ui/pagination";
 import Loader from "../../components/ui/loader";
 import ErrorMessage from "../../components/ui/errorMessage";
 export default () => {
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState("");
     const [searchResults, setSearchResults] = useState(null);

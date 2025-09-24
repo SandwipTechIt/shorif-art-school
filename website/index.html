@@ -109,6 +109,7 @@
       overflow-x: hidden;
       background-color: var(--light);
     }
+    
 
     .form-input {
       @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300;
@@ -207,6 +208,38 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+
+    /* Enhanced Hero Text Gradient */
+    .hero-gradient-text {
+      background: linear-gradient(135deg, 
+        #667eea 0%, 
+        #764ba2 25%, 
+        #f093fb 50%, 
+        #f5576c 75%, 
+        #4facfe 100%);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 4s ease-in-out infinite;
+    }
+
+    /* Gradient Animation */
+    @keyframes gradientShift {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    /* Hover effect for hero text */
+    .hero-gradient-text:hover {
+      animation-play-state: paused;
+      transform: scale(1.02);
+      transition: transform 0.3s ease;
     }
 
     /* Hero Pattern */
@@ -728,7 +761,9 @@
       <div class="flex justify-between items-center h-16">
         <!-- Logo -->
         <div class="flex items-center space-x-3">
-          <img src="https://i.ibb.co/qY8wgT24/logo.png" class="w-10 h-10" alt="" />
+          <a href="https://shorifartschool.com/">
+            <img src="logo.png" class="w-10 h-10" alt="" />
+          </a>
         </div>
 
         <!-- Desktop Menu -->
@@ -772,6 +807,7 @@
           <a href="#students" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">শিক্ষার্থী</a>
           <a href="#gallery" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">গ্যালারি</a>
           <a href="#faq" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">FAQ</a>
+          <a href="#teachers" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">শিক্ষকমণ্ডলী</a>
           <a href="#contact" class="block py-2 text-gray-700 hover:text-indigo-600 font-medium">যোগাযোগ</a>
           <a href="tel:01616-010205"
             class="group inline-flex items-center px-6 py-3 bg-white text-green-600 font-medium rounded-full text-lg border-2 border-green-600 shadow-md hover:shadow-lg transform transition-all duration-300 ">
@@ -799,8 +835,12 @@
     <div class="container mx-auto px-4 py-20 relative z-10">
       <div class="max-w-4xl mx-auto text-center">
         <div class="animate-fadeInUp">
-          <h2 class="hero-text text-4xl md:text-6xl pt-4 font-bold text-gray-800 mb-6 leading-tight gradient-text">
-            শরীফ আর্ট স্কুলে আপনাকে স্বাগতম।
+          <h2 class="hero-text text-4xl md:text-6xl pt-4 font-bold mb-6 leading-tight hero-gradient-text waveTextAnimated py-4">
+            <span>শরীফ</span>
+            <span>আর্ট</span>
+            <span>স্কুলে</span>
+            <span>আপনাকে</span>
+            <span>স্বাগতম।</span>
           </h2>
           <p class="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
             শরীফ আর্ট স্কুলে আমরা শিশুদের সুন্দর হাতের লেখা,ক্যালিগ্রাফি এবং বিভিন্ন ধরনের
@@ -2088,7 +2128,7 @@
                 <h5 class="text-xl font-bold text-gray-800 mb-2">মোহাম্মদ জাহিদুল ইসলাম</h5>
                 <div class="text-indigo-600 font-semibold mb-2">ড্রয়িং শিক্ষক</div>
                 <div class="text-gray-600 text-sm mb-3">
-                  <p><strong>যোগ্যতা:</strong> চারুকলায় অনার্স</p>
+                  <p>চারুকলায় অনার্স</p>
                   <p>চট্টগ্রাম বিশ্ববিদ্যালয়</p>
                 </div>
                 <div class="flex items-center text-sm text-gray-500">
@@ -2109,7 +2149,7 @@
                 <h5 class="text-xl font-bold text-gray-800 mb-2">জহীর উদ্দীন</h5>
                 <div class="text-indigo-600 font-semibold mb-2">সুন্দর হাতের লেখা বিভাগ</div>
                 <div class="text-gray-600 text-sm mb-3">
-                  <p><strong>যোগ্যতা:</strong> আলিম</p>
+                  <p>আলিম</p>
                   <p>শরীফ আর্ট স্কুল</p>
                 </div>
                 <div class="flex items-center text-sm text-gray-500">
@@ -2129,6 +2169,10 @@
               <div class="p-6">
                 <h5 class="text-xl font-bold text-gray-800 mb-2">Sadia Jahan</h5>
                 <div class="text-indigo-600 font-semibold mb-2">ড্রয়িং শিক্ষক</div>
+                <div class="text-gray-600 text-sm mb-3">
+                  <p>Areas of Study: Bachelor Of Business Administration.</p>
+                  <!-- <p>শরীফ আর্ট স্কুল</p> -->
+                </div>
                 <div class="flex items-center text-sm text-gray-500">
                   <i class="fas fa-palette mr-2"></i>
                   <span>Drawing Teacher</span>
@@ -2387,6 +2431,7 @@
                 </div>
               </div>
             </div>
+            
             <div
               class="work-item gallery-item m-2 teacher3 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
               onclick="openLightbox('images/teachers/teacher3_drawing1.jpeg')">
@@ -2398,6 +2443,51 @@
                 </div>
               </div>
             </div>
+            <div
+              class="work-item gallery-item m-2 teacher3 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+              onclick="openLightbox('images/teachers/teacher3_drawing2.jpeg')">
+              <img src="images/teachers/teacher3_drawing2.jpeg" alt="Teacher 3 Work 1" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="work-item gallery-item m-2 teacher3 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+              onclick="openLightbox('images/teachers/teacher3_drawing3.jpeg')">
+              <img src="images/teachers/teacher3_drawing3.jpeg" alt="Teacher 3 Work 1" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="work-item gallery-item m-2 teacher3 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+              onclick="openLightbox('images/teachers/teacher3_drawing4.jpeg')">
+              <img src="images/teachers/teacher3_drawing4.jpeg" alt="Teacher 3 Work 1" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="work-item gallery-item m-2 teacher3 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+              onclick="openLightbox('images/teachers/teacher3_drawing5.jpeg')">
+              <img src="images/teachers/teacher3_drawing5.jpeg" alt="Teacher 3 Work 1" class="w-full h-48 object-cover">
+              <div class="gallery-overlay">
+                <div class="gallery-overlay-content">
+                  <i class="fas fa-search-plus"></i>
+                  <p>বড় করে দেখুন</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

@@ -14,14 +14,14 @@ import {
   searchStudents,
 } from "../controllers/student.controller.js";
 
-Router.post("/createStudent", uploadCategoryImage, handleUploadError, createStudent);
-Router.post("/updateStudent/:id", uploadCategoryImage, handleUploadError, updateStudent);
+Router.post("/createStudent", authMiddleware, uploadCategoryImage, handleUploadError, createStudent);
+Router.post("/updateStudent/:id", authMiddleware, uploadCategoryImage, handleUploadError, updateStudent);
 
 
 
-Router.get("/getStudents",  getStudents);
-Router.get("/searchStudents/:query", authMiddleware, searchStudents);
-Router.get("/getStudent/:id", authMiddleware, getStudentById);
+Router.get("/getStudents", getStudents);
+Router.get("/searchStudents/:query", searchStudents);
+Router.get("/getStudent/:id", getStudentById);
 Router.delete("/deleteStudent/:id", authMiddleware, deleteStudent);
 
 
