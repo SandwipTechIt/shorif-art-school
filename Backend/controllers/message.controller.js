@@ -6,7 +6,7 @@ import { getTotalPaid } from "../helper/dues.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-const message_URL = process.env.message_URL;
+const message_URL = "https://smsp.durjoysoft.com/api";
 const apiKey = process.env.ApiKey;
 const senderId = process.env.SenderID;
 
